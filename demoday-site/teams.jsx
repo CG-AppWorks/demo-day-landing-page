@@ -7,7 +7,27 @@ function initials(name) {
 // Flag glyph for the founder's HQ (single character pair, e.g. "KR" → 🇰🇷)
 const FLAG = { TW:"🇹🇼", SG:"🇸🇬", KR:"🇰🇷", MY:"🇲🇾", US:"🇺🇸", HK:"🇭🇰", ID:"🇮🇩", JP:"🇯🇵", VN:"🇻🇳", PH:"🇵🇭", AU:"🇦🇺", FR:"🇫🇷", ES:"🇪🇸", AR:"🇦🇷", ARG:"🇦🇷" };
 
+// Team logo lockups, keyed by team id. Missing ids fall back to the order/initials box.
+const LOGOS = {
+  decisionslab:'assets/logos/decisionslab.png', hyarks:'assets/logos/hyarks.png',
+  innowave:'assets/logos/innowave.png',
+  krush:'assets/logos/krush.png', lips:'assets/logos/lips.png', notag:'assets/logos/notag.png',
+  novo:'assets/logos/novo.png', pathors:'assets/logos/pathors.png', raptor:'assets/logos/raptor.png',
+  refundy:'assets/logos/refundy.png', rosary:'assets/logos/rosary.png', shieldbase:'assets/logos/shieldbase.png',
+};
+
+// Founder portraits, keyed by team id. Missing ids fall back to the HQ flag glyph.
+const PORTRAITS = {
+  notag:'assets/portraits/notag.jpg', pathors:'assets/portraits/pathors.png',
+  shieldbase:'assets/portraits/shieldbase.png', refundy:'assets/portraits/refundy.png',
+  hyarks:'assets/portraits/hyarks.jpeg', novo:'assets/portraits/novo.png',
+  decisionslab:'assets/portraits/decisionslab.jpg', lips:'assets/portraits/lips.jpeg',
+  raptor:'assets/portraits/raptor.png', rosary:'assets/portraits/rosary.png',
+  krush:'assets/portraits/krush.jpg',
+};
+
 function LangBadge({ language }) {
+  if (window.EVENT_CONFIG && window.EVENT_CONFIG.wordly === false) return null;
   const isZh = language && language.toLowerCase().startsWith('mandarin');
   return (
     <span className={`badge lang ${isZh ? 'mandarin' : 'english'}`} title={`Pitch language: ${language}`}>
@@ -21,13 +41,17 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
   const liveCls = isLive && accentLive ? 'live' : '';
   const tagCls = team.tags[0] ? `tag-${team.tags[0].toLowerCase().replace(/[^a-z0-9]/g,'-')}` : '';
   const orderStr = String(team.speakerOrder).padStart(2,'0');
+  const logo = LOGOS[team.id];
+  const portrait = PORTRAITS[team.id];
 
   if (density === 'compact') {
     return (
       <article className={`team-card ${liveCls} ${tagCls}`} onClick={() => onOpenLive(team)}>
         <div className="logo order">{orderStr}</div>
         <div>
-          <h4>{team.name}</h4>
+          {logo
+            ? <img className="card-logo-img sm" src={logo} alt={team.name}/>
+            : <h4>{team.name}</h4>}
           <div className="sub" style={{marginTop:2}}>{team.sub}</div>
         </div>
         <div>
@@ -38,7 +62,11 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
           </div>
         </div>
         <div className="presenter-mini">
-          <div className="who">{FLAG[team.hq] || ''} {team.presenter}</div>
+          <div className="who">
+            {portrait
+              ? <img className="presenter-avatar sm" src={portrait} alt={team.presenter}/>
+              : <span>{FLAG[team.hq] || ''}</span>} {team.presenter}
+          </div>
           <div className="role">{team.title}</div>
         </div>
         <div className="compact-actions">
@@ -59,20 +87,25 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
           <span className="order-tag">{orderStr}</span>
         </div>
         <div className="body">
-          <div className="head">
-            <div className="logo">{initials(team.name)}</div>
-            <div className="meta">
-              <h4>{team.name}</h4>
-              <div className="sub">{team.sub}</div>
+          {logo
+            ? <div className="card-logo-row"><img className="card-logo-img" src={logo} alt={team.name}/></div>
+            : (
+            <div className="head">
+              <div className="logo">{initials(team.name)}</div>
+              <div className="meta">
+                <h4>{team.name}</h4>
+              </div>
             </div>
-          </div>
+            )}
           <div className="badges">
             {team.tags.map(t => <span key={t} className={`badge ${t.toLowerCase().replace(/[^a-z0-9]/g,'-')}`}>{t}</span>)}
             <LangBadge language={team.language}/>
           </div>
           <p className="pitch">{team.pitch}</p>
           <div className="presenter">
-            <div className="flag">{FLAG[team.hq] || ''}</div>
+            {portrait
+              ? <img className="presenter-avatar" src={portrait} alt={team.presenter}/>
+              : <div className="flag">{FLAG[team.hq] || ''}</div>}
             <div className="who">
               <b>{team.presenter}</b>
               <span>{team.title} · {team.hq}</span>
@@ -96,20 +129,25 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
   // default / comfy
   return (
     <article className={`team-card ${liveCls} ${tagCls}`} onClick={() => onOpenLive(team)}>
-      <div className="head">
-        <div className="logo order">{orderStr}</div>
-        <div className="meta">
-          <h4>{team.name}</h4>
-          <div className="sub">{team.sub}</div>
+      {logo
+        ? <div className="card-logo-row"><img className="card-logo-img" src={logo} alt={team.name}/></div>
+        : (
+        <div className="head">
+          <div className="logo order">{orderStr}</div>
+          <div className="meta">
+            <h4>{team.name}</h4>
+          </div>
         </div>
-      </div>
+        )}
       <div className="badges">
         {team.tags.map(t => <span key={t} className={`badge ${t.toLowerCase().replace(/[^a-z0-9]/g,'-')}`}>{t}</span>)}
         <LangBadge language={team.language}/>
       </div>
       <p className="pitch">{team.pitch}</p>
       <div className="presenter">
-        <div className="flag">{FLAG[team.hq] || ''}</div>
+        {portrait
+          ? <img className="presenter-avatar" src={portrait} alt={team.presenter}/>
+          : <div className="flag">{FLAG[team.hq] || ''}</div>}
         <div className="who">
           <b>{team.presenter}</b>
           <span>{team.title} · {team.hq}</span>
@@ -152,11 +190,12 @@ function FilterBar({ filter, setFilter, search, setSearch }) {
   );
 }
 
-function TeamsSection({ favorites, onFav, onIntro, onOpenLive, density, accentIntensity, captionLanguage, onCaptionLanguageChange, sessionId, liveTeamId }) {
+function TeamsSection({ favorites, onFav, onIntro, onOpenLive, density, accentIntensity, captionLanguage, onCaptionLanguageChange, sessionId, liveTeamId, language }) {
   const [filter, setFilter] = useState({ tag: 'All', batches: [], languages: [], markets: [], favoritesOnly: false });
   const [search, setSearch] = useState('');
 
   const filtered = TEAMS.filter(t => {
+    if (t.batch === 'WA#10') return false; // shown under the Wistron block
     if (filter.tag !== 'All' && !t.tags.includes(filter.tag)) return false;
     if (filter.batches.length && !filter.batches.includes(t.batch)) return false;
     if (filter.languages.length && !filter.languages.includes((t.language || '').split(' ')[0])) return false;
@@ -175,9 +214,13 @@ function TeamsSection({ favorites, onFav, onIntro, onOpenLive, density, accentIn
       <div className="container">
         <div className="section-head">
           <div>
-            <div className="eyebrow">The Cohort · 17 founders · 2 programs</div>
+            {(window.EVENT_CONFIG && window.EVENT_CONFIG.wistron === false) && <div className="eyebrow">AppWorks #32</div>}
             <h2>Presenting teams.</h2>
-            <p className="sub">13 from AppWorks Accelerator #32 + 4 from Wistron Accelerator #10, in pitch order. Tap any card to favorite it or request an intro. 點選團隊可收藏或約約交流。</p>
+            <p className="sub">{(window.EVENT_CONFIG && window.EVENT_CONFIG.wistron === false)
+              ? 'Tap any card to favorite it or request an intro to the founder.'
+              : (language === 'zh'
+                ? '點選任一團隊即可收藏或預約交流。'
+                : 'Tap any card to favorite it or request an intro.')}</p>
           </div>
         </div>
 
@@ -205,3 +248,4 @@ function TeamsSection({ favorites, onFav, onIntro, onOpenLive, density, accentIn
   );
 }
 window.TeamsSection = TeamsSection;
+window.TeamCard = TeamCard;

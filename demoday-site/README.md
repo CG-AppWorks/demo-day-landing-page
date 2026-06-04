@@ -1,8 +1,14 @@
-# AppWorks #32 + Wistron #10 — Demo Day landing page
+# AppWorks #32 — Demo Day landing pages (Taiwan + Singapore)
 
-A single-page event site for AppWorks Demo Day #32 (held with Wistron Accelerator #10).
-Audience-facing: browse the 17 pitching teams, follow who's on stage, open the live AI
-interpretation (Wordly), and reach the live photo album (Accupai).
+Two single-page event sites that share the same components:
+
+- **`index.html`** — **Taiwan** edition. AppWorks #32 + Wistron #10, bilingual (EN/中文),
+  with Wordly live AI interpretation and the Accupai photo album.
+- **`singapore.html`** — **Singapore** edition. AppWorks #32 only, English-only, no
+  Wistron / Wordly / album. Edition differences are driven by `EVENT_CONFIG` in the data file.
+
+Audience-facing: browse the pitching teams, open the founder intro email, and (TW) follow
+the live captions + photo album.
 
 ## Run it
 
@@ -35,7 +41,8 @@ embedded Wordly / QR / Accupai resources.
 | `index.html` | Shell — loads styles, React/Babel, and the component scripts in order |
 | `tokens.css` | AppWorks design tokens (color, type, spacing, radius) |
 | `styles.css` | All component styles |
-| `data.js` | Team directory, agenda, nav tabs — **edit team data here** |
+| `data.js` | **Taiwan** team directory, agenda, nav tabs + `EVENT_CONFIG` (TW) |
+| `data-sg.js` | **Singapore** team directory, agenda, nav tabs + `EVENT_CONFIG` (SG) |
 | `chrome.jsx` | Top nav, hero, "Now on stage" card, footer, icons, AppWorks logo |
 | `teams.jsx` | Team directory: search + cards (compact / cards / editorial) |
 | `live.jsx` | Live panel + Wordly captions feed |

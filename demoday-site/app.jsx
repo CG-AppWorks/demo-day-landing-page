@@ -14,6 +14,9 @@ function App() {
   }/*EDITMODE-END*/;
 
   const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const CFG = window.EVENT_CONFIG || {};
+  // English-only editions (e.g. Singapore) ignore the language toggle.
+  const lang = CFG.bilingual === false ? 'en' : tweaks.language;
 
   // Operator-controlled live state (Backstage console). Persists to
   // localStorage; independent of the design-time Tweaks panel.
@@ -66,20 +69,20 @@ function App() {
     return TEAMS.find(x => x.id === stage.liveTeamId) || null;
   }, [stage.phase, stage.liveTeamId]);
   const liveTeamId = liveTeam ? liveTeam.id : null;
-  const kpis = { teams: 17, attendees: '600+' };
+  const kpis = { teams: TEAMS.length, attendees: '600+' };
 
   return (
     <div className={`accent-${tweaks.accentIntensity}`}>
       <TopNav
         activeTab={activeTab}
         onNav={nav}
-        language={tweaks.language}
+        language={lang}
         onLanguageChange={(v) => setTweak('language', v)}
         sessionId={sessionId}/>
 
-      <Hero variant={tweaks.heroVariant} language={tweaks.language} kpis={kpis}/>
+      <Hero variant={tweaks.heroVariant} language={lang} kpis={kpis}/>
 
-      {tweaks.showNowOnStage && <NowOnStage team={liveTeam} phase={stage.phase} captionLanguage={captionLanguage} onCaptionLanguageChange={setCaptionLanguage} sessionId={sessionId}/>}
+      {tweaks.showNowOnStage && CFG.nowOnStage !== false && <NowOnStage team={liveTeam} phase={stage.phase} captionLanguage={captionLanguage} onCaptionLanguageChange={setCaptionLanguage} sessionId={sessionId}/>}
 
       <TeamsSection
         favorites={favorites}
@@ -91,12 +94,19 @@ function App() {
         captionLanguage={captionLanguage}
         onCaptionLanguageChange={setCaptionLanguage}
         sessionId={sessionId}
-        liveTeamId={liveTeamId}/>
+        liveTeamId={liveTeamId}
+        language={lang}/>
 
       <Agenda/>
-      <Album/>
-      <About/>
-      <Partners/>
+      {CFG.album !== false && <Album language={lang}/>}
+      <About language={lang}/>
+      {CFG.wistron !== false && <Partners
+        favorites={favorites}
+        onFav={onFav}
+        onIntro={(team) => setIntroTeam(team)}
+        onOpenLive={(team) => setOpenedTeam(team)}
+        density={tweaks.cardDensity}
+        accentIntensity={tweaks.accentIntensity}/>}
       <Sponsors/>
       <Footer/>
 
@@ -146,6 +156,7 @@ function App() {
             { value:'expressive', label:'Bold' },
           ]}
           onChange={(v) => setTweak('accentIntensity', v)}/>
+        {CFG.bilingual !== false && (
         <TweakRadio
           label="Language"
           value={tweaks.language}
@@ -154,6 +165,7 @@ function App() {
             { value:'en',   label:'EN' },
           ]}
           onChange={(v) => setTweak('language', v)}/>
+        )}
       </TweaksPanel>
     </div>
   );

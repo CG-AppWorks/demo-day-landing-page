@@ -9,7 +9,7 @@
 //   • Footer:    the small "Backstage" link in the footer
 const { useState: useBkState, useEffect: useBkEffect } = React;
 
-const BACKSTAGE_KEY = 'dd32.backstage.v1';
+const BACKSTAGE_KEY = 'dd32.backstage.' + ((window.EVENT_CONFIG && window.EVENT_CONFIG.edition) || 'TW') + '.v1';
 
 function useBackstage(defaults) {
   const [state, setState] = useBkState(() => {
@@ -102,6 +102,7 @@ function Backstage({ open, onClose, stage, setStage, reset }) {
 
         <div className="bk-body">
           {/* Wordly session */}
+          {(window.EVENT_CONFIG ? window.EVENT_CONFIG.wordly !== false : true) && (
           <section className="bk-section">
             <label className="bk-label">Wordly session ID</label>
             <div className="bk-id-row">
@@ -128,6 +129,7 @@ function Backstage({ open, onClose, stage, setStage, reset }) {
               <a href={`https://attend.wordly.ai/join/${stage.sessionId}`} target="_blank" rel="noopener" className="bk-open">Test attendee link →</a>
             </div>
           </section>
+          )}
 
           {/* Event phase */}
           <section className="bk-section">
