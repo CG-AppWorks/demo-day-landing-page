@@ -1479,6 +1479,8 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
 .modal {
   background: #fff; border-radius: var(--radius-lg);
   max-width: 560px; width: 100%;
+  max-height: 90vh;
+  display: flex; flex-direction: column;
   box-shadow: 0 30px 80px rgba(0,0,0,0.3);
   overflow: hidden;
   animation: rise var(--dur) var(--ease);
@@ -1498,6 +1500,7 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
 .modal .close:hover { border-color: var(--aw-slate); color: var(--fg1); }
 .modal .body {
   padding: 20px 24px; display: flex; flex-direction: column; gap: 14px;
+  overflow-y: auto; -webkit-overflow-scrolling: touch; flex: 1; min-height: 0;
 }
 .modal label {
   font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
@@ -1510,9 +1513,21 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
   font-family: var(--font-mono); font-size: 12.5px; line-height: 1.55;
   color: var(--fg1); white-space: pre-wrap; word-break: break-word;
 }
+.modal .head {
+  flex-shrink: 0;
+}
 .modal .foot {
   padding: 16px 24px; border-top: 1px solid var(--border);
   display: flex; justify-content: flex-end; gap: 10px; align-items: center;
+  flex-shrink: 0; flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+  .modal-back { padding: 12px; align-items: flex-end; }
+  .modal { max-height: 92vh; border-radius: var(--radius-lg); }
+  .modal .close { width: 40px; height: 40px; font-size: 24px; }
+  .modal .foot { justify-content: stretch; }
+  .modal .foot .hint { flex-basis: 100%; margin-right: 0; margin-bottom: 4px; }
+  .modal .foot .btn { flex: 1; justify-content: center; padding: 12px; }
 }
 .modal .foot .hint {
   margin-right: auto; font-size: 12px; color: var(--fg2);
@@ -1748,7 +1763,7 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
 
   /* Hero */
   .hero .hero-inner { padding: 36px 0 44px; }
-  .hero-keyvisual { max-width: 100%; }
+  .hero-keyvisual { max-width: 86%; }
   .hero-headline-block { margin: 18px 0 4px; }
   /* SG text headline — keep "Demo Day" on one strong line, tighten the stack */
   .hero-wordmark { gap: 2px; }
