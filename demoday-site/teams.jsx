@@ -14,6 +14,10 @@ const LOGOS = {
   krush:'assets/logos/krush.png', lips:'assets/logos/lips.png', notag:'assets/logos/notag.png',
   novo:'assets/logos/novo.png', pathors:'assets/logos/pathors.png', raptor:'assets/logos/raptor.png',
   refundy:'assets/logos/refundy.png', rosary:'assets/logos/rosary.png', shieldbase:'assets/logos/shieldbase.png',
+  phasetrum:'assets/logos/phasetrum.png', omniease:'assets/logos/omniease.png',
+  notifly:'assets/logos/notifly.png', greenbidz:'assets/logos/greenbidz.jpg',
+  cloudstation:'assets/logos/cloudstation.png', arrivl:'assets/logos/arrivl.png',
+  ruomei:'assets/logos/ruomei.png',
 };
 
 // Founder portraits, keyed by team id. Missing ids fall back to the HQ flag glyph.
@@ -24,6 +28,11 @@ const PORTRAITS = {
   decisionslab:'assets/portraits/decisionslab.jpg', lips:'assets/portraits/lips.jpeg',
   raptor:'assets/portraits/raptor.png', rosary:'assets/portraits/rosary.png',
   krush:'assets/portraits/krush.jpg',
+  phasetrum:'assets/portraits/phasetrum.jpg', omniease:'assets/portraits/omniease.jpg',
+  arrivl:'assets/portraits/arrivl.jpg', ruomei:'assets/portraits/ruomei.jpg',
+  notifly:'assets/portraits/notifly.jpg', innowave:'assets/portraits/innowave.jpg',
+  greenbidz:'assets/portraits/greenbidz.png', cloudstation:'assets/portraits/cloudstation.png',
+  sixsense:'assets/portraits/sixsense.jpeg',
 };
 
 function LangBadge({ language }) {

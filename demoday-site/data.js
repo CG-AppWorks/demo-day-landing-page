@@ -35,22 +35,22 @@ const TEAMS = [
     pitch:"AI manufacturing platform automating defect inspection and predictive quality control to lift yield and cycle time for semiconductor and advanced manufacturing lines." },
 
   // ─── Wistron Accelerator #10 ─ placeholder teams (not in the AppWorks CSV — confirm real lineup) ───
-  { id:"wa-team-1", order:15, name:"WA#10 Team A",    sub:"— placeholder —",  tags:["AI","Manufacturing"],  batch:"WA#10", stage:"Pitching", market:"TW", hq:"TW", language:"English",  presenter:"TBC", title:"—", email:"team@example.com", website:"", speakerOrder:15,
-    pitch:"Placeholder — share the WA#10 lineup and I'll drop in the real team here." },
-  { id:"wa-team-2", order:16, name:"WA#10 Team B",    sub:"— placeholder —",  tags:["AI","Manufacturing"],  batch:"WA#10", stage:"Pitching", market:"TW", hq:"TW", language:"English",  presenter:"TBC", title:"—", email:"team@example.com", website:"", speakerOrder:16,
-    pitch:"Placeholder — share the WA#10 lineup and I'll drop in the real team here." },
-  { id:"wa-team-3", order:17, name:"WA#10 Team C",    sub:"— placeholder —",  tags:["AI","Manufacturing"],  batch:"WA#10", stage:"Pitching", market:"TW", hq:"TW", language:"English",  presenter:"TBC", title:"—", email:"team@example.com", website:"", speakerOrder:17,
-    pitch:"Placeholder — share the WA#10 lineup and I'll drop in the real team here." },
-  { id:"wa-team-4", order:18, name:"WA#10 Team D",    sub:"— placeholder —",  tags:["AI","Manufacturing"],  batch:"WA#10", stage:"Pitching", market:"TW", hq:"TW", language:"English",  presenter:"TBC", title:"—", email:"team@example.com", website:"", speakerOrder:18,
-    pitch:"Placeholder — share the WA#10 lineup and I'll drop in the real team here." },
+  { id:"phasetrum", order:1, name:"Phasetrum", sub:"Phased-array RF chips for satellites", tags:["Dual-Use","Manufacturing"], batch:"WA#10", stage:"Pitching", market:"Global", hq:"TW", language:"Mandarin", presenter:"Wayne Tsai", title:"Founder & CEO", email:"wayne@phasetrum.com", website:"https://phasetrum.com", speakerOrder:1,
+    pitch:"AIP + patented Phase Tuner architecture for phased-array antennas — 99% yield, 50% less power, 10× faster calibration for LEO satellite, AESA radar and 6G." },
+  { id:"ruomei", order:2, name:"Ruomei", sub:"Nano thermal-management materials", tags:["Manufacturing"], batch:"WA#10", stage:"Pitching", market:"Global", hq:"TW", language:"Mandarin", presenter:"Owen Lee", title:"Founder & CEO", email:"jackylin@ruomei.com.tw", website:"https://ruomei.com.tw/", speakerOrder:2,
+    pitch:"Nano-scale thermal solder mask + microchannel cooling that drop in to existing SMT lines, cutting AI-chip temperatures with zero process change — 'aluminum-for-copper' lightweighting." },
+  { id:"greenbidz", order:3, name:"GreenBidz", sub:"Circular-asset marketplace & ESG", tags:["AI","Enterprise"], batch:"WA#10", stage:"Pitching", market:"Asia", hq:"TW", language:"Mandarin", presenter:"Jerry Yiu", title:"Founder & CEO", email:"jyiu@greenbidz.com", website:"https://greenbidz.com", speakerOrder:3,
+    pitch:"SaaS-enabled B2B marketplace that helps factories recover value from surplus equipment while auto-capturing the CO₂ and lifecycle data enterprises need for ESG reporting." },
+  { id:"cloudstation", order:4, name:"CloudStation", sub:"Deploy apps & AI agents to any cloud", tags:["AI","Enterprise"], batch:"WA#10", stage:"Pitching", market:"Global", hq:"FR", language:"English", presenter:"Oumnya Benhassou", title:"Co-Founder & CEO", email:"oumnya@cloud-station.io", website:"https://cloud-station.io", speakerOrder:4,
+    pitch:"A no-code, multi-cloud platform that lets non-technical founders deploy apps, databases and autonomous AI agents — 'the technical co-founder you don't give equity to.'" },
 ];
 
 const AGENDA = [
   { t:"12:00–13:00", title:"Registration",                             tag:"Lobby · 5F",  now:false },
-  { t:"13:00–13:20", title:"Opening Remarks · Jamie Lin, Chairman and Partner of AppWorks",              tag:"Keynote",     now:false },
-  { t:"13:20–14:30", title:"AppWorks #32 Startups Demo · 14 teams",    tag:"Pitches",     now:true  },
-  { t:"14:30–14:45", title:"Wistron #10 Startups Demo · 4 teams",   tag:"Pitches",     now:false },
-  { t:"14:45–16:30", title:"Open Floor & Cocktail Networking",         tag:"Networking",  now:false, wide:true },
+  { t:"13:00–13:20", title:"Opening",              tag:"Keynote",     now:false },
+  { t:"13:20–14:00", title:"AppWorks #32 Startups Demo · 14 teams",    tag:"Pitches",     now:true  },
+  { t:"14:00–14:30", title:"Wistron #10 Startups Demo · 4 teams",   tag:"Pitches",     now:false },
+  { t:"14:30–16:30", title:"Open Floor & Cocktail Networking",         tag:"Networking",  now:false, wide:true },
 ];
 
 const TABS = [

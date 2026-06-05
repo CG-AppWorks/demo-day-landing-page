@@ -80,7 +80,7 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
           }
           {CFG.wordly !== false &&
           <a className="btn outline sm" href={captionsUrl} target="_blank" rel="noopener" title="Open AI live interpretation">
-            <I.globe /> {language === 'zh' ? '即時口譯' : 'Live Captions'}
+            <I.globe /> {language === 'zh' ? '即時翻譯' : 'Live Captions'}
           </a>
           }
           {CFG.album !== false &&
@@ -94,7 +94,7 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
         <div className="nav-mobile">
           {CFG.wordly !== false &&
           <a className="btn primary sm nav-cap-pill" href={captionsUrl} target="_blank" rel="noopener" title="Live interpretation">
-            <I.globe /> {language === 'zh' ? '即時口譯' : 'Captions'}
+            <I.globe /> {language === 'zh' ? '即時翻譯' : 'Captions'}
           </a>
           }
           <button className="nav-burger" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen}
@@ -116,7 +116,7 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
           <div className="nav-sheet-actions">
             {CFG.wordly !== false &&
             <a className="btn primary" href={captionsUrl} target="_blank" rel="noopener">
-              <I.globe /> {language === 'zh' ? '即時口譯' : 'Live Captions'}
+              <I.globe /> {language === 'zh' ? '即時翻譯' : 'Live Captions'}
             </a>
             }
             {CFG.album !== false &&

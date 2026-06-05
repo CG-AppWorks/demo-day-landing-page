@@ -1786,8 +1786,14 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
   .captions .powered { flex-basis: 100%; order: 3; }
   .captions .lang-seg { width: 100%; }
   .captions .lang-seg button { flex: 1; padding: 9px 8px; }
-  .wordly-qr { flex-direction: row; align-items: center; }
-  .wordly-qr .qr-eyebrow { text-align: left; flex: 1; }
+  .wordly-qr {
+    flex-direction: row; flex-wrap: wrap; align-items: center;
+    justify-content: center; gap: 12px 14px;
+  }
+  .wordly-qr .qr-eyebrow { flex-basis: 100%; text-align: center; }
+  .wordly-qr .qr-img { flex: 0 0 auto; }
+  .wordly-qr .qr-detail { flex: 1 1 150px; min-width: 140px; }
+  .wordly-qr .open-link { flex-basis: 100%; justify-content: center; }
 
   /* Filters → horizontal scroll strip so they don't stack into a wall */
   .filters {

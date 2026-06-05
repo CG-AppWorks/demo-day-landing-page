@@ -132,7 +132,7 @@ function About({ language }) {
           {cards.map((c, i) =>
           <div key={i} className="about-card">
               <h3>{c.title}<span className="dot">.</span></h3>
-              {zh ? <p className="zh">{c.zh}</p> : <p>{c.en}</p>}
+              <p>{c.en}</p>
               <div className="stats-inline">
                 {c.stats.map((s, j) =>
               <div key={j} className="stat">
@@ -170,10 +170,9 @@ function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpen
             <div className="stats-inline">
               <div className="stat"><div className="v"><span className="num">10</span></div><div className="l">Programs</div></div>
               <div className="stat"><div className="v"><span className="num">80</span></div><div className="l">Alumni</div></div>
-              <div className="stat"><div className="v"><span className="num">42</span></div><div className="l">POCs landed</div></div>
               <div className="stat"><div className="v"><span className="num">4</span></div><div className="l">Teams pitching today</div></div>
             </div>
-            <a className="btn outline sm" href="#">More information <I.arrow /></a>
+            <a className="btn outline sm" href="https://appworks.tw/wistron/" target="_blank" rel="noopener">More information <I.arrow /></a>
           </div>
         </div>
         {waTeams.length > 0 && window.TeamCard &&
