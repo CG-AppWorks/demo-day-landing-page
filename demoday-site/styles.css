@@ -1782,6 +1782,8 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
     border-right: 1px solid rgba(66,79,87,0.18);
     border-bottom: 1px solid rgba(66,79,87,0.18);
   }
+  .hero-meta .item:first-child { padding-left: 14px; }
+  .hero-meta .item:last-child { padding-right: 14px; }
   .hero-meta .item:nth-child(2n) { border-right: 0; }
   .hero-meta .item:nth-child(3), .hero-meta .item:nth-child(4) { padding-bottom: 0; }
   .hero-meta .item:nth-child(3), .hero-meta .item:nth-child(4) { border-bottom: 0; }
