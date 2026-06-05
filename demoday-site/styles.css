@@ -1775,14 +1775,14 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
   .hero-meta {
     grid-template-columns: repeat(2, 1fr);
     margin-top: 32px; gap: 0;
+    max-width: 100%;
   }
   .hero-meta .item {
     padding: 16px 14px;
     border-right: 1px solid rgba(66,79,87,0.18);
     border-bottom: 1px solid rgba(66,79,87,0.18);
   }
-  .hero-meta .item:nth-child(2n) { border-right: 0; padding-right: 0; }
-  .hero-meta .item:nth-child(2n+1) { padding-left: 0; }
+  .hero-meta .item:nth-child(2n) { border-right: 0; }
   .hero-meta .item:nth-child(3), .hero-meta .item:nth-child(4) { padding-bottom: 0; }
   .hero-meta .item:nth-child(3), .hero-meta .item:nth-child(4) { border-bottom: 0; }
   .hero-meta .v { font-size: 21px; }
