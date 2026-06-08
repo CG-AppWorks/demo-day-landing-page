@@ -60,4 +60,9 @@ window.EVENT_CONFIG = {
   heroVenueShort: 'Guoco Midtown',
   heroVenueSub: 'MICE Room 2+3 · Singapore',
   heroTeamsNote: 'AppWorks #32',
+  heroGuest: {
+    name: 'KS Pua',
+    role: 'CEO, Phison',
+    url:  'https://www.linkedin.com/in/k-s-pua-1090054/',
+  },
 };
