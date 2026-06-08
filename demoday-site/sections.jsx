@@ -194,21 +194,22 @@ function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpen
 window.Partners = Partners;
 
 function Sponsors() {
-  // DD#32 cloud sponsors — logo lockups.
+  // DD#32 sponsors + event partner — logo lockups, shown together.
   const sponsors = [
-  { name: 'Google Cloud', src: 'assets/sponsor-google.svg', h: 38 },
-  { name: 'AWS', src: 'assets/sponsor-aws.svg', h: 30 }];
+  { name: 'Google Cloud', src: 'assets/sponsor-google.svg', h: 30 },
+  { name: 'AWS', src: 'assets/sponsor-aws.svg', h: 34 },
+  { name: 'KKCOMPANY', src: 'assets/sponsor-kkcompany.jpg', h: 40 }];
 
   return (
     <section className="section tight" id="sponsors">
       <div className="container">
         <div className="section-head">
           <div>
-            <div className="eyebrow">Thank you to our sponsors</div>
+            <div className="eyebrow">Thank you to our sponsors & partners</div>
             <h2>Demo Day sponsors.</h2>
           </div>
         </div>
-        <div className="sponsors two">
+        <div className="sponsors three">
           {sponsors.map((s, i) =>
           <div key={i} className="sp">
               <img src={s.src} alt={s.name} style={{ height: s.h + 'px', width: 'auto' }} />

@@ -1450,6 +1450,19 @@ body {
   transition: background var(--dur-fast) var(--ease);
 }
 .sponsors.two .sp { border-bottom: 0; }
+/* Event-partner row */
+.sponsors.three {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 880px; margin: 0 auto;
+}
+.sponsors.three .sp { min-height: 140px; border-bottom: 0; }
+.sponsors.three .sp:nth-child(1), .sponsors.three .sp:nth-child(2) { border-right: 1px solid var(--border); }
+.sponsors.three .sp:nth-child(3) { border-right: 0; }
+@media (max-width: 600px) {
+  .sponsors.three { grid-template-columns: 1fr; max-width: 320px; }
+  .sponsors.three .sp { border-right: 0 !important; border-bottom: 1px solid var(--border); }
+  .sponsors.three .sp:last-child { border-bottom: 0; }
+}
 .sponsors .sp:hover { background: var(--aw-mist); color: var(--fg1); }
 .sponsors .sp:nth-child(6n) { border-right: 0; }
 @media (max-width: 780px) {
