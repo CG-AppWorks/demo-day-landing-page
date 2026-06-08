@@ -62,7 +62,7 @@ window.EVENT_CONFIG = {
   heroTeamsNote: 'AppWorks #32',
   heroGuest: {
     name: 'KS Pua',
-    role: 'CEO, Phison',
+    role: 'Chairman & CEO, Phison',
     url:  'https://www.linkedin.com/in/k-s-pua-1090054/',
   },
 };
