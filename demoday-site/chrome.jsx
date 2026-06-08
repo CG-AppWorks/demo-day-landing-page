@@ -17,6 +17,7 @@ const I = {
   users: (p) => <svg className="icon" {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>,
   mic: (p) => <svg className="icon" {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="2" width="6" height="12" rx="3" /><path d="M19 10a7 7 0 0 1-14 0" /><line x1="12" y1="17" x2="12" y2="22" /></svg>,
   mail: (p) => <svg className="icon" {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m2 7 10 6 10-6" /></svg>,
+  linkedin: (p) => <svg className="icon" {...p} viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 18.34V9.94H5.56v8.4h2.78zM6.95 8.7a1.61 1.61 0 1 0 0-3.22 1.61 1.61 0 0 0 0 3.22zM18.45 18.34v-4.6c0-2.42-.52-4.28-3.35-4.28-1.36 0-2.27.75-2.65 1.45h-.04V9.94H9.75v8.4h2.77v-4.16c0-1.1.21-2.16 1.57-2.16 1.34 0 1.36 1.25 1.36 2.23v4.09h2.99z" /></svg>,
   camera: (p) => <svg className="icon" {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 7L16 12 23 17z" /><rect x="1" y="5" width="15" height="14" rx="2" /></svg>,
   eye: (p) => <svg className="icon" {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" /><circle cx="12" cy="12" r="3" /></svg>,
   star: (p) => <svg className="icon" {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15 9 22 9.3 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9.3 9 9 12 2" /></svg>,
@@ -175,6 +176,13 @@ function Hero({ variant = 'photo', language, kpis }) {
         <p className="lede zh zh-line center">
             一場專屬於 AI 與亞洲跨境新創的盛會 — {kpis.teams} 組精選潛力團隊登台，<br />包含 14 組 AppWorks #32 與 4 組 Wistron #10 新創，齊聚台北、連接全球。
           </p>
+        }
+        {CFG.heroGuest &&
+        <a className="hero-guest" href={CFG.heroGuest.url || '#'} target="_blank" rel="noopener">
+          <span className="hero-guest-tag">Special Guest Keynote</span>
+          <span className="hero-guest-name">{CFG.heroGuest.name}</span>
+          <span className="hero-guest-role">{CFG.heroGuest.role}</span>
+        </a>
         }
         <div className="hero-meta">
           <div className="item">
@@ -353,7 +361,7 @@ function Footer() {
             Helping tech startups disrupt the world since 2009.<br />
             Contact us: <a href="mailto:a@appworks.tw">a@appworks.tw</a>
           </div>
-          <a href="#backstage" className="foot-backstage">⚙ Backstage</a>
+          <a href="#backstage" className="foot-backstage" aria-label="Backstage" title="Backstage">🔒</a>
         </div>
       </div>
     </footer>);

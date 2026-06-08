@@ -77,7 +77,45 @@ function Backstage({ open, onClose, stage, setStage, reset }) {
   const [draftId, setDraftId] = useBkState(stage.sessionId);
   useBkEffect(() => { setDraftId(stage.sessionId); }, [stage.sessionId]);
 
+  // Password gate — unlocks for this browser session only.
+  const [unlocked, setUnlocked] = useBkState(() => {
+    try { return sessionStorage.getItem('dd32.bk.unlocked') === '1'; } catch (e) { return false; }
+  });
+  const [pw, setPw] = useBkState('');
+  const [pwErr, setPwErr] = useBkState(false);
+  const tryUnlock = () => {
+    if (pw === 'il0veT@iwan') {
+      setUnlocked(true); setPwErr(false);
+      try { sessionStorage.setItem('dd32.bk.unlocked', '1'); } catch (e) {}
+    } else { setPwErr(true); }
+  };
+
   if (!open) return null;
+
+  if (!unlocked) {
+    return (
+      <div className="bk-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label="Backstage login">
+        <div className="bk-panel bk-gate" onClick={(e) => e.stopPropagation()}>
+          <div className="bk-head">
+            <div className="bk-title">Backstage · locked</div>
+            <button className="bk-close" onClick={onClose} aria-label="Close">×</button>
+          </div>
+          <div className="bk-body">
+            <label className="bk-label">Enter password</label>
+            <input
+              className={`bk-input ${pwErr ? 'warn' : ''}`}
+              type="password"
+              value={pw}
+              autoFocus
+              spellCheck={false}
+              onChange={(e) => { setPw(e.target.value); setPwErr(false); }}
+              onKeyDown={(e) => { if (e.key === 'Enter') tryUnlock(); }}/>
+            {pwErr && <div className="bk-hint warn">Incorrect password.</div>}
+            <button className="bk-btn primary" style={{ marginTop: 12 }} onClick={tryUnlock}>Unlock</button>
+          </div>
+        </div>
+      </div>);
+  }
 
   const idValid = /^[A-Za-z]{4}-?\d{4}$/.test(draftId.trim());
   const normalizedId = draftId.trim().toUpperCase();

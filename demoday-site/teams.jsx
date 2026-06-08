@@ -46,7 +46,8 @@ function LangBadge({ language }) {
 }
 
 function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accentLive, liveTeamId }) {
-  const isLive = team.id === liveTeamId;
+  const liveEnabled = !(window.EVENT_CONFIG && window.EVENT_CONFIG.nowOnStage === false);
+  const isLive = liveEnabled && team.id === liveTeamId;
   const liveCls = isLive && accentLive ? 'live' : '';
   const tagCls = team.tags[0] ? `tag-${team.tags[0].toLowerCase().replace(/[^a-z0-9]/g,'-')}` : '';
   const orderStr = String(team.speakerOrder).padStart(2,'0');
@@ -82,6 +83,7 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
           <button className={`iconbtn ${favorited ? 'on' : ''}`} onClick={(e) => {e.stopPropagation(); onFav(team.id);}} title="Save to shortlist">
             {favorited ? <I.heartFill/> : <I.heart/>}
           </button>
+          {team.linkedin && <a className="iconbtn" href={team.linkedin} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title={`${team.presenter} on LinkedIn`}><I.linkedin/></a>}
           {team.website && <a className="iconbtn" href={team.website} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title="Visit website"><I.globe/></a>}
           <button className="btn primary sm" onClick={(e)=>{e.stopPropagation(); onIntro(team);}} title={`Email ${team.presenter}`}><I.mail/> Contact</button>
         </div>
@@ -126,6 +128,7 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
               <button className={`iconbtn ${favorited ? 'on' : ''}`} onClick={(e)=>{e.stopPropagation(); onFav(team.id);}} title="Save to shortlist">
                 {favorited ? <I.heartFill/> : <I.heart/>}
               </button>
+              {team.linkedin && <a className="iconbtn" href={team.linkedin} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title={`${team.presenter} on LinkedIn`}><I.linkedin/></a>}
               {team.website && <a className="iconbtn" href={team.website} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title="Visit website"><I.globe/></a>}
               <button className="btn primary sm" onClick={(e)=>{e.stopPropagation(); onIntro(team);}} title={`Email ${team.presenter}`}><I.mail/> Contact founder</button>
             </div>
@@ -168,6 +171,7 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
           <button className={`iconbtn ${favorited ? 'on' : ''}`} onClick={(e)=>{e.stopPropagation(); onFav(team.id);}} title="Save to shortlist">
             {favorited ? <I.heartFill/> : <I.heart/>}
           </button>
+          {team.linkedin && <a className="iconbtn" href={team.linkedin} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title={`${team.presenter} on LinkedIn`}><I.linkedin/></a>}
           {team.website && <a className="iconbtn" href={team.website} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title="Visit website"><I.globe/></a>}
           <button className="btn primary sm" onClick={(e)=>{e.stopPropagation(); onIntro(team);}} title={`Email ${team.presenter}`}><I.mail/> Contact founder</button>
         </div>

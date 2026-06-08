@@ -9,7 +9,7 @@ function Agenda() {
             <h2>Agenda.</h2>
           </div>
         </div>
-        <div className={`agenda${(window.EVENT_CONFIG && window.EVENT_CONFIG.wistron === false) ? ' one-col' : ''}`}>
+        <div className={`agenda${window.EVENT_CONFIG && window.EVENT_CONFIG.wistron === false ? ' one-col' : ''}`}>
           {AGENDA.map((s, i) =>
           <div key={i} className="slot" style={s.wide ? { gridColumn: '1/-1' } : {}}>
               <div className="t">{s.t}</div>
@@ -33,9 +33,9 @@ function Album({ language }) {
           <div>
             <div className="eyebrow">POWERED BY ACCUPAI</div>
             <h2>Live photo album.</h2>
-            <p className="sub">{language === 'zh'
-              ? '透過 Accupai 即時觀看活動照片，歡迎分享、轉發。'
-              : 'Real-time event photography from the floor — view, download, and share on the spot.'}</p>
+            <p className="sub">{language === 'zh' ?
+              '透過 Accupai 即時觀看活動照片，歡迎分享、轉發。' :
+              'Real-time event photography from the floor — view, download, and share on the spot.'}</p>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <a className="btn primary" href={ALBUM_URL} target="_blank" rel="noopener">
@@ -70,50 +70,50 @@ function Album({ language }) {
 window.Album = Album;
 
 function About({ language }) {
-  const zh = language === 'zh';
+  const showZh = !(window.EVENT_CONFIG && window.EVENT_CONFIG.bilingual === false);
   const cards = [
   {
     title: "AppWorks",
-    en: "Founded in 2009, AppWorks is an accelerator built by founders, for founders — which has since expanded into a broader startup community and venture capital platform. We believe AI and blockchain are driving the next major paradigm shift, and we stand alongside teams from seed onward.",
-    zh: "2009 年成立，由「創業者」為「創業者」設立的加速器，以及基於加速器發展的新創社群與創投機構。",
+    en: "Founded in 2009, AppWorks is an accelerator built by founders, for founders — which has since expanded into a broader startup community and venture capital platform. Just as the Mobile Internet reshaped entire industries, we believe AI and blockchain are driving the next major paradigm shift. Founders lead the work of building great companies; our role is to support them from the seed stage onward with long-term guidance, capital, and a strong regional network.",
+    zh: "2009 年成立，由「創業者」為「創業者」設立的加速器，以及基於加速器發展的新創社群與創投機構，致力協助下世代的創業者抓住數位革命的成長機會。正如 Mobile Internet 曾引發巨大的產業變革，我們相信 AI 與區塊鏈正推動新一波關鍵的典範轉移。創業者是主角，投資人是配角；我們從種子時期開始支持團隊，陪著他們打造區域級、世界級的偉大企業。",
     link: "https://appworks.tw/",
     stats: [
-    { v: "653", l: "Startups", num: true },
-    { v: "2,086", l: "Founders", num: true },
-    { v: <span style={{ color: '#ff6b0f' }}>{(window.EVENT_CONFIG && window.EVENT_CONFIG.bilingual === false) ? "Pan-Asia" : "亞洲跨境"}</span>, l: "Region" }]
+    { v: "663", l: "Startups", num: true },
+    { v: "2,189", l: "Founders", num: true },
+    { v: <span style={{ color: '#ff6b0f' }}>{showZh ? "亞洲跨境" : "Pan-Asia"}</span>, l: "Region" }]
 
   },
   {
     title: "AppWorks Accelerator",
-    en: "Founded in 2010, AppWorks Accelerator selects the most promising teams every six months. 288 AI startups and 156 Web3 startups in the ecosystem. Portfolio raised US$ 7.3B, valued at US$ 37.7B, generating US$ 17.4B in annual revenue across 9 GSEA markets.",
-    zh: "於 2010 年創辦，每半年選拔最具潛力的新創團隊。",
+    en: "Founded in 2010, AppWorks Accelerator selects the most promising teams every six months, helping founders go from 0 to 1 to product–market fit and scale. The ecosystem now spans 663 active startups and 2,189 founders — including 135 AI startups and 144 Web3 startups. Collectively they have raised US$ 8.1B, reached US$ 42.1B in valuation, generate US$ 18.6B in annual revenue, and created 28,256 jobs across 9 markets.",
+    zh: "2010 年成立，每半年遴選最具潛力的團隊，協助創業者從 0 到 1 找到 Product-Market Fit、並在成長階段建立可持續且可擴張的商業模式。生態系共有 663 家活躍新創、2,189 位創業者，包含 135 家 AI 新創與 144 家 Web3 新創；合計募得 81 億美元，總市值 421 億美元，年營收 186 億美元，提供 28,581 個工作機會，橫跨台灣、印尼、新加坡、馬來西亞、越南、菲律賓、韓國、日本與香港等九大市場。",
     link: "https://appworks.tw/accelerator/",
     stats: [
-    { v: "US$ 7.3B", l: "Raised", num: true },
-    { v: "US$ 37.7B", l: "Valuation", num: true },
-    { v: "9", l: "Markets", num: true }]
+    { v: "US$ 8.1B", l: "Total Raised", num: true },
+    { v: "US$ 42.1B", l: "Total Valuation", num: true },
+    { v: "28,256", l: "Jobs Created", num: true }]
 
   },
   {
     title: "AppWorks Funds",
-    en: "Four VC funds totaling US$ 386M. We invest Seed to Series C, 20–30 deals a year, 100+ portfolio names — Lalamove, Dapper Labs / Flow, Animoca Brands, 91APP, Figment, Carousell, ShopBack, 17LIVE, KKday.",
-    zh: "四檔基金，總規模 US$ 386M，每年投資 20–30 件早期到成長期案件。",
+    en: "AppWorks manages four venture capital funds totaling US$ 386M. We invest from Seed to Series C, funding 20–30 deals a year, now with 130+ portfolio names — Lalamove, Dapper Labs / Flow, Animoca Brands, 91APP, Figment, Carousell, ShopBack, 17LIVE, KKday — and have produced 6 IPOs, 9 IEOs, 1 hectocorn, 2 decacorns, and 8 unicorns.",
+    zh: "管理四支創投基金，總募集金額 3.86 億美元。通常投資種子輪至 C 輪，每年進行 20–30 個投資案，至今已投資超過 130 家新創，如 Lalamove、Dapper Labs / Flow、Animoca Brands、91APP、Figment、Carousell、ShopBack、17LIVE、KKday；並已有 6 個 IPO、9 個 IEO，以及 1 隻百角獸、2 隻十角獸與 8 隻獨角獸。",
     link: "https://appworks.tw/investments/",
     stats: [
     { v: "US$ 386M", l: "AUM", num: true },
     { v: <span style={{ color: '#ff6b0f' }}>6 / 8</span>, l: "IPOs · Unicorns" },
-    { v: "100+", l: "Portfolio", num: true }]
+    { v: "130+", l: "Portfolio", num: true }]
 
   },
   {
-    title: "Aiworks by AppWorks School",
-    en: "Supports enterprises in advancing AI and automation transformation through consulting and workforce training — Taiwan Mobile, SinoPac, Nanshan Life, Hotai Insurance, Hanlin Publishing, and more.",
-    zh: "協助企業推動 AI 與自動化轉型，提供顧問與人才培訓服務。",
+    title: "Aiworks",
+    en: "Aiworks supports enterprises in advancing AI and automation transformation through consulting and workforce training — from foundational literacy to practical implementation. It has helped Taiwan Mobile, SinoPac, Nanshan Life, Hotai Insurance, and Hanlin Publishing build AI capabilities. As an OpenAI Service Partner, Aiworks has empowered 200+ enterprises and 20,000+ professionals across telecom, finance, retail, publishing, and technology.",
+    zh: "專注協助企業推動 AI 與自動化升級，以顧問服務與人才培訓為核心，從素養啟蒙到應用落地。曾協助台灣大哥大、永豐金控、南山人壽、和泰產險、翰林出版等企業建立 AI 與自動化能力；現為 OpenAI 台灣官方合作服務夥伴，截至目前已與超過 200 家企業合作，累計培訓逾 20,000 位學員，服務橫跨電信、金融、零售、出版與科技產業。",
     link: "https://aiworks.tw/",
     stats: [
-    { v: "170+", l: "Enterprises", num: true },
-    { v: "10,000+", l: "Trained", num: true },
-    { v: <span style={{ color: '#ff6b0f' }}>5 yrs</span>, l: "Operating" }]
+    { v: "200+", l: "Enterprises", num: true },
+    { v: "20,000+", l: "Trained", num: true },
+    { v: <span style={{ color: '#ff6b0f' }}>OpenAI</span>, l: "Partner" }]
 
   }];
 
@@ -133,6 +133,7 @@ function About({ language }) {
           <div key={i} className="about-card">
               <h3>{c.title}<span className="dot">.</span></h3>
               <p>{c.en}</p>
+              {showZh && <p className="zh">{c.zh}</p>}
               <div className="stats-inline">
                 {c.stats.map((s, j) =>
               <div key={j} className="stat">
@@ -179,11 +180,11 @@ function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpen
         <div className={`teams ${density}`} style={{ marginTop: 24 }}>
           {waTeams.map((t) =>
           <window.TeamCard key={t.id} team={t}
-            density={density}
-            favorited={favorites.includes(t.id)}
-            onFav={onFav} onIntro={onIntro} onOpenLive={onOpenLive}
-            accentLive={accentIntensity !== 'restrained'}
-            liveTeamId={null} />
+          density={density}
+          favorited={favorites.includes(t.id)}
+          onFav={onFav} onIntro={onIntro} onOpenLive={onOpenLive}
+          accentLive={accentIntensity !== 'restrained'}
+          liveTeamId={null} />
           )}
         </div>
         }

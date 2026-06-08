@@ -72,7 +72,7 @@ function App() {
   const kpis = { teams: TEAMS.length, attendees: '600+' };
 
   return (
-    <div className={`accent-${tweaks.accentIntensity}`}>
+    <div className={`accent-${tweaks.accentIntensity}${CFG.nowOnStage === false ? ' edition-nostage' : ''}`}>
       <TopNav
         activeTab={activeTab}
         onNav={nav}
