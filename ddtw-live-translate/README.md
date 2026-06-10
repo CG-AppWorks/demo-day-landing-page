@@ -13,7 +13,7 @@ guest phones over SSE (with a polling fallback).
 
 | Step | Scope | Status |
 |---|---|---|
-| **1** | Worker + Durable Object + KV: segment ingest, SSE, polling, switch | ✅ built (this commit) |
+| **1** | Worker + Durable Object + KV: segment ingest, SSE, polling, switch | ✅ built + **deployed** → `https://ddtw-captions.hsichun.workers.dev` |
 | 2 | Viewer embed on staging + SSE load test | ⬜ |
 | 3 | `/api/translate` with glossary prompt | ⬜ |
 | 4 | Broadcaster page + OpenAI STT pipeline | ⬜ |
@@ -76,17 +76,31 @@ final line confirms a missing token returns `status=401`.
 
 ## Deploy (Cloudflare)
 
+Already deployed to **`https://ddtw-captions.hsichun.workers.dev`** (account
+`hsichun@appworks.tw`, free plan → DO is SQLite-backed). KV namespace
+`captions_kv` id is in `wrangler.toml`; `ADMIN_TOKEN` is set as a Worker secret
+(not in the repo).
+
+To redeploy after changes:
+
 ```bash
 cd worker
+npx wrangler deploy
+```
+
+First-time setup on a fresh account:
+
+```bash
+npx wrangler login
 npx wrangler kv namespace create captions_kv   # paste the id into wrangler.toml
 npx wrangler secret put ADMIN_TOKEN
 npx wrangler deploy
 ```
 
-Then smoke-test against the live URL:
+Smoke-test against the live URL (ADMIN_TOKEN required for the writes):
 
 ```bash
-BASE=https://ddtw-captions.<account>.workers.dev ADMIN_TOKEN=<token> ./test/post-fake-segments.sh
+BASE=https://ddtw-captions.hsichun.workers.dev ADMIN_TOKEN=<token> ./test/post-fake-segments.sh
 ```
 
 ## Event-day runbook (to be expanded in later steps)

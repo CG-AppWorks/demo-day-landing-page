@@ -12,7 +12,9 @@ class_name = "CaptionHub"
 
 [[migrations]]
 tag = "v1"
-new_classes = ["CaptionHub"]
+# SQLite-backed DOs are required on the free plan (and are now the default).
+# The storage KV API (storage.get/put) used by CaptionHub works unchanged.
+new_sqlite_classes = ["CaptionHub"]
 
 # ---------------------------------------------------------------------------
 # KV: persistence + polling fallback (latest N segments per channel, active
@@ -22,7 +24,7 @@ new_classes = ["CaptionHub"]
 # ---------------------------------------------------------------------------
 [[kv_namespaces]]
 binding = "CAPTIONS_KV"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "fb3cbbd2334d4affa2fa9e0b79686757"
 
 [observability]
 enabled = true
