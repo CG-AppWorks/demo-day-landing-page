@@ -1,0 +1,6 @@
+# Copy this file to `.dev.vars` for local `wrangler dev`. Do NOT commit `.dev.vars`.
+ADMIN_TOKEN=dev-secret-change-me
+
+# Not used in step 1 (no provider calls yet) — added in later build steps:
+# OPENAI_API_KEY=
+# GEMINI_API_KEY=

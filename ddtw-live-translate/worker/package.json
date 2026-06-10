@@ -1,0 +1,16 @@
+{
+  "name": "ddtw-captions",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Live EN<->zh-TW caption fan-out Worker for AppWorks Demo Day (step 1: ingest/SSE/poll/switch).",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "kv:create": "wrangler kv namespace create captions_kv"
+  },
+  "devDependencies": {
+    "wrangler": "^3.99.0"
+  }
+}

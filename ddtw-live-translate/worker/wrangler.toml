@@ -1,0 +1,34 @@
+name = "ddtw-captions"
+main = "src/index.js"
+compatibility_date = "2026-06-01"
+
+# ---------------------------------------------------------------------------
+# Single Durable Object instance ("event") holds all live caption state and
+# fans SSE segments out to ~400 guest phones. See spec §2.1.
+# ---------------------------------------------------------------------------
+[[durable_objects.bindings]]
+name = "CAPTION_HUB"
+class_name = "CaptionHub"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["CaptionHub"]
+
+# ---------------------------------------------------------------------------
+# KV: persistence + polling fallback (latest N segments per channel, active
+# flag). Create once, then paste the id below:
+#   npx wrangler kv namespace create captions_kv
+# Local `wrangler dev` simulates KV regardless of this id.
+# ---------------------------------------------------------------------------
+[[kv_namespaces]]
+binding = "CAPTIONS_KV"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+[observability]
+enabled = true
+
+# Secrets (NOT stored here) — set before deploy:
+#   npx wrangler secret put ADMIN_TOKEN
+#   npx wrangler secret put OPENAI_API_KEY   # later steps
+#   npx wrangler secret put GEMINI_API_KEY   # later steps
+# For local dev, put ADMIN_TOKEN in .dev.vars (see .dev.vars.example).
