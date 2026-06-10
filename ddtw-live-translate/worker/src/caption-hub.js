@@ -7,7 +7,8 @@
 
 import { CORS_HEADERS, json } from "./http.js";
 
-const CHANNELS = ["openai", "gemini"];
+const CHANNELS = ["openai", "gemini"];               // caption-producing engine channels
+const SWITCH_TARGETS = ["openai", "gemini", "wordly"]; // valid POST /api/switch values
 const STREAM_CHANNELS = ["openai", "gemini", "active"];
 const MAX_SEGMENTS = 500;       // per-channel in-memory cap (spec §2.1)
 const BACKLOG_ON_CONNECT = 30;  // recent segments replayed to a new subscriber
@@ -32,7 +33,7 @@ export class CaptionHub {
 
     this.state.blockConcurrencyWhile(async () => {
       const storedActive = await this.state.storage.get("active");
-      if (CHANNELS.includes(storedActive)) this.active = storedActive;
+      if (SWITCH_TARGETS.includes(storedActive)) this.active = storedActive;
       for (const ch of CHANNELS) {
         const arr = await this.state.storage.get(`segments:${ch}`);
         if (Array.isArray(arr)) this.segments[ch] = arr;
@@ -92,16 +93,18 @@ export class CaptionHub {
     try { body = await request.json(); } catch { return json({ error: "bad_json" }, { status: 400 }); }
 
     const active = body && body.active;
-    if (!CHANNELS.includes(active)) return json({ error: "bad_channel" }, { status: 400 });
+    if (!SWITCH_TARGETS.includes(active)) return json({ error: "bad_target" }, { status: 400 });
 
     this.active = active;
     await this.state.storage.put("active", active);
     try { await this.env.CAPTIONS_KV.put("active", active); } catch { /* KV is best-effort */ }
 
-    // Tell "active" subscribers to reset, then replay the new channel's backlog.
+    // Tell "active" subscribers to reset, then replay the new source's backlog.
+    // "wordly" is a non-caption source (the viewer shows the Wordly embed), so
+    // it has no segments to replay.
     this.sendRaw("active", this.frame("switch", { active, ts: Date.now() }));
-    const backlog = this.segments[active].slice(-BACKLOG_ON_CONNECT);
-    this.sendRaw("active", this.frame("backlog", { channel: active, segments: backlog }));
+    const segs = CHANNELS.includes(active) ? this.segments[active].slice(-BACKLOG_ON_CONNECT) : [];
+    this.sendRaw("active", this.frame("backlog", { channel: active, segments: segs }));
 
     return json({ ok: true, active });
   }
@@ -110,6 +113,7 @@ export class CaptionHub {
   handleLatest(url) {
     const requested = url.searchParams.get("channel") || "active";
     const resolved = requested === "active" ? this.active : requested;
+    if (resolved === "wordly") return json({ channel: "wordly", active: this.active, segments: [] });
     if (!CHANNELS.includes(resolved)) return json({ error: "bad_channel" }, { status: 400 });
 
     const sinceRaw = url.searchParams.get("since");
@@ -133,10 +137,8 @@ export class CaptionHub {
         hub.subs[channel].add(controller);
         const resolved = channel === "active" ? hub.active : channel;
         controller.enqueue(hub.frame("hello", { channel, active: hub.active, ts: Date.now() }));
-        controller.enqueue(hub.frame("backlog", {
-          channel: resolved,
-          segments: hub.segments[resolved].slice(-BACKLOG_ON_CONNECT),
-        }));
+        const segs = CHANNELS.includes(resolved) ? hub.segments[resolved].slice(-BACKLOG_ON_CONNECT) : [];
+        controller.enqueue(hub.frame("backlog", { channel: resolved, segments: segs }));
         hub.ensureHeartbeat();
       },
       cancel() {

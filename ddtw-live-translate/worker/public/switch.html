@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Demo Day · Caption Switch (operator)</title>
+<style>
+  :root{ --bg:#0b0d10; --panel:#14181d; --line:#222a31; --ink:#f4f7fa; --dim:#8c98a4;
+         --openai:#10a37f; --gemini:#4c8dff; --wordly:#b06bff; --good:#37d39b; --bad:#ff6b6b; }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100dvh;background:var(--bg);color:var(--ink);
+    font:500 16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    display:flex;flex-direction:column;align-items:center;padding:24px;gap:18px}
+  .card{width:100%;max-width:460px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
+  h1{font-size:17px;margin:0 0 2px} .sub{color:var(--dim);font-size:13px;margin:0 0 14px}
+  label{display:block;font-size:12px;color:var(--dim);margin:10px 0 4px;font-weight:600}
+  input{width:100%;background:#0b0d10;border:1px solid var(--line);color:var(--ink);
+    border-radius:9px;padding:10px 12px;font:inherit}
+  .live{display:flex;align-items:center;gap:10px;font-size:14px;margin:4px 0 2px}
+  .lamp{width:11px;height:11px;border-radius:50%;background:var(--dim)}
+  .lamp.ok{background:var(--good)} .lamp.err{background:var(--bad)}
+  .now b{font-weight:700}
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px}
+  .opt{appearance:none;cursor:pointer;border:2px solid var(--line);background:#0b0d10;color:var(--ink);
+    border-radius:12px;padding:16px 8px;font:inherit;font-weight:700;display:flex;flex-direction:column;
+    align-items:center;gap:6px;transition:.15s}
+  .opt small{font-weight:500;color:var(--dim);font-size:11px}
+  .opt[data-k=openai].active{border-color:var(--openai);color:var(--openai)}
+  .opt[data-k=gemini].active{border-color:var(--gemini);color:var(--gemini)}
+  .opt[data-k=wordly].active{border-color:var(--wordly);color:var(--wordly)}
+  .opt:disabled{opacity:.5;cursor:wait}
+  .msg{font-size:13px;color:var(--dim);min-height:18px;margin-top:10px}
+  .msg.err{color:var(--bad)} .msg.ok{color:var(--good)}
+  a{color:var(--gemini)}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Live caption switch</h1>
+    <p class="sub">Operator control — flips what all guests see, instantly.</p>
+
+    <label>Worker base URL</label>
+    <input id="base" placeholder="https://ddtw-captions.<acct>.workers.dev"/>
+    <label>Admin token</label>
+    <input id="token" type="password" placeholder="ddtw_…" autocomplete="off"/>
+
+    <div class="grid">
+      <button class="opt" data-k="openai">OpenAI<small>engine</small></button>
+      <button class="opt" data-k="gemini">Gemini<small>engine</small></button>
+      <button class="opt" data-k="wordly">Wordly<small>backup</small></button>
+    </div>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div class="card">
+    <div class="live"><span class="lamp" id="lamp"></span>
+      <span class="now">Live to guests: <b id="now">—</b></span></div>
+    <p class="sub" style="margin:8px 0 0">
+      Guest view: <a id="viewerLink" target="_blank" rel="noopener">open viewer ↗</a>
+    </p>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  var qs = new URLSearchParams(location.search);
+  var baseEl = $("base"), tokenEl = $("token"), msg = $("msg"), nowEl = $("now"), lamp = $("lamp");
+
+  // Defaults: same origin for base; remember token locally on this operator device.
+  baseEl.value = qs.get("base") || localStorage.getItem("ddtw.base") || location.origin;
+  tokenEl.value = localStorage.getItem("ddtw.token") || "";
+  baseEl.addEventListener("change", function(){ localStorage.setItem("ddtw.base", base()); refreshLink(); poll(); });
+  tokenEl.addEventListener("change", function(){ localStorage.setItem("ddtw.token", tokenEl.value.trim()); });
+
+  function base(){ return baseEl.value.replace(/\/$/,""); }
+  function refreshLink(){ $("viewerLink").href = base() + "/viewer?base=" + encodeURIComponent(base()); }
+
+  function setNow(active){
+    nowEl.textContent = active ? active.toUpperCase() : "—";
+    document.querySelectorAll(".opt").forEach(function(b){ b.classList.toggle("active", b.dataset.k === active); });
+  }
+
+  function poll(){
+    fetch(base() + "/api/latest?channel=active", {cache:"no-store"})
+      .then(function(r){ return r.json(); })
+      .then(function(d){ lamp.className = "lamp ok"; setNow(d.active); })
+      .catch(function(){ lamp.className = "lamp err"; });
+  }
+
+  document.querySelectorAll(".opt").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var target = btn.dataset.k;
+      var token = tokenEl.value.trim();
+      if(!token){ msg.className = "msg err"; msg.textContent = "Enter the admin token first."; return; }
+      document.querySelectorAll(".opt").forEach(function(b){ b.disabled = true; });
+      msg.className = "msg"; msg.textContent = "Switching to " + target + "…";
+      fetch(base() + "/api/switch", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json", "Authorization":"Bearer " + token },
+        body: JSON.stringify({ active: target })
+      }).then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
+        .then(function(res){
+          if(res.ok && res.j.ok){ msg.className = "msg ok"; msg.textContent = "Now live: " + target.toUpperCase(); setNow(res.j.active); }
+          else { msg.className = "msg err"; msg.textContent = "Failed: " + (res.j.error || "unknown") + (res.j.error==="unauthorized" ? " (check token)" : ""); }
+        }).catch(function(e){ msg.className = "msg err"; msg.textContent = "Network error: " + e; })
+        .finally(function(){ document.querySelectorAll(".opt").forEach(function(b){ b.disabled = false; }); });
+    });
+  });
+
+  refreshLink(); poll(); setInterval(poll, 3000);
+})();
+</script>
+</body>
+</html>

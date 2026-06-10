@@ -26,6 +26,11 @@ new_sqlite_classes = ["CaptionHub"]
 binding = "CAPTIONS_KV"
 id = "fb3cbbd2334d4affa2fa9e0b79686757"
 
+# Static pages (guest viewer + admin switch panel) served from ./public.
+# Requests that don't match a file fall through to the Worker (api/* + /health).
+[assets]
+directory = "./public"
+
 [observability]
 enabled = true
 

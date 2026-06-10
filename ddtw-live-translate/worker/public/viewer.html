@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#0b0d10"/>
+<title>Demo Day · 即時字幕 Live Captions</title>
+<style>
+  :root{
+    --bg:#0b0d10; --panel:#14181d; --line:#222a31; --ink:#f4f7fa; --dim:#8c98a4;
+    --accent:#4c8dff; --interim:#9fb3c8; --good:#37d39b; --warn:#ffb454; --bad:#ff6b6b;
+    --pad: clamp(14px, 4vw, 28px);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:500 clamp(20px,5.2vw,30px)/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+    display:flex; flex-direction:column; min-height:100dvh;
+    -webkit-text-size-adjust:100%;
+  }
+  header{
+    display:flex; align-items:center; gap:10px;
+    padding:max(10px,env(safe-area-inset-top)) var(--pad) 10px;
+    border-bottom:1px solid var(--line); position:sticky; top:0; background:rgba(11,13,16,.92);
+    backdrop-filter:saturate(140%) blur(8px); z-index:5;
+    font-size:14px; font-weight:600;
+  }
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--dim);flex:none;transition:background .3s}
+  .dot.live{background:var(--good);box-shadow:0 0 0 4px rgba(55,211,155,.15)}
+  .dot.poll{background:var(--warn)}
+  .dot.down{background:var(--bad)}
+  #src{color:var(--dim);font-weight:600}
+  .spacer{flex:1}
+  .btn{
+    appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);
+    font:inherit;font-size:13px;font-weight:600;padding:7px 12px;border-radius:999px;cursor:pointer;
+  }
+  .btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+  main{flex:1;overflow-y:auto;padding:var(--pad);scroll-behavior:smooth}
+  .seg{margin:0 0 clamp(16px,4vw,26px)}
+  .zh{font-weight:650;letter-spacing:.2px}
+  .seg.interim .zh{color:var(--interim);font-style:italic}
+  .en{display:none;margin-top:4px;font-size:.62em;color:var(--dim);font-weight:500;line-height:1.4}
+  body.show-en .en{display:block}
+  .empty{color:var(--dim);font-weight:500;text-align:center;margin-top:18vh;font-size:.7em;padding:0 1em}
+  /* Wordly backup mode */
+  #wordly{display:none;flex:1;flex-direction:column}
+  body.mode-wordly main{display:none}
+  body.mode-wordly #wordly{display:flex}
+  #wordly .note{padding:var(--pad);color:var(--dim);font-size:.62em;font-weight:600;border-bottom:1px solid var(--line)}
+  #wordly iframe{flex:1;width:100%;border:0;background:#fff}
+  #jump{
+    position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom));
+    background:var(--accent);color:#fff;border:0;border-radius:999px;padding:11px 18px;font:inherit;
+    font-size:14px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.4);cursor:pointer;display:none;z-index:6;
+  }
+  #jump.show{display:block}
+</style>
+</head>
+<body class="show-en">
+  <header>
+    <span class="dot" id="dot" title="connection"></span>
+    <span>即時字幕</span>
+    <span id="src">·</span>
+    <span class="spacer"></span>
+    <button class="btn" id="enToggle" aria-pressed="true">EN</button>
+  </header>
+
+  <main id="feed" aria-live="polite">
+    <div class="empty" id="empty">等待字幕開始… · Waiting for the session to start…</div>
+  </main>
+
+  <section id="wordly">
+    <div class="note">備援字幕來源：Wordly · Backup caption source active</div>
+    <iframe id="wordlyFrame" title="Wordly live captions" allow="autoplay"></iframe>
+  </section>
+
+  <button id="jump">↓ 跳到最新 Jump to live</button>
+
+<script>
+(function(){
+  "use strict";
+  var qs = new URLSearchParams(location.search);
+  // Worker base: same origin by default; override with ?base=https://...
+  var BASE = (qs.get("base") || "").replace(/\/$/,"");
+  var WORDLY_SESSION = qs.get("wordly") || ""; // Wordly session id for backup mode
+  var WORDLY_LANG = qs.get("lang") || "zh-Hant";
+
+  var feed = document.getElementById("feed");
+  var empty = document.getElementById("empty");
+  var dot = document.getElementById("dot");
+  var srcLabel = document.getElementById("src");
+  var jump = document.getElementById("jump");
+  var enToggle = document.getElementById("enToggle");
+  var wordlyFrame = document.getElementById("wordlyFrame");
+
+  var SRC_NAMES = { openai:"OpenAI", gemini:"Gemini", wordly:"Wordly" };
+  var nodes = {};            // seq -> {wrap, zh, en, final}
+  var lastSeq = -1;          // highest seq applied (for polling ?since=)
+  var mode = null;           // current active source
+  var stickToBottom = true;
+
+  // --- rendering -----------------------------------------------------------
+  function setMode(active){
+    if(active === mode) return;
+    mode = active;
+    srcLabel.textContent = "· " + (SRC_NAMES[active] || active);
+    if(active === "wordly"){
+      document.body.classList.add("mode-wordly");
+      if(WORDLY_SESSION && !wordlyFrame.src){
+        wordlyFrame.src = "https://attend.wordly.ai/frame/" + encodeURIComponent(WORDLY_SESSION)
+          + "?lang=" + encodeURIComponent(WORDLY_LANG);
+      }
+    } else {
+      document.body.classList.remove("mode-wordly");
+    }
+  }
+
+  function clearFeed(){
+    nodes = {}; lastSeq = -1;
+    feed.querySelectorAll(".seg").forEach(function(n){ n.remove(); });
+    empty.style.display = "";
+  }
+
+  function applySegment(s){
+    if(typeof s.seq !== "number") return;
+    empty.style.display = "none";
+    var n = nodes[s.seq];
+    if(!n){
+      var wrap = document.createElement("div");
+      wrap.className = "seg";
+      var zh = document.createElement("div"); zh.className = "zh";
+      var en = document.createElement("div"); en.className = "en";
+      wrap.appendChild(zh); wrap.appendChild(en);
+      // insert in seq order (usually append)
+      var after = null;
+      var segEls = feed.querySelectorAll(".seg");
+      for(var i=segEls.length-1;i>=0;i--){ if(+segEls[i].dataset.seq < s.seq){ after = segEls[i]; break; } }
+      wrap.dataset.seq = s.seq;
+      if(after && after.nextSibling) feed.insertBefore(wrap, after.nextSibling);
+      else if(after) feed.appendChild(wrap);
+      else feed.appendChild(wrap);
+      n = nodes[s.seq] = { wrap:wrap, zh:zh, en:en };
+    }
+    n.zh.textContent = s.zh || "";
+    n.en.textContent = s.en || "";
+    n.wrap.classList.toggle("interim", s.final === false);
+    if(s.seq > lastSeq) lastSeq = s.seq;
+    if(stickToBottom) scrollToLive();
+  }
+
+  function scrollToLive(){
+    feed.scrollTop = feed.scrollHeight;
+    jump.classList.remove("show");
+  }
+
+  feed.addEventListener("scroll", function(){
+    var nearBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80;
+    stickToBottom = nearBottom;
+    jump.classList.toggle("show", !nearBottom);
+  });
+  jump.addEventListener("click", function(){ stickToBottom = true; scrollToLive(); });
+
+  enToggle.addEventListener("click", function(){
+    var on = document.body.classList.toggle("show-en");
+    enToggle.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+
+  // --- transport: SSE with polling fallback --------------------------------
+  var es = null, polling = null, backoff = 1000;
+
+  function setStatus(cls){ dot.className = "dot " + cls; }
+
+  function handleEvent(type, data){
+    if(type === "hello"){ setMode(data.active); }
+    else if(type === "switch"){ clearFeed(); setMode(data.active); }
+    else if(type === "backlog"){ (data.segments||[]).forEach(applySegment); if(mode==="wordly"){} }
+    else if(type === "segment"){ applySegment(data); }
+  }
+
+  function startSSE(){
+    stopPolling();
+    var url = BASE + "/api/stream?channel=active";
+    try { es = new EventSource(url); } catch(e){ return startPolling(); }
+    es.addEventListener("open", function(){ setStatus("live"); backoff = 1000; });
+    ["hello","switch","backlog","segment"].forEach(function(type){
+      es.addEventListener(type, function(ev){
+        try { handleEvent(type, JSON.parse(ev.data)); } catch(e){}
+      });
+    });
+    es.addEventListener("error", function(){
+      setStatus("down");
+      if(es){ es.close(); es = null; }
+      // fall back to polling, and keep trying SSE with backoff
+      startPolling();
+      backoff = Math.min(backoff*1.7, 15000);
+      setTimeout(function(){ if(!es) startSSE(); }, backoff);
+    });
+  }
+
+  function startPolling(){
+    if(polling) return;
+    setStatus("poll");
+    var tick = function(){
+      fetch(BASE + "/api/latest?channel=active&since=" + lastSeq, {cache:"no-store"})
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          setMode(d.active);
+          (d.segments||[]).forEach(applySegment);
+        }).catch(function(){ setStatus("down"); });
+    };
+    tick();
+    polling = setInterval(tick, 2000);
+  }
+  function stopPolling(){ if(polling){ clearInterval(polling); polling = null; } }
+
+  // iOS Safari suspends EventSource on lock; reconnect on resume.
+  function revive(){
+    if(document.visibilityState === "visible"){
+      if(es){ es.close(); es = null; }
+      lastSeq = lastSeq; // keep; backlog will reconcile by seq
+      startSSE();
+    }
+  }
+  document.addEventListener("visibilitychange", revive);
+  window.addEventListener("pageshow", revive);
+  window.addEventListener("online", revive);
+
+  startSSE();
+})();
+</script>
+</body>
+</html>
