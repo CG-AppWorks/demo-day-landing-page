@@ -14,7 +14,8 @@ const MAX_SEGMENTS = 500;       // per-channel in-memory cap (spec §2.1)
 const BACKLOG_ON_CONNECT = 30;  // recent segments replayed to a new subscriber
 const KV_RECENT = 50;           // segments mirrored to KV for polling fallback
 const HEARTBEAT_MS = 20_000;    // keep-alive comment through proxies (spec §2.1)
-const KV_FLUSH_MS = 5_000;      // debounce window for persistence writes
+const KV_FLUSH_MS = 120_000;    // KV mirror cadence — free tier allows only 1,000 writes/day;
+                                // DO storage (no such cap) is the real persistence, KV is a mirror
 
 export class CaptionHub {
   constructor(state, env) {
