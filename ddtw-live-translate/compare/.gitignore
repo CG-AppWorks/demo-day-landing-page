@@ -1,6 +1,7 @@
 node_modules/
 audio/
 out/
+scripts/
 *.mp3
 *.wav
 *.m4a
