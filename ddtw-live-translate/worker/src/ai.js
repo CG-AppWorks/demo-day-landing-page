@@ -3,7 +3,7 @@
 
 import { glossaryForPrompt } from "./glossary.js";
 
-const GEMINI_STT_MODEL = "gemini-2.5-flash";
+const GEMINI_STT_MODEL = "gemini-3.5-flash"; // faster than 2.5-flash for transcription (~1.4s vs ~2.5s) and accurate
 const GEMINI_MT_MODEL = "gemini-3.5-flash"; // 3.5 gives the better glossary recovery (matches the compare run)
 const OPENAI_STT_MODEL = "gpt-4o-transcribe";
 const OPENAI_MT_MODEL = "gpt-4o-mini";
