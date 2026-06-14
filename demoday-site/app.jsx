@@ -112,6 +112,8 @@ function App() {
 
       <IntroModal team={introTeam} onClose={() => setIntroTeam(null)}/>
 
+      <LiveCaptionsWidget sessionId={sessionId} captionLanguage={captionLanguage}/>
+
       <Backstage
         open={bkOpen}
         onClose={() => setBkOpen(false)}

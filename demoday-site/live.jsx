@@ -19,9 +19,6 @@ function useActiveCaptionSource(worker) {
 
 function LivePanel({ captionLanguage = 'en', onCaptionLanguageChange = () => {}, sessionId = 'DXRS-1194' }) {
   const [pane, setPane] = useState('chat');
-  const captionsWorker = (window.EVENT_CONFIG && window.EVENT_CONFIG.captionsWorker) || '';
-  const captionSource = useActiveCaptionSource(captionsWorker) || 'wordly';
-  const aiCaptions = captionsWorker && captionSource !== 'wordly';
   const [reactions, setReactions] = useState({ clap: 128, fire: 71, rocket: 54, idea: 42, heart: 33 });
   const [messages, setMessages] = useState([
   { who: 'Sarah H.', role: 'Investor · Sequoia SEA', kind: 'inv', text: "Love the unit economics on slide 4. What's CAC payback looking like?" },
@@ -52,7 +49,6 @@ function LivePanel({ captionLanguage = 'en', onCaptionLanguageChange = () => {},
         ['chat', 'Chat'],
         ['qa', 'Q&A'],
         ['polls', 'Polls'],
-        ['captions', 'Captions'],
         ['people', 'People']].
         map(([id, label]) =>
         <button key={id} className={pane === id ? 'on' : ''} onClick={() => setPane(id)}>{label}</button>
@@ -133,36 +129,6 @@ function LivePanel({ captionLanguage = 'en', onCaptionLanguageChange = () => {},
         </div>
       }
 
-      {pane === 'captions' &&
-      <React.Fragment>
-          <div className="caption-toolbar">
-            <div className="caption-toolbar-info">
-              <span className="badge-ai"><span className="dot" />{CAPTION_SOURCE_LABEL[captionSource] || 'Wordly'}</span>
-              <span className="session-code">{aiCaptions ? 'EN + 中文' : sessionId}</span>
-            </div>
-            {!aiCaptions &&
-            <div className="lang-mini" role="radiogroup" aria-label="Caption language">
-              {LANGUAGES.map((l) =>
-            <button key={l.code}
-            className={l.code === captionLanguage ? 'on' : ''}
-            onClick={() => onCaptionLanguageChange(l.code)}
-            title={l.name}>{l.label}</button>
-            )}
-            </div>
-            }
-          </div>
-          <div className="live-body fade-in" style={{ padding: 0, background: aiCaptions ? '#0b0d10' : '#fff' }}>
-            {aiCaptions ?
-            <div className="caption-live-stack"><div className="caption-live-frame">
-              <iframe key={captionSource}
-                src={captionsWorker + '/viewer?base=' + encodeURIComponent(captionsWorker)}
-                title="Live AI captions" allow="autoplay" loading="lazy" />
-            </div></div> :
-            <CaptionsLive language={captionLanguage} sessionId={sessionId} />}
-          </div>
-        </React.Fragment>
-      }
-
       {pane === 'people' &&
       <div className="live-body fade-in">
           {[
@@ -239,3 +205,39 @@ function CaptionsLive({ language, sessionId }) {
 
 }
 window.CaptionsLive = CaptionsLive;
+
+/* ─── Floating live-captions widget ───
+   A bottom-corner launcher that opens a slide-up caption panel on demand, so
+   guests who don't need captions are unaffected. Follows the server switch:
+   OpenAI/Gemini stream via the embedded viewer; Wordly via the existing embed.
+   Renders nothing unless EVENT_CONFIG.captionsWorker is set. */
+function LiveCaptionsWidget({ sessionId = 'DXRS-1194', captionLanguage = 'zh-TW' }) {
+  const worker = (window.EVENT_CONFIG && window.EVENT_CONFIG.captionsWorker) || '';
+  const [open, setOpen] = useState(false);
+  const source = useActiveCaptionSource(open ? worker : '') || 'wordly';
+  if (!worker) return null;
+  const isWordly = source === 'wordly';
+  return (
+    <div className="ddcap">
+      {open &&
+      <div className="ddcap-panel" role="dialog" aria-label="Live captions">
+        <div className="ddcap-head">
+          <span className="ddcap-badge"><span className="ddcap-dot" />{CAPTION_SOURCE_LABEL[source] || 'Wordly'}</span>
+          <span className="ddcap-title">即時字幕 · Live captions</span>
+          <button className="ddcap-x" onClick={() => setOpen(false)} aria-label="Close captions">×</button>
+        </div>
+        <div className="ddcap-body">
+          {isWordly ?
+          <CaptionsLive language={captionLanguage} sessionId={sessionId} /> :
+          <iframe key={source} className="ddcap-frame"
+            src={worker + '/viewer?base=' + encodeURIComponent(worker)}
+            title="Live captions" allow="autoplay" loading="lazy" />}
+        </div>
+      </div>}
+      <button className={`ddcap-fab ${open ? 'on' : ''}`} onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+        <span className="ddcap-dot" />{open ? '收合 Hide' : '即時字幕 Captions'}
+      </button>
+    </div>);
+
+}
+window.LiveCaptionsWidget = LiveCaptionsWidget;
