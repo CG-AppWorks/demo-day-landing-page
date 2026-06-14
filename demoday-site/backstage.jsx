@@ -90,6 +90,38 @@ function Backstage({ open, onClose, stage, setStage, reset }) {
     } else { setPwErr(true); }
   };
 
+  // ── Live caption engine switch (server-side; affects all guests) ──
+  const captionsWorker = (window.EVENT_CONFIG && window.EVENT_CONFIG.captionsWorker) || '';
+  const [adminToken, setAdminToken] = useBkState(() => {
+    try { return localStorage.getItem('ddtw.token') || ''; } catch (e) { return ''; }
+  });
+  const [liveSource, setLiveSource] = useBkState('');
+  const [switchMsg, setSwitchMsg] = useBkState('');
+  useBkEffect(() => {
+    if (!captionsWorker || !open) return;
+    let stop = false;
+    const poll = () => fetch(captionsWorker + '/api/latest?channel=active', { cache: 'no-store' })
+      .then((r) => r.json()).then((d) => { if (!stop) setLiveSource(d.active); }).catch(() => {});
+    poll();
+    const id = setInterval(poll, 3000);
+    return () => { stop = true; clearInterval(id); };
+  }, [captionsWorker, open]);
+  const flipEngine = (eng) => {
+    const tok = adminToken.trim();
+    if (!tok) { setSwitchMsg('Enter the admin token first.'); return; }
+    try { localStorage.setItem('ddtw.token', tok); } catch (e) {}
+    setSwitchMsg('Switching to ' + eng + '…');
+    fetch(captionsWorker + '/api/switch', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok },
+      body: JSON.stringify({ active: eng }),
+    }).then((r) => r.json().then((j) => ({ ok: r.ok, j })))
+      .then(({ ok, j }) => {
+        if (ok && j.ok) { setLiveSource(j.active); setSwitchMsg('Now live: ' + eng.toUpperCase()); }
+        else { setSwitchMsg('Failed: ' + (j.error || 'error') + (j.error === 'unauthorized' ? ' (check token)' : '')); }
+      }).catch((e) => setSwitchMsg('Network error: ' + e.message));
+  };
+
   if (!open) return null;
 
   if (!unlocked) {
@@ -166,6 +198,34 @@ function Backstage({ open, onClose, stage, setStage, reset }) {
               <code>{stage.sessionId || '—'}</code>
               <a href={`https://attend.wordly.ai/join/${stage.sessionId}`} target="_blank" rel="noopener" className="bk-open">Test attendee link →</a>
             </div>
+          </section>
+          )}
+
+          {/* Live caption engine switch */}
+          {captionsWorker && (
+          <section className="bk-section">
+            <label className="bk-label">Live captions engine</label>
+            <input
+              className="bk-input mono"
+              type="password"
+              placeholder="Admin token (ddtw_…)"
+              value={adminToken}
+              spellCheck={false}
+              autoComplete="off"
+              onChange={(e) => setAdminToken(e.target.value)}/>
+            <div className="bk-seg" style={{ marginTop: 8 }}>
+              {['openai', 'gemini', 'wordly'].map((e) => (
+                <button key={e} className={liveSource === e ? 'on' : ''} onClick={() => flipEngine(e)}>
+                  {e === 'openai' ? 'OpenAI' : e === 'gemini' ? 'Gemini' : 'Wordly'}
+                </button>
+              ))}
+            </div>
+            <div className="bk-hint">
+              {switchMsg
+                ? <span className={/fail|error|token/i.test(switchMsg) ? 'warn' : ''}>{switchMsg}</span>
+                : <span>Flips the Captions tab for <b>all guests</b>, instantly. <b>Wordly</b> = backup.</span>}
+            </div>
+            <div className="bk-live"><span className="k">Now live:</span> <code>{(liveSource || '—').toUpperCase()}</code></div>
           </section>
           )}
 

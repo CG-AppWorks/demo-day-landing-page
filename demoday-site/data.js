@@ -71,4 +71,8 @@ window.EVENT_CONFIG = {
   album: true,       // Accupai photo album
   wistron: true,     // WA#10 cohort + partners section
   keyVisual: true,   // use the printed key-visual lockup in the hero
+  // Live caption engine switch (OpenAI/Gemini/Wordly). When set, the Captions
+  // tab follows the server switch; defaults to Wordly so guests see no change
+  // until an operator flips it from Backstage.
+  captionsWorker: 'https://ddtw-captions.hsichun.workers.dev',
 };

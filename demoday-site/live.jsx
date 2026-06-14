@@ -1,7 +1,27 @@
 // live.jsx — Live audience panel (chat / Q&A / polls / people)
 
+// Which caption source guests currently see, per the server switch. Polls the
+// captions Worker every 3s. Returns 'openai' | 'gemini' | 'wordly' | null.
+const CAPTION_SOURCE_LABEL = { openai: 'OpenAI', gemini: 'Gemini', wordly: 'Wordly' };
+function useActiveCaptionSource(worker) {
+  const [active, setActive] = useState(null);
+  useEffect(() => {
+    if (!worker) return;
+    let stop = false;
+    const poll = () => fetch(worker + '/api/latest?channel=active', { cache: 'no-store' })
+      .then((r) => r.json()).then((d) => { if (!stop) setActive(d.active); }).catch(() => {});
+    poll();
+    const id = setInterval(poll, 3000);
+    return () => { stop = true; clearInterval(id); };
+  }, [worker]);
+  return active;
+}
+
 function LivePanel({ captionLanguage = 'en', onCaptionLanguageChange = () => {}, sessionId = 'DXRS-1194' }) {
   const [pane, setPane] = useState('chat');
+  const captionsWorker = (window.EVENT_CONFIG && window.EVENT_CONFIG.captionsWorker) || '';
+  const captionSource = useActiveCaptionSource(captionsWorker) || 'wordly';
+  const aiCaptions = captionsWorker && captionSource !== 'wordly';
   const [reactions, setReactions] = useState({ clap: 128, fire: 71, rocket: 54, idea: 42, heart: 33 });
   const [messages, setMessages] = useState([
   { who: 'Sarah H.', role: 'Investor · Sequoia SEA', kind: 'inv', text: "Love the unit economics on slide 4. What's CAC payback looking like?" },
@@ -117,9 +137,10 @@ function LivePanel({ captionLanguage = 'en', onCaptionLanguageChange = () => {},
       <React.Fragment>
           <div className="caption-toolbar">
             <div className="caption-toolbar-info">
-              <span className="badge-ai"><span className="dot" />Wordly</span>
-              <span className="session-code">{sessionId}</span>
+              <span className="badge-ai"><span className="dot" />{CAPTION_SOURCE_LABEL[captionSource] || 'Wordly'}</span>
+              <span className="session-code">{aiCaptions ? 'EN + 中文' : sessionId}</span>
             </div>
+            {!aiCaptions &&
             <div className="lang-mini" role="radiogroup" aria-label="Caption language">
               {LANGUAGES.map((l) =>
             <button key={l.code}
@@ -128,9 +149,16 @@ function LivePanel({ captionLanguage = 'en', onCaptionLanguageChange = () => {},
             title={l.name}>{l.label}</button>
             )}
             </div>
+            }
           </div>
-          <div className="live-body fade-in" style={{ padding: 0, background: '#fff' }}>
-            <CaptionsLive language={captionLanguage} sessionId={sessionId} />
+          <div className="live-body fade-in" style={{ padding: 0, background: aiCaptions ? '#0b0d10' : '#fff' }}>
+            {aiCaptions ?
+            <div className="caption-live-stack"><div className="caption-live-frame">
+              <iframe key={captionSource}
+                src={captionsWorker + '/viewer?base=' + encodeURIComponent(captionsWorker)}
+                title="Live AI captions" allow="autoplay" loading="lazy" />
+            </div></div> :
+            <CaptionsLive language={captionLanguage} sessionId={sessionId} />}
           </div>
         </React.Fragment>
       }
