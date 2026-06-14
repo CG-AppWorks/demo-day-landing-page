@@ -246,3 +246,19 @@ function LiveCaptionsWidget({ sessionId = 'DXRS-1194', captionLanguage = 'zh-TW'
 
 }
 window.LiveCaptionsWidget = LiveCaptionsWidget;
+
+/* In-page caption launcher (placed just above Sponsors). Opens the same
+   slide-up panel as the floating button. Renders only when configured. */
+function CaptionsLauncher({ language = 'en' }) {
+  const worker = (window.EVENT_CONFIG && window.EVENT_CONFIG.captionsWorker) || '';
+  if (!worker) return null;
+  return (
+    <div className="container ddcap-launch">
+      <button className="ddcap-launch-btn" onClick={() => window.ddOpenCaptions && window.ddOpenCaptions()}>
+        <span className="ddcap-dot" />
+        {language === 'zh' ? '即時字幕 · 開啟 (EN + 中文)' : '即時字幕 · Open live captions (EN + 中文)'}
+      </button>
+    </div>);
+
+}
+window.CaptionsLauncher = CaptionsLauncher;

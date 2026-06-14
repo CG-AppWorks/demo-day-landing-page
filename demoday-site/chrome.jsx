@@ -87,7 +87,7 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
             {language === 'zh' ? 'EN' : '中文'}
           </button>
           }
-          {CFG.wordly !== false &&
+          {CFG.wordly !== false && !hasLiveCaptions &&
           <a className="btn outline sm" href={captionsUrl} target="_blank" rel="noopener" onClick={openCaptions} title="Open AI live interpretation">
             <I.globe /> {language === 'zh' ? '即時翻譯' : 'Live Captions'}
           </a>
@@ -101,7 +101,7 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
 
         {/* Mobile: compact captions pill + hamburger */}
         <div className="nav-mobile">
-          {CFG.wordly !== false &&
+          {CFG.wordly !== false && !hasLiveCaptions &&
           <a className="btn primary sm nav-cap-pill" href={captionsUrl} target="_blank" rel="noopener" onClick={openCaptions} title="Live interpretation">
             <I.globe /> {language === 'zh' ? '即時翻譯' : 'Captions'}
           </a>
@@ -123,7 +123,7 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
             )}
           </div>
           <div className="nav-sheet-actions">
-            {CFG.wordly !== false &&
+            {CFG.wordly !== false && !hasLiveCaptions &&
             <a className="btn primary" href={captionsUrl} target="_blank" rel="noopener" onClick={openCaptions}>
               <I.globe /> {language === 'zh' ? '即時翻譯' : 'Live Captions'}
             </a>

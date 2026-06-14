@@ -107,6 +107,7 @@ function App() {
         onOpenLive={(team) => setOpenedTeam(team)}
         density={tweaks.cardDensity}
         accentIntensity={tweaks.accentIntensity}/>}
+      <CaptionsLauncher language={lang}/>
       <Sponsors/>
       <Footer/>
 
