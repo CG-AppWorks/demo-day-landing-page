@@ -62,6 +62,7 @@ async function sttGemini(env, bytes, mime) {
       { inline_data: { mime_type: mime || "audio/wav", data: bytesToBase64(bytes) } },
       { text: "Transcribe this audio verbatim in the language spoken. Output ONLY the transcript text — no labels, no commentary. If there is no clear speech, output nothing." },
     ] }],
+    generationConfig: { thinkingConfig: { thinkingBudget: 0 } }, // ~5x faster; no reasoning needed for STT
   };
   const r = await geminiFetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_STT_MODEL}:generateContent?key=${env.GEMINI_API_KEY}`, {
     method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
@@ -105,6 +106,7 @@ async function translateGemini(env, text, ctx, extraTerms) {
       generationConfig: {
         temperature: 0.2, responseMimeType: "application/json",
         responseSchema: { type: "OBJECT", required: ["en", "zh"], properties: { en: { type: "STRING" }, zh: { type: "STRING" } } },
+        thinkingConfig: { thinkingBudget: 0 }, // disable internal reasoning — ~5x lower latency for live captions
       },
     }),
   });
