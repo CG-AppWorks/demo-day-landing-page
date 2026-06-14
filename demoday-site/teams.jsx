@@ -17,7 +17,7 @@ const LOGOS = {
   phasetrum:'assets/logos/phasetrum.png', omniease:'assets/logos/omniease.png',
   notifly:'assets/logos/notifly.png', greenbidz:'assets/logos/greenbidz.jpg',
   cloudstation:'assets/logos/cloudstation.png', arrivl:'assets/logos/arrivl.png',
-  ruomei:'assets/logos/ruomei.png',
+  ruomei:'assets/logos/ruomei.png', clika:'assets/logos/clika.svg',
 };
 
 // Founder portraits, keyed by team id. Missing ids fall back to the HQ flag glyph.
@@ -32,7 +32,7 @@ const PORTRAITS = {
   arrivl:'assets/portraits/arrivl.jpg', ruomei:'assets/portraits/ruomei.jpg',
   notifly:'assets/portraits/notifly.jpg', innowave:'assets/portraits/innowave.jpg',
   greenbidz:'assets/portraits/greenbidz.png', cloudstation:'assets/portraits/cloudstation.png',
-  sixsense:'assets/portraits/sixsense.jpeg',
+  sixsense:'assets/portraits/sixsense.jpeg', clika:'assets/portraits/clika.jpg',
 };
 
 function LangBadge({ language }) {
