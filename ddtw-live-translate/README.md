@@ -14,11 +14,12 @@ guest phones over SSE (with a polling fallback).
 | Step | Scope | Status |
 |---|---|---|
 | **1** | Worker + Durable Object + KV: segment ingest, SSE, polling, switch | ✅ built + **deployed** → `https://ddtw-captions.hsichun.workers.dev` |
-| 2 | Viewer embed on staging + SSE load test | ⬜ |
-| 3 | `/api/translate` with glossary prompt | ⬜ |
-| 4 | Broadcaster page + OpenAI STT pipeline | ⬜ |
-| 5 | Gemini pipeline + `/compare` + switch UI | ⬜ |
-| 6 | Rehearsal with recorded + live audio | ⬜ |
+| 2 | Guest viewer (`/viewer`) + operator switch (`/switch`) | ✅ deployed |
+| 3 | `/api/translate` + bilingual `{en,zh}` glossary captioning | ✅ deployed |
+| 4 | Broadcaster (`/broadcast`): mic → `/api/caption` (STT + translate) | ✅ deployed |
+| 5 | Gemini pipeline + `/compare` + 3-way switch (incl. Wordly) | ✅ deployed |
+| — | Dynamic glossary generator (`compare/build-glossary.mjs`) | ✅ tooling ready |
+| 6 | Rehearsal with recorded + live audio; load test | ⬜ |
 
 ## Layout
 

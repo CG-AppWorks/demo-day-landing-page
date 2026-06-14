@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Demo Day · Broadcaster</title>
+<style>
+  :root{ --bg:#0b0d10; --panel:#14181d; --line:#222a31; --ink:#f4f7fa; --dim:#8c98a4;
+         --openai:#10a37f; --gemini:#4c8dff; --good:#37d39b; --warn:#ffb454; --bad:#ff6b6b; }
+  *{box-sizing:border-box} body{margin:0;min-height:100dvh;background:var(--bg);color:var(--ink);
+    font:500 15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;
+    display:flex;flex-direction:column;align-items:center;padding:20px;gap:16px}
+  .card{width:100%;max-width:680px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+  h1{font-size:17px;margin:0 0 2px} .sub{color:var(--dim);font-size:13px;margin:0 0 12px}
+  label{display:block;font-size:12px;color:var(--dim);margin:10px 0 4px;font-weight:600}
+  input,select{width:100%;background:#0b0d10;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:10px;font:inherit}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .row>*{flex:1;min-width:120px}
+  button{appearance:none;cursor:pointer;border:1px solid var(--line);background:#0b0d10;color:var(--ink);
+    border-radius:10px;padding:12px;font:inherit;font-weight:600}
+  button.primary{border-color:var(--good);color:var(--good)} button.stop{border-color:var(--bad);color:var(--bad)}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .seg-eng{display:flex;gap:8px}
+  .seg-eng button{flex:1}
+  .seg-eng button.on[data-e=openai]{border-color:var(--openai);color:var(--openai)}
+  .seg-eng button.on[data-e=gemini]{border-color:var(--gemini);color:var(--gemini)}
+  .meter{height:14px;background:#0b0d10;border:1px solid var(--line);border-radius:7px;overflow:hidden;position:relative}
+  .meter .fill{height:100%;width:0%;background:var(--good);transition:width .05s linear}
+  .meter .fill.hot{background:var(--bad)}
+  .meter .thr{position:absolute;top:0;bottom:0;width:2px;background:var(--warn)}
+  .stat{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--dim);margin-top:6px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--dim)} .dot.on{background:var(--bad)} .dot.idle{background:var(--good)}
+  .log{margin-top:10px;max-height:240px;overflow-y:auto;font-size:13px}
+  .log .e{margin:0 0 9px;padding-bottom:7px;border-bottom:1px dashed #1c242b}
+  .log .e .en{color:var(--dim);font-size:12px} .log .e .zh{font-weight:600}
+  .log .e.err{color:var(--bad)}
+  .msg{font-size:12px;color:var(--dim);min-height:16px;margin-top:8px} .msg.err{color:var(--bad)}
+  .hint{font-size:12px;color:var(--dim)}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+  <div class="card" id="gate">
+    <h1>Broadcaster · sign in</h1>
+    <p class="sub">Runs on one laptop at the soundboard. Captures audio and posts captions.</p>
+    <label>Admin token</label>
+    <input id="token" type="password" placeholder="ddtw_…" autocomplete="off"/>
+    <div style="height:10px"></div>
+    <button class="primary" id="enter">Continue</button>
+    <div class="msg" id="gateMsg"></div>
+  </div>
+
+  <div class="card hidden" id="app">
+    <h1>Broadcaster</h1>
+    <p class="sub">Pick the audio input (use the USB interface for the FOH feed), choose an engine, then Start.</p>
+
+    <label>Audio input device</label>
+    <select id="device"></select>
+
+    <label>Engine</label>
+    <div class="seg-eng" id="engine">
+      <button data-e="openai" class="on">OpenAI</button>
+      <button data-e="gemini">Gemini</button>
+    </div>
+
+    <label>Input level <span class="hint">— green while speaking, amber line = silence threshold</span></label>
+    <div class="meter"><div class="fill" id="fill"></div><div class="thr" id="thr"></div></div>
+    <label>Sensitivity (silence threshold)</label>
+    <input id="thrRange" type="range" min="0" max="60" value="12"/>
+
+    <div style="height:12px"></div>
+    <div class="row">
+      <button class="primary" id="start">▶ Start</button>
+      <button class="stop hidden" id="stop">■ Stop</button>
+      <button id="pushLive">Make engine live to guests</button>
+    </div>
+    <div class="stat"><span class="dot idle" id="recDot"></span><span id="recState">idle</span><span id="counter"></span></div>
+    <div class="msg" id="msg"></div>
+
+    <label>Captions sent</label>
+    <div class="log" id="log"></div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+  var BASE = (new URLSearchParams(location.search).get("base") || "").replace(/\/$/,"");
+  var $ = function(id){ return document.getElementById(id); };
+  var token = "", engine = "openai", seq = (Date.now() % 1e7);
+  var ctx, source, proc, stream;
+  var buf = [], bufLen = 0, inRate = 48000;
+  var speaking = false, silenceRun = 0, voiceRun = 0, lastCtx = [];
+  var THR = 0.012, MIN_MS = 600, SIL_MS = 650, MAX_MS = 9000;
+  var chunkMs = 0;
+
+  // ---- gate ----
+  $("token").value = localStorage.getItem("ddtw.token") || "";
+  $("enter").onclick = function(){
+    token = $("token").value.trim();
+    if(!token){ $("gateMsg").textContent = "Enter the admin token."; return; }
+    localStorage.setItem("ddtw.token", token);
+    $("gate").classList.add("hidden"); $("app").classList.remove("hidden");
+    listDevices();
+  };
+
+  // ---- engine select ----
+  $("engine").querySelectorAll("button").forEach(function(b){
+    b.onclick = function(){ engine = b.dataset.e;
+      $("engine").querySelectorAll("button").forEach(function(x){ x.classList.toggle("on", x===b); }); };
+  });
+
+  // ---- threshold slider ----
+  function applyThr(){ THR = $("thrRange").value/1000; $("thr").style.left = Math.min(100, THR*100*8) + "%"; }
+  $("thrRange").oninput = applyThr; applyThr();
+
+  // ---- devices ----
+  async function listDevices(){
+    try{
+      var tmp = await navigator.mediaDevices.getUserMedia({audio:true});
+      tmp.getTracks().forEach(function(t){ t.stop(); });
+    }catch(e){ $("msg").className="msg err"; $("msg").textContent="Mic permission denied: "+e.message; return; }
+    var devs = await navigator.mediaDevices.enumerateDevices();
+    var sel = $("device"); sel.innerHTML = "";
+    devs.filter(function(d){ return d.kind==="audioinput"; }).forEach(function(d){
+      var o = document.createElement("option"); o.value = d.deviceId; o.textContent = d.label || ("Input "+(sel.length+1)); sel.appendChild(o);
+    });
+  }
+
+  // ---- audio capture ----
+  $("start").onclick = start; $("stop").onclick = stop;
+
+  async function start(){
+    try{
+      stream = await navigator.mediaDevices.getUserMedia({ audio: {
+        deviceId: $("device").value ? { exact: $("device").value } : undefined,
+        channelCount: 1, echoCancellation: false, noiseSuppression: false, autoGainControl: false,
+      }});
+    }catch(e){ $("msg").className="msg err"; $("msg").textContent="Could not open mic: "+e.message; return; }
+    ctx = new (window.AudioContext||window.webkitAudioContext)();
+    inRate = ctx.sampleRate;
+    source = ctx.createMediaStreamSource(stream);
+    proc = ctx.createScriptProcessor(4096, 1, 1);
+    proc.onaudioprocess = onAudio;
+    source.connect(proc); proc.connect(ctx.destination); // output stays silent
+    buf = []; bufLen = 0; speaking=false; silenceRun=0; voiceRun=0; chunkMs=0;
+    $("start").classList.add("hidden"); $("stop").classList.remove("hidden");
+    $("recDot").className="dot on"; $("recState").textContent="listening";
+    $("msg").className="msg"; $("msg").textContent="";
+  }
+
+  function stop(){
+    if(proc){ proc.disconnect(); proc.onaudioprocess=null; }
+    if(source) source.disconnect();
+    if(stream) stream.getTracks().forEach(function(t){ t.stop(); });
+    if(ctx) ctx.close();
+    $("stop").classList.add("hidden"); $("start").classList.remove("hidden");
+    $("recDot").className="dot idle"; $("recState").textContent="idle";
+  }
+
+  function onAudio(e){
+    var input = e.inputBuffer.getChannelData(0);
+    var sum=0; for(var i=0;i<input.length;i++) sum += input[i]*input[i];
+    var rms = Math.sqrt(sum/input.length);
+    var pct = Math.min(100, rms*100*8);
+    var fill=$("fill"); fill.style.width=pct+"%"; fill.classList.toggle("hot", rms>0.5);
+
+    var frameMs = input.length / inRate * 1000;
+    buf.push(new Float32Array(input)); bufLen += input.length; chunkMs += frameMs;
+
+    if(rms > THR){ voiceRun += frameMs; silenceRun = 0; if(voiceRun > 120) speaking = true; }
+    else { silenceRun += frameMs; voiceRun = 0; }
+
+    var endBySilence = speaking && silenceRun > SIL_MS && chunkMs > MIN_MS;
+    var endByMax = chunkMs > MAX_MS && speaking;
+    if(endBySilence || endByMax){ finalizeChunk(); }
+    else if(!speaking && chunkMs > 1500){ // drop leading silence, keep buffer small
+      buf = buf.slice(-3); bufLen = buf.reduce(function(n,a){return n+a.length;},0); chunkMs = bufLen/inRate*1000;
+    }
+  }
+
+  function finalizeChunk(){
+    var merged = new Float32Array(bufLen), off=0;
+    buf.forEach(function(a){ merged.set(a, off); off += a.length; });
+    buf=[]; bufLen=0; speaking=false; silenceRun=0; voiceRun=0; chunkMs=0;
+    var pcm16 = downsample(merged, inRate, 16000);
+    sendChunk(pcm16);
+  }
+
+  function downsample(f32, inR, outR){
+    var ratio = inR/outR, outLen = Math.floor(f32.length/ratio);
+    var out = new Int16Array(outLen);
+    for(var i=0;i<outLen;i++){ var s = f32[Math.floor(i*ratio)]; s = Math.max(-1,Math.min(1,s)); out[i] = s<0 ? s*0x8000 : s*0x7FFF; }
+    return out;
+  }
+
+  function wavBlob(pcm16){
+    var n = pcm16.length, bytes = 44 + n*2, dv = new DataView(new ArrayBuffer(bytes));
+    function str(o,s){ for(var i=0;i<s.length;i++) dv.setUint8(o+i, s.charCodeAt(i)); }
+    str(0,"RIFF"); dv.setUint32(4, 36+n*2, true); str(8,"WAVE"); str(12,"fmt ");
+    dv.setUint32(16,16,true); dv.setUint16(20,1,true); dv.setUint16(22,1,true);
+    dv.setUint32(24,16000,true); dv.setUint32(28,16000*2,true); dv.setUint16(32,2,true); dv.setUint16(34,16,true);
+    str(36,"data"); dv.setUint32(40, n*2, true);
+    for(var i=0;i<n;i++) dv.setInt16(44+i*2, pcm16[i], true);
+    return new Blob([dv], {type:"audio/wav"});
+  }
+
+  async function sendChunk(pcm16){
+    var mySeq = seq++;
+    var fd = new FormData();
+    fd.append("engine", engine); fd.append("seq", String(mySeq));
+    fd.append("context", lastCtx.join(" "));
+    fd.append("audio", wavBlob(pcm16), "chunk.wav");
+    var row = addRow("…", "（轉譯中）", false);
+    try{
+      var r = await fetch(BASE + "/api/caption", { method:"POST", headers:{ Authorization:"Bearer "+token }, body: fd });
+      var j = await r.json();
+      if(!r.ok || j.error){ row.className="e err"; row.textContent = "error: "+(j.error||r.status)+" "+(j.message||""); return; }
+      if(!j.transcript){ row.remove(); return; } // silence
+      row.querySelector(".en").textContent = j.en || j.transcript;
+      row.querySelector(".zh").textContent = j.zh || "";
+      lastCtx.push(j.transcript); if(lastCtx.length>4) lastCtx.shift();
+      $("counter").textContent = "· "+(mySeq) ;
+    }catch(e){ row.className="e err"; row.textContent="network: "+e.message; }
+  }
+
+  function addRow(en, zh, isErr){
+    var d = document.createElement("div"); d.className = "e"+(isErr?" err":"");
+    d.innerHTML = '<div class="en"></div><div class="zh"></div>';
+    d.querySelector(".en").textContent = en; d.querySelector(".zh").textContent = zh;
+    $("log").prepend(d); return d;
+  }
+
+  $("pushLive").onclick = async function(){
+    try{
+      var r = await fetch(BASE + "/api/switch", { method:"POST",
+        headers:{ "Content-Type":"application/json", Authorization:"Bearer "+token }, body: JSON.stringify({active:engine}) });
+      var j = await r.json();
+      $("msg").className = r.ok ? "msg" : "msg err";
+      $("msg").textContent = r.ok ? ("Guests now see: "+engine.toUpperCase()) : ("switch failed: "+(j.error||r.status));
+    }catch(e){ $("msg").className="msg err"; $("msg").textContent="switch error: "+e.message; }
+  };
+})();
+</script>
+</body>
+</html>
