@@ -215,6 +215,11 @@ function LiveCaptionsWidget({ sessionId = 'DXRS-1194', captionLanguage = 'zh-TW'
   const worker = (window.EVENT_CONFIG && window.EVENT_CONFIG.captionsWorker) || '';
   const [open, setOpen] = useState(false);
   const source = useActiveCaptionSource(open ? worker : '') || 'wordly';
+  // Let the nav caption buttons open this widget.
+  useEffect(() => {
+    window.ddOpenCaptions = () => setOpen(true);
+    return () => { try { delete window.ddOpenCaptions; } catch (e) {} };
+  }, []);
   if (!worker) return null;
   const isWordly = source === 'wordly';
   return (

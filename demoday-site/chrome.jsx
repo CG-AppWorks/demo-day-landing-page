@@ -50,6 +50,14 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const CFG = window.EVENT_CONFIG || {};
   const captionsUrl = `https://attend.wordly.ai/join/${sessionId || 'DXRS-1194'}`;
+  // When the live-caption switch is configured, the nav buttons open the
+  // on-page captions widget instead of the external Wordly page.
+  const hasLiveCaptions = !!CFG.captionsWorker;
+  const openCaptions = (e) => {
+    if (!hasLiveCaptions) return;
+    e.preventDefault(); setMenuOpen(false);
+    if (window.ddOpenCaptions) window.ddOpenCaptions();
+  };
 
   // Lock body scroll while the mobile sheet is open.
   useEffect(() => {
@@ -80,7 +88,7 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
           </button>
           }
           {CFG.wordly !== false &&
-          <a className="btn outline sm" href={captionsUrl} target="_blank" rel="noopener" title="Open AI live interpretation">
+          <a className="btn outline sm" href={captionsUrl} target="_blank" rel="noopener" onClick={openCaptions} title="Open AI live interpretation">
             <I.globe /> {language === 'zh' ? '即時翻譯' : 'Live Captions'}
           </a>
           }
@@ -94,7 +102,7 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
         {/* Mobile: compact captions pill + hamburger */}
         <div className="nav-mobile">
           {CFG.wordly !== false &&
-          <a className="btn primary sm nav-cap-pill" href={captionsUrl} target="_blank" rel="noopener" title="Live interpretation">
+          <a className="btn primary sm nav-cap-pill" href={captionsUrl} target="_blank" rel="noopener" onClick={openCaptions} title="Live interpretation">
             <I.globe /> {language === 'zh' ? '即時翻譯' : 'Captions'}
           </a>
           }
@@ -116,7 +124,7 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
           </div>
           <div className="nav-sheet-actions">
             {CFG.wordly !== false &&
-            <a className="btn primary" href={captionsUrl} target="_blank" rel="noopener">
+            <a className="btn primary" href={captionsUrl} target="_blank" rel="noopener" onClick={openCaptions}>
               <I.globe /> {language === 'zh' ? '即時翻譯' : 'Live Captions'}
             </a>
             }
@@ -277,6 +285,21 @@ window.wordlyQrUrl = wordlyQrUrl;
 
 function CaptionsStrip({ language, onLanguageChange, sessionId }) {
   if (window.EVENT_CONFIG && window.EVENT_CONFIG.wordly === false) return null;
+  const worker = (window.EVENT_CONFIG && window.EVENT_CONFIG.captionsWorker) || '';
+  // Follow the live-caption switch: OpenAI/Gemini stream via the viewer,
+  // Wordly via the existing embed.
+  const [src, setSrc] = useState('wordly');
+  useEffect(() => {
+    if (!worker) return;
+    let stop = false;
+    const poll = () => fetch(worker + '/api/latest?channel=active', { cache: 'no-store' })
+      .then((r) => r.json()).then((d) => { if (!stop) setSrc(d.active); }).catch(() => {});
+    poll();
+    const id = setInterval(poll, 3000);
+    return () => { stop = true; clearInterval(id); };
+  }, [worker]);
+  const ai = worker && src !== 'wordly';
+  const srcLabel = ai ? (src === 'gemini' ? 'Gemini' : 'OpenAI') : 'Wordly';
   const langs = LANGUAGES;
   const joinUrl = wordlyJoinUrl(sessionId);
   const frameUrl = wordlyFrameUrl(sessionId, language, { bgcolor: 'FFFFFF', fgcolor: '424F57', fgsize: '1.1em' });
@@ -285,7 +308,8 @@ function CaptionsStrip({ language, onLanguageChange, sessionId }) {
     <div className="captions" aria-label="AI live interpretation">
       <div className="captions-header">
         <span className="badge-ai"><span className="dot" />AI Live Interpretation</span>
-        <span className="powered">Audience captions · <b>Wordly</b> · Session <code>{sessionId}</code></span>
+        <span className="powered">Audience captions · <b>{srcLabel}</b>{ai ? ' · EN + 中文' : <> · Session <code>{sessionId}</code></>}</span>
+        {!ai &&
         <div className="lang-seg" role="radiogroup" aria-label="Caption language">
           {langs.map((l) =>
           <button key={l.code}
@@ -295,7 +319,19 @@ function CaptionsStrip({ language, onLanguageChange, sessionId }) {
           title={l.name}>{l.label}</button>
           )}
         </div>
+        }
       </div>
+      {ai ?
+      <div className="captions-body">
+        <div className="wordly-frame" style={{ background: '#0b0d10' }}>
+          <iframe
+            key={src}
+            src={worker + '/viewer?base=' + encodeURIComponent(worker)}
+            title="Live captions"
+            allow="autoplay"
+            loading="lazy" />
+        </div>
+      </div> :
       <div className="captions-body">
         <div className="wordly-frame">
           <iframe
@@ -324,7 +360,7 @@ function CaptionsStrip({ language, onLanguageChange, sessionId }) {
             Open in browser <I.arrow />
           </a>
         </div>
-      </div>
+      </div>}
     </div>);
 
 }
