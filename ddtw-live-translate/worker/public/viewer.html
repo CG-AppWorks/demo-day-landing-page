@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#0b0d10"/>
-<title>Demo Day · 即時字幕 Live Captions</title>
+<title>Demo Day · 即時翻譯 Live Captions</title>
 <style>
   :root{
     --bg:#0b0d10; --panel:#14181d; --line:#222a31; --ink:#f4f7fa; --dim:#8c98a4;
@@ -41,8 +41,13 @@
   .seg{margin:0 0 clamp(16px,4vw,26px)}
   .zh{font-weight:650;letter-spacing:.2px}
   .seg.interim .zh{color:var(--interim);font-style:italic}
-  .en{display:none;margin-top:4px;font-size:.62em;color:var(--dim);font-weight:500;line-height:1.4}
-  body.show-en .en{display:block}
+  .en{margin-top:4px;font-size:.62em;color:var(--dim);font-weight:500;line-height:1.4}
+  body.lang-zh .en{display:none}
+  body.lang-en .zh{display:none}
+  body.lang-en .en{display:block;margin-top:0;font-size:1em;color:var(--ink);font-weight:650}
+  .langseg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .langseg button{appearance:none;border:0;background:transparent;color:var(--dim);font:inherit;font-size:13px;font-weight:600;padding:6px 12px;cursor:pointer}
+  .langseg button.on{background:var(--accent);color:#fff}
   .empty{color:var(--dim);font-weight:500;text-align:center;margin-top:18vh;font-size:.7em;padding:0 1em}
   /* Wordly backup mode */
   #wordly{display:none;flex:1;flex-direction:column}
@@ -58,13 +63,17 @@
   #jump.show{display:block}
 </style>
 </head>
-<body class="show-en">
+<body class="lang-both">
   <header>
     <span class="dot" id="dot" title="connection"></span>
-    <span>即時字幕</span>
+    <span>即時翻譯</span>
     <span id="src">·</span>
     <span class="spacer"></span>
-    <button class="btn" id="enToggle" aria-pressed="true">EN</button>
+    <div class="langseg" id="langseg" role="radiogroup" aria-label="Caption language">
+      <button data-m="zh" role="radio">中</button>
+      <button data-m="both" class="on" role="radio" aria-checked="true">雙語</button>
+      <button data-m="en" role="radio">EN</button>
+    </div>
   </header>
 
   <main id="feed" aria-live="polite">
@@ -92,7 +101,7 @@
   var dot = document.getElementById("dot");
   var srcLabel = document.getElementById("src");
   var jump = document.getElementById("jump");
-  var enToggle = document.getElementById("enToggle");
+  var langseg = document.getElementById("langseg");
   var wordlyFrame = document.getElementById("wordlyFrame");
 
   var SRC_NAMES = { openai:"OpenAI", gemini:"Gemini", wordly:"Wordly" };
@@ -162,10 +171,19 @@
   });
   jump.addEventListener("click", function(){ stickToBottom = true; scrollToLive(); });
 
-  enToggle.addEventListener("click", function(){
-    var on = document.body.classList.toggle("show-en");
-    enToggle.setAttribute("aria-pressed", on ? "true" : "false");
-  });
+  function setLang(m){
+    document.body.classList.remove("lang-zh","lang-en","lang-both");
+    document.body.classList.add("lang-" + m);
+    langseg.querySelectorAll("button").forEach(function(b){
+      var on = b.dataset.m === m;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-checked", on ? "true" : "false");
+    });
+    try{ localStorage.setItem("ddcap.lang", m); }catch(e){}
+  }
+  langseg.querySelectorAll("button").forEach(function(b){ b.onclick = function(){ setLang(b.dataset.m); }; });
+  var savedLang; try{ savedLang = localStorage.getItem("ddcap.lang"); }catch(e){}
+  setLang(["zh","en","both"].indexOf(savedLang) >= 0 ? savedLang : "both");
 
   // --- transport: SSE with polling fallback --------------------------------
   var es = null, polling = null, backoff = 1000;
