@@ -228,7 +228,7 @@ function LiveCaptionsWidget({ sessionId = 'DXRS-1194', captionLanguage = 'zh-TW'
       <div className="ddcap-panel" role="dialog" aria-label="Live captions">
         <div className="ddcap-head">
           <span className="ddcap-badge"><span className="ddcap-dot" />{CAPTION_SOURCE_LABEL[source] || 'Wordly'}</span>
-          <span className="ddcap-title">即時字幕 · Live captions</span>
+          <span className="ddcap-title">即時翻譯 · Live captions</span>
           <button className="ddcap-x" onClick={() => setOpen(false)} aria-label="Close captions">×</button>
         </div>
         <div className="ddcap-body">
@@ -240,7 +240,7 @@ function LiveCaptionsWidget({ sessionId = 'DXRS-1194', captionLanguage = 'zh-TW'
         </div>
       </div>}
       <button className={`ddcap-fab ${open ? 'on' : ''}`} onClick={() => setOpen((o) => !o)} aria-expanded={open}>
-        <span className="ddcap-dot" />{open ? '收合 Hide' : '即時字幕 Captions'}
+        <span className="ddcap-dot" />{open ? '收合 Hide' : '即時翻譯 Captions'}
       </button>
     </div>);
 
@@ -256,7 +256,7 @@ function CaptionsLauncher({ language = 'en' }) {
     <div className="container ddcap-launch">
       <button className="ddcap-launch-btn" onClick={() => window.ddOpenCaptions && window.ddOpenCaptions()}>
         <span className="ddcap-dot" />
-        {language === 'zh' ? '即時字幕 · 開啟 (EN + 中文)' : '即時字幕 · Open live captions (EN + 中文)'}
+        {language === 'zh' ? '即時翻譯 · 開啟 (EN + 中文)' : '即時翻譯 · Open live captions (EN + 中文)'}
       </button>
     </div>);
 

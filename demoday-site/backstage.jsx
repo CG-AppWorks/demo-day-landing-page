@@ -48,10 +48,17 @@ window.useBackstage = useBackstage;
 
 // Hook: returns [open, setOpen] and wires keyboard + hash triggers.
 function useBackstageToggle() {
-  const [open, setOpen] = useBkState(() => {
-    try { return window.location.hash.toLowerCase() === '#backstage'; } catch (e) { return false; }
-  });
+  // Never auto-open on load — otherwise a lingering #backstage in the URL
+  // re-pops the console on every refresh. Open only via the footer link
+  // (#backstage) or ⌘/Ctrl+Shift+B.
+  const [open, setOpen] = useBkState(false);
   useBkEffect(() => {
+    const clearHash = () => {
+      if (window.location.hash.toLowerCase() === '#backstage') {
+        try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch (e) {}
+      }
+    };
+    clearHash(); // strip a stale #backstage left from a previous session
     const onKey = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === 'B' || e.key === 'b')) {
         e.preventDefault();
@@ -60,7 +67,7 @@ function useBackstageToggle() {
       if (e.key === 'Escape') setOpen(false);
     };
     const onHash = () => {
-      if (window.location.hash.toLowerCase() === '#backstage') setOpen(true);
+      if (window.location.hash.toLowerCase() === '#backstage') { setOpen(true); clearHash(); }
     };
     window.addEventListener('keydown', onKey);
     window.addEventListener('hashchange', onHash);
