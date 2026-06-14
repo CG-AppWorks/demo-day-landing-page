@@ -153,7 +153,7 @@ function Hero({ variant = 'photo', language, kpis }) {
   const venue = CFG.venue || 'Taipei Marriott Hotel · 5F Grand Ballroom';
   const wistron = CFG.wistron !== false;
   const enLede = wistron ?
-  <p className="lede center"><b>{kpis.teams} select startups, one room.</b> 14 from <b>AppWorks Accelerator #32</b> + 4 from <b>Wistron Accelerator #10</b> — founders from Taiwan, Singapore, Korea, Malaysia, Hong Kong and the US, working at the forefront of <b>Enterprise AI</b>, <b>Manufacturing AI</b> and <b>Dual-Use Tech</b>.</p> :
+  <p className="lede center"><b>{kpis.teams} select startups, one room.</b> 15 from <b>AppWorks Accelerator #32</b> + 4 from <b>Wistron Accelerator #10</b> — founders from Taiwan, Singapore, Korea, Malaysia, Hong Kong and the US, working at the forefront of <b>Enterprise AI</b>, <b>Manufacturing AI</b> and <b>Dual-Use Tech</b>.</p> :
   <p className="lede center"><b>{kpis.teams} selected startups,</b> the <b>AppWorks #32</b> cohort -<br />Founders from Taiwan, Singapore, Korea, Malaysia, Hong Kong and the US,<br />working at the forefront of <b>Enterprise AI</b>, <b>Manufacturing AI</b>, <b>Web3</b> and <b>Dual-Use Tech</b>.</p>;
 
   return (
@@ -182,7 +182,7 @@ function Hero({ variant = 'photo', language, kpis }) {
         {(language === 'en' || language === 'both') && enLede}
         {(language === 'zh' || language === 'both') &&
         <p className="lede zh zh-line center">
-            一場專屬於 AI 與亞洲跨境新創的盛會 — {kpis.teams} 組精選潛力團隊登台，<br />包含 14 組 AppWorks #32 與 4 組 Wistron #10 新創，齊聚台北、連接全球。
+            一場專屬於 AI 與亞洲跨境新創的盛會 — {kpis.teams} 組精選潛力團隊登台，<br />包含 15 組 AppWorks #32 與 4 組 Wistron #10 新創，齊聚台北、連接全球。
           </p>
         }
         {CFG.heroGuest &&
@@ -203,7 +203,7 @@ function Hero({ variant = 'photo', language, kpis }) {
           </div>
           <div className="item">
             <div className="k">Teams</div>
-            <div className="v"><span className="num">{kpis.teams}</span><small>{CFG.heroTeamsNote || (wistron ? '14 AppWorks · 4 Wistron' : 'AppWorks #32')}</small></div>
+            <div className="v"><span className="num">{kpis.teams}</span><small>{CFG.heroTeamsNote || (wistron ? '15 AppWorks · 4 Wistron' : 'AppWorks #32')}</small></div>
           </div>
           <div className="item">
             <div className="k">Markets</div>
