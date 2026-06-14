@@ -70,7 +70,8 @@ function Album({ language }) {
 window.Album = Album;
 
 function About({ language }) {
-  const showZh = !(window.EVENT_CONFIG && window.EVENT_CONFIG.bilingual === false);
+  // Follow the nav language toggle. Non-bilingual editions (e.g. SG) stay English.
+  const zh = (window.EVENT_CONFIG ? window.EVENT_CONFIG.bilingual !== false : true) && language === 'zh';
   const cards = [
   {
     title: "AppWorks",
@@ -80,7 +81,7 @@ function About({ language }) {
     stats: [
     { v: "663", l: "Startups", num: true },
     { v: "2,189", l: "Founders", num: true },
-    { v: <span style={{ color: '#ff6b0f' }}>{showZh ? "亞洲跨境" : "Pan-Asia"}</span>, l: "Region" }]
+    { v: <span style={{ color: '#ff6b0f' }}>{zh ? "亞洲跨境" : "Pan-Asia"}</span>, l: "Region" }]
 
   },
   {
@@ -124,16 +125,15 @@ function About({ language }) {
         <div className="section-head">
           <div>
             <div className="eyebrow">SINCE 2009 </div>
-            <h2>About AppWorks.</h2>
-            <p className="sub">An accelerator, a community, and venture capital — built by founders, for founders.</p>
+            <h2>{zh ? '關於 AppWorks。' : 'About AppWorks.'}</h2>
+            <p className="sub">{zh ? '加速器、社群與創投，由創業者，為創業者打造。' : 'An accelerator, a community, and venture capital — built by founders, for founders.'}</p>
           </div>
         </div>
         <div className="about-grid">
           {cards.map((c, i) =>
           <div key={i} className="about-card">
               <h3>{c.title}<span className="dot">.</span></h3>
-              <p>{c.en}</p>
-              {showZh && <p className="zh">{c.zh}</p>}
+              <p className={zh ? 'zh' : ''}>{zh ? c.zh : c.en}</p>
               <div className="stats-inline">
                 {c.stats.map((s, j) =>
               <div key={j} className="stat">
