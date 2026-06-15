@@ -97,7 +97,7 @@ function App() {
         liveTeamId={liveTeamId}
         language={lang}/>
 
-      <Agenda/>
+      <Agenda language={lang}/>
       {CFG.album !== false && <Album language={lang}/>}
       <About language={lang}/>
       {CFG.wistron !== false && <Partners
@@ -106,10 +106,11 @@ function App() {
         onIntro={(team) => setIntroTeam(team)}
         onOpenLive={(team) => setOpenedTeam(team)}
         density={tweaks.cardDensity}
-        accentIntensity={tweaks.accentIntensity}/>}
+        accentIntensity={tweaks.accentIntensity}
+        language={lang}/>}
       <CaptionsLauncher language={lang}/>
-      <Sponsors/>
-      <Footer/>
+      <Sponsors language={lang}/>
+      <Footer language={lang}/>
 
       <IntroModal team={introTeam} onClose={() => setIntroTeam(null)}/>
 

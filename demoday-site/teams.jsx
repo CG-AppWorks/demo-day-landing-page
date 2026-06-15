@@ -45,7 +45,9 @@ function LangBadge({ language }) {
   );
 }
 
-function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accentLive, liveTeamId }) {
+function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accentLive, liveTeamId, language }) {
+  const sub = tr(language, team.sub, (window.ZH && window.ZH.teamSub && window.ZH.teamSub[team.id]));
+  const pitch = tr(language, team.pitch, (window.ZH && window.ZH.teamPitch && window.ZH.teamPitch[team.id]));
   const liveEnabled = !(window.EVENT_CONFIG && window.EVENT_CONFIG.nowOnStage === false);
   const isLive = liveEnabled && team.id === liveTeamId;
   const liveCls = isLive && accentLive ? 'live' : '';
@@ -62,10 +64,10 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
           {logo
             ? <img className="card-logo-img sm" src={logo} alt={team.name}/>
             : <h4>{team.name}</h4>}
-          <div className="sub" style={{marginTop:2}}>{team.sub}</div>
+          <div className="sub" style={{marginTop:2}}>{sub}</div>
         </div>
         <div>
-          <p className="pitch" style={{minHeight:0}}>{team.pitch}</p>
+          <p className="pitch" style={{minHeight:0}}>{pitch}</p>
           <div className="badges" style={{marginTop:6}}>
             {team.tags.map(t => <span key={t} className={`badge ${t.toLowerCase().replace(/[^a-z0-9]/g,'-')}`}>{t}</span>)}
             <LangBadge language={team.language}/>
@@ -112,7 +114,7 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
             {team.tags.map(t => <span key={t} className={`badge ${t.toLowerCase().replace(/[^a-z0-9]/g,'-')}`}>{t}</span>)}
             <LangBadge language={team.language}/>
           </div>
-          <p className="pitch">{team.pitch}</p>
+          <p className="pitch">{pitch}</p>
           <div className="presenter">
             {portrait
               ? <img className="presenter-avatar" src={portrait} alt={team.presenter}/>
@@ -155,7 +157,7 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
         {team.tags.map(t => <span key={t} className={`badge ${t.toLowerCase().replace(/[^a-z0-9]/g,'-')}`}>{t}</span>)}
         <LangBadge language={team.language}/>
       </div>
-      <p className="pitch">{team.pitch}</p>
+      <p className="pitch">{pitch}</p>
       <div className="presenter">
         {portrait
           ? <img className="presenter-avatar" src={portrait} alt={team.presenter}/>
@@ -228,12 +230,12 @@ function TeamsSection({ favorites, onFav, onIntro, onOpenLive, density, accentIn
         <div className="section-head">
           <div>
             {(window.EVENT_CONFIG && window.EVENT_CONFIG.wistron === false) && <div className="eyebrow">AppWorks #32</div>}
-            <h2>Presenting teams.</h2>
-            <p className="sub">{(window.EVENT_CONFIG && window.EVENT_CONFIG.wistron === false)
-              ? 'Tap any card to favorite it or request an intro to the founder.'
-              : (language === 'zh'
-                ? '點選任一團隊即可收藏或預約交流。'
-                : 'Tap any card to favorite it or request an intro.')}</p>
+            <h2>{tr(language, 'Presenting teams.', ZH.teams.heading)}</h2>
+            <p className="sub">{tr(language,
+              (window.EVENT_CONFIG && window.EVENT_CONFIG.wistron === false)
+                ? 'Tap any card to favorite it or request an intro to the founder.'
+                : 'Tap any card to favorite it or request an intro.',
+              ZH.teams.sub)}</p>
           </div>
         </div>
 
@@ -247,7 +249,8 @@ function TeamsSection({ favorites, onFav, onIntro, onOpenLive, density, accentIn
                 favorited={favorites.includes(t.id)}
                 onFav={onFav} onIntro={onIntro} onOpenLive={onOpenLive}
                 accentLive={accentIntensity !== 'restrained'}
-                liveTeamId={liveTeamId}/>
+                liveTeamId={liveTeamId}
+                language={language}/>
             )}
             {filtered.length === 0 &&
               <div style={{gridColumn:'1/-1', padding:'48px 24px', textAlign:'center', color:'var(--fg2)'}}>

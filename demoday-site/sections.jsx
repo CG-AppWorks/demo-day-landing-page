@@ -1,19 +1,19 @@
 // sections.jsx — Agenda, Album, About, Partners, Sponsors, IntroModal
 
-function Agenda() {
+function Agenda({ language }) {
   return (
     <section className="section bone" id="agenda">
       <div className="container">
         <div className="section-head">
           <div>
-            <h2>Agenda.</h2>
+            <h2>{tr(language, 'Agenda.', ZH.agenda.heading)}</h2>
           </div>
         </div>
         <div className={`agenda${window.EVENT_CONFIG && window.EVENT_CONFIG.wistron === false ? ' one-col' : ''}`}>
           {AGENDA.map((s, i) =>
           <div key={i} className="slot" style={s.wide ? { gridColumn: '1/-1' } : {}}>
               <div className="t">{s.t}</div>
-              <div className="title">{s.title}</div>
+              <div className="title">{tr(language, s.title, (ZH.agendaTitles || [])[i])}</div>
             </div>
           )}
         </div>
@@ -31,11 +31,9 @@ function Album({ language }) {
       <div className="container">
         <div className="section-head">
           <div>
-            <div className="eyebrow">POWERED BY ACCUPAI</div>
-            <h2>Live photo album.</h2>
-            <p className="sub">{language === 'zh' ?
-              '透過 Accupai 即時觀看活動照片，歡迎分享、轉發。' :
-              'Real-time event photography from the floor — view, download, and share on the spot.'}</p>
+            <div className="eyebrow">{tr(language, 'POWERED BY ACCUPAI', ZH.album.eyebrow)}</div>
+            <h2>{tr(language, 'Live photo album.', ZH.album.heading)}</h2>
+            <p className="sub">{tr(language, 'Real-time event photography from the floor — view, download, and share on the spot.', ZH.album.sub)}</p>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <a className="btn primary" href={ALBUM_URL} target="_blank" rel="noopener">
@@ -154,7 +152,7 @@ function About({ language }) {
 }
 window.About = About;
 
-function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpenLive = () => {}, density = 'comfy', accentIntensity = 'balanced' }) {
+function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpenLive = () => {}, density = 'comfy', accentIntensity = 'balanced', language }) {
   const waTeams = (window.TEAMS || []).filter((t) => t.batch === 'WA#10');
   return (
     <section className="section bone" id="partners">
@@ -167,13 +165,13 @@ function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpen
         <div className="about-grid" style={{ gridTemplateColumns: '1fr' }}>
           <div className="about-card">
             <h3>Wistron Accelerator<span className="dot">.</span></h3>
-            <p>A corporate accelerator focused on AI, robotics, sustainability, and next-gen computing — pairing startups with Wistron's global manufacturing network and enterprise customers. Program #10 brings another cohort of teams with commercial POC pathways built in.</p>
+            <p>{tr(language, "A corporate accelerator focused on AI, robotics, sustainability, and next-gen computing — pairing startups with Wistron's global manufacturing network and enterprise customers. Program #10 brings another cohort of teams with commercial POC pathways built in.", ZH.partners.body)}</p>
             <div className="stats-inline">
-              <div className="stat"><div className="v"><span className="num">10</span></div><div className="l">Programs</div></div>
-              <div className="stat"><div className="v"><span className="num">80</span></div><div className="l">Alumni</div></div>
-              <div className="stat"><div className="v"><span className="num">4</span></div><div className="l">Teams pitching today</div></div>
+              <div className="stat"><div className="v"><span className="num">10</span></div><div className="l">{tr(language, 'Programs', ZH.partners.programs)}</div></div>
+              <div className="stat"><div className="v"><span className="num">80</span></div><div className="l">{tr(language, 'Alumni', ZH.partners.alumni)}</div></div>
+              <div className="stat"><div className="v"><span className="num">4</span></div><div className="l">{tr(language, 'Teams pitching today', ZH.partners.pitching)}</div></div>
             </div>
-            <a className="btn outline sm" href="https://appworks.tw/wistron/" target="_blank" rel="noopener">More information <I.arrow /></a>
+            <a className="btn outline sm" href="https://appworks.tw/wistron/" target="_blank" rel="noopener">{tr(language, 'More information', '更多資訊')} <I.arrow /></a>
           </div>
         </div>
         {waTeams.length > 0 && window.TeamCard &&
@@ -184,7 +182,7 @@ function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpen
           favorited={favorites.includes(t.id)}
           onFav={onFav} onIntro={onIntro} onOpenLive={onOpenLive}
           accentLive={accentIntensity !== 'restrained'}
-          liveTeamId={null} />
+          liveTeamId={null} language={language} />
           )}
         </div>
         }
@@ -193,7 +191,7 @@ function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpen
 }
 window.Partners = Partners;
 
-function Sponsors() {
+function Sponsors({ language }) {
   // DD#32 sponsors + event partner — logo lockups, shown together.
   const sponsors = [
   { name: 'Google Cloud', src: 'assets/sponsor-google.svg', h: 30 },
@@ -205,8 +203,8 @@ function Sponsors() {
       <div className="container">
         <div className="section-head">
           <div>
-            <div className="eyebrow">Thank you to our sponsors & partners</div>
-            <h2>Demo Day sponsors.</h2>
+            <div className="eyebrow">{tr(language, 'Thank you to our sponsors & partners', ZH.sponsors.eyebrow)}</div>
+            <h2>{tr(language, 'Demo Day sponsors.', ZH.sponsors.heading)}</h2>
           </div>
         </div>
         <div className="sponsors three">

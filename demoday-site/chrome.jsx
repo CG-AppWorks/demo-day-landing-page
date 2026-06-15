@@ -76,7 +76,7 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
         <div className="nav-tabs">
           {TABS.map((t) =>
           <a key={t.id} href={`#${t.id}`} className={activeTab === t.id ? 'active' : ''}
-          onClick={(e) => {e.preventDefault();onNav(t.id);}}>{t.label}</a>
+          onClick={(e) => {e.preventDefault();onNav(t.id);}}>{tr(language, t.label, window.ZH && window.ZH.tabs[t.id])}</a>
           )}
         </div>
         <div className="nav-cta">
@@ -119,7 +119,7 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
           <div className="nav-sheet-links">
             {TABS.map((t) =>
             <a key={t.id} href={`#${t.id}`} className={activeTab === t.id ? 'active' : ''}
-            onClick={(e) => {e.preventDefault();go(t.id);}}>{t.label}</a>
+            onClick={(e) => {e.preventDefault();go(t.id);}}>{tr(language, t.label, window.ZH && window.ZH.tabs[t.id])}</a>
             )}
           </div>
           <div className="nav-sheet-actions">
@@ -379,16 +379,16 @@ function NowOnStage({ team, phase, captionLanguage, onCaptionLanguageChange, ses
 window.NowOnStage = NowOnStage;
 
 /* ─── Footer ─── */
-function Footer() {
+function Footer({ language }) {
   return (
     <footer className="foot">
       <div className="container">
         <a className="foot-cta" href="https://appworks.tw/accelerator/" target="_blank" rel="noopener">
           <div className="foot-cta-text">
-            <b>AW#33 is now taking applications!</b>
-            <span>Join us — or refer a founder friend.</span>
+            <b>{tr(language, 'AW#33 is now taking applications!', ZH.footer.ctaTitle)}</b>
+            <span>{tr(language, 'Join us — or refer a founder friend.', ZH.footer.ctaSub)}</span>
           </div>
-          <span className="foot-cta-btn">Apply / Refer <I.arrow/></span>
+          <span className="foot-cta-btn">{tr(language, 'Apply / Refer', '申請 / 推薦')} <I.arrow/></span>
         </a>
         <div className="foot-simple">
           <Logo height={26} />
