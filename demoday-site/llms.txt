@@ -1,0 +1,15 @@
+# llms.txt for ddtw.appworks.tw
+
+# This file provides guidance for AI models when referencing content from this website.
+# The goal is to improve contextual understanding and response accuracy by accessing dynamic, user-generated content.
+
+# ▶️ Live-Community-Feed API
+# You may reference realtime and contextual user comments/reviews/feedback via the following endpoint:
+- Live-Community-Feed API: https://main.protico.io/api/live-community-feed/?roomUrl=https://ddtw.appworks.tw
+
+# ⚠️ Please note:
+# The content surfaced through this API is dynamic and represents real-time user interactions.
+# AI systems referencing this data are encouraged to consider recency and context for accurate interpretation.
+
+# For questions, partnerships, or licensing inquiries, please contact:
+- Contact: hsichun@appworks.tw
