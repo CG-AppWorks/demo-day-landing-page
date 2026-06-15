@@ -195,18 +195,18 @@ function Hero({ variant = 'photo', language, kpis }) {
         <div className="hero-meta">
           <div className="item">
             <div className="k">{language === 'zh' ? '日期' : 'Date'}</div>
-            <div className="v">{CFG.heroDate || '17 Jun'}<small>{CFG.heroTime || 'Wed · 12:00–16:30'}</small></div>
+            <div className="v">{tr(language, CFG.heroDate || '17 Jun', '6/17')}<small>{CFG.heroTime || 'Wed · 12:00–16:30'}</small></div>
           </div>
           <div className="item">
             <div className="k">{language === 'zh' ? '地點' : 'Venue'}</div>
-            <div className="v">{CFG.heroVenueShort || 'Marriott'}<small>{CFG.heroVenueSub || (language === 'zh' ? '5F 大廳 · 台北' : '5F Grand Ballroom · Taipei')}</small></div>
+            <div className="v">{tr(language, CFG.heroVenueShort || 'Marriott', '萬豪酒店')}<small>{CFG.heroVenueSub || (language === 'zh' ? '5F 大廳 · 台北' : '5F Grand Ballroom · Taipei')}</small></div>
           </div>
           <div className="item">
-            <div className="k">Teams</div>
+            <div className="k">{tr(language, 'Teams', '團隊')}</div>
             <div className="v"><span className="num">{kpis.teams}</span><small>{CFG.heroTeamsNote || (wistron ? '15 AppWorks · 4 Wistron' : 'AppWorks #32')}</small></div>
           </div>
           <div className="item">
-            <div className="k">Markets</div>
+            <div className="k">{tr(language, 'Markets', '市場')}</div>
             <div className="v"><span className="num">6</span><small>TW · SG · KR · MY · US · HK</small></div>
           </div>
         </div>

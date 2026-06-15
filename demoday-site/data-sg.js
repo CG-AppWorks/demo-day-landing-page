@@ -49,9 +49,9 @@ Object.assign(window, { TEAMS, AGENDA, TABS });
 // names, product names. Edit the wording here — it's the single source for 中文.
 const ZH = {
   tabs: { teams: '團隊', agenda: '議程', about: '關於' },
-  teams: { heading: '簡報團隊。', sub: '點選任一團隊即可收藏，或預約與創辦人交流。' },
+  teams: { heading: '登台團隊。', sub: '點選任一團隊即可收藏，或預約與創辦人交流。' },
   agenda: { heading: '議程。' },
-  agendaTitles: ['報到', '開場', 'AppWorks #32 新創簡報 · 15 組', 'Wistron #10 新創簡報 · 4 組', '自由交流與酒會'],
+  agendaTitles: ['報到', '開場', 'AppWorks #32 Demo · 15 組', 'Wistron #10 Demo · 4 組', '自由交流與酒會'],
   album: { eyebrow: 'ACCUPAI 提供', heading: '活動即時相簿。', sub: '由 Accupai 即時拍攝活動現場——可即時觀看、下載與分享。' },
   partners: {
     cardTitle: 'Wistron Accelerator',
