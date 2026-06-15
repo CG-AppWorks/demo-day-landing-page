@@ -113,6 +113,14 @@ function Backstage({ open, onClose, stage, setStage, reset }) {
     const id = setInterval(poll, 3000);
     return () => { stop = true; clearInterval(id); };
   }, [captionsWorker, open]);
+  const clearCaptions = () => {
+    const tok = adminToken.trim();
+    if (!tok) { setSwitchMsg('Enter the admin token first.'); return; }
+    setSwitchMsg('Clearing caption history…');
+    fetch(captionsWorker + '/api/reset', { method: 'POST', headers: { Authorization: 'Bearer ' + tok } })
+      .then((r) => r.json()).then((j) => setSwitchMsg(j && j.ok ? 'Caption history cleared.' : 'Clear failed.'))
+      .catch((e) => setSwitchMsg('Clear error: ' + e.message));
+  };
   const flipEngine = (eng) => {
     const tok = adminToken.trim();
     if (!tok) { setSwitchMsg('Enter the admin token first.'); return; }
@@ -233,6 +241,7 @@ function Backstage({ open, onClose, stage, setStage, reset }) {
                 : <span>Flips the Captions tab for <b>all guests</b>, instantly. <b>Wordly</b> = backup.</span>}
             </div>
             <div className="bk-live"><span className="k">Now live:</span> <code>{(liveSource || '—').toUpperCase()}</code></div>
+            <button className="bk-btn ghost" style={{ marginTop: 8 }} onClick={clearCaptions}>Clear caption history</button>
           </section>
           )}
 

@@ -17,6 +17,7 @@ export { CaptionHub };
 const ADMIN_ROUTES = new Set([
   "/api/segment",
   "/api/switch",
+  "/api/reset",
   "/api/translate",
   "/api/caption",
   "/api/ephemeral/openai",
@@ -29,6 +30,7 @@ const DO_ROUTES = new Set([
   "/api/stream",
   "/api/latest",
   "/api/switch",
+  "/api/reset",
 ]);
 
 // Direct browser→provider streaming (not needed by the chunked /api/caption path).

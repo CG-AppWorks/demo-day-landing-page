@@ -48,6 +48,7 @@ export class CaptionHub {
       switch (url.pathname) {
         case "/api/segment": return await this.handleSegment(request);
         case "/api/switch":  return await this.handleSwitch(request);
+        case "/api/reset":   return await this.handleReset();
         case "/api/latest":  return this.handleLatest(url);
         case "/api/stream":  return this.handleStream(url);
         default:             return json({ error: "not_found" }, { status: 404 });
@@ -55,6 +56,21 @@ export class CaptionHub {
     } catch (err) {
       return json({ error: "internal", message: String((err && err.message) || err) }, { status: 500 });
     }
+  }
+
+  // -- POST /api/reset ------------------------------------------------------
+  // Wipe stored caption history (memory + DO storage + KV) and tell any open
+  // viewers to clear their feed live. Leaves the active-channel switch as-is.
+  async handleReset() {
+    for (const ch of CHANNELS) this.segments[ch] = [];
+    await this.state.storage.delete(["segments:openai", "segments:gemini"]);
+    try {
+      await this.env.CAPTIONS_KV.delete("segments:openai");
+      await this.env.CAPTIONS_KV.delete("segments:gemini");
+    } catch { /* KV best-effort */ }
+    const frame = this.frame("clear", { ts: Date.now() });
+    for (const ch of STREAM_CHANNELS) this.sendRaw(ch, frame);
+    return json({ ok: true, cleared: true });
   }
 
   // -- POST /api/segment ----------------------------------------------------

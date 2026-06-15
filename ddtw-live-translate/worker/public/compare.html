@@ -90,6 +90,7 @@
       es.addEventListener("open", function(){ st.className = "st live"; backoff = 1000; });
       es.addEventListener("hello", function(ev){ try{ setActive(JSON.parse(ev.data).active); }catch(e){} });
       es.addEventListener("backlog", function(ev){ try{ (JSON.parse(ev.data).segments||[]).forEach(apply); }catch(e){} });
+      es.addEventListener("clear", function(){ feed.innerHTML = ""; nodes = {}; });
       es.addEventListener("segment", function(ev){ try{ apply(JSON.parse(ev.data)); }catch(e){} });
       es.addEventListener("error", function(){
         st.className = "st down";

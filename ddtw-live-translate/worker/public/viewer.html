@@ -193,6 +193,7 @@
   function handleEvent(type, data){
     if(type === "hello"){ setMode(data.active); }
     else if(type === "switch"){ clearFeed(); setMode(data.active); }
+    else if(type === "clear"){ clearFeed(); }
     else if(type === "backlog"){ (data.segments||[]).forEach(applySegment); if(mode==="wordly"){} }
     else if(type === "segment"){ applySegment(data); }
   }
@@ -202,7 +203,7 @@
     var url = BASE + "/api/stream?channel=active";
     try { es = new EventSource(url); } catch(e){ return startPolling(); }
     es.addEventListener("open", function(){ setStatus("live"); backoff = 1000; });
-    ["hello","switch","backlog","segment"].forEach(function(type){
+    ["hello","switch","clear","backlog","segment"].forEach(function(type){
       es.addEventListener(type, function(ev){
         try { handleEvent(type, JSON.parse(ev.data)); } catch(e){}
       });
