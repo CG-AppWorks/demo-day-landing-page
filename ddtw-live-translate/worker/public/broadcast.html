@@ -146,6 +146,7 @@
     $("start").classList.add("hidden"); $("stop").classList.remove("hidden");
     $("recDot").className="dot on"; $("recState").textContent="listening";
     $("msg").className="msg"; $("msg").textContent="";
+    pushEngineLive(); // auto-push this engine to guests so captions show immediately
   }
 
   function stop(){
@@ -230,7 +231,7 @@
     $("log").prepend(d); return d;
   }
 
-  $("pushLive").onclick = async function(){
+  async function pushEngineLive(){
     try{
       var r = await fetch(BASE + "/api/switch", { method:"POST",
         headers:{ "Content-Type":"application/json", Authorization:"Bearer "+token }, body: JSON.stringify({active:engine}) });
@@ -238,7 +239,8 @@
       $("msg").className = r.ok ? "msg" : "msg err";
       $("msg").textContent = r.ok ? ("Guests now see: "+engine.toUpperCase()) : ("switch failed: "+(j.error||r.status));
     }catch(e){ $("msg").className="msg err"; $("msg").textContent="switch error: "+e.message; }
-  };
+  }
+  $("pushLive").onclick = pushEngineLive;
 })();
 </script>
 </body>
