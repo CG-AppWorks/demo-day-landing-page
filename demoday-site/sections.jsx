@@ -154,6 +154,7 @@ window.About = About;
 
 function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpenLive = () => {}, density = 'comfy', accentIntensity = 'balanced', language }) {
   const waTeams = (window.TEAMS || []).filter((t) => t.batch === 'WA#10');
+  const zh = (window.EVENT_CONFIG ? window.EVENT_CONFIG.bilingual !== false : true) && language === 'zh';
   return (
     <section className="section bone" id="partners">
       <div className="container">
@@ -162,16 +163,30 @@ function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpen
             <h2>Wistron #10.</h2>
           </div>
         </div>
-        <div className="about-grid" style={{ gridTemplateColumns: '1fr' }}>
+        <div className="about-grid">
+          <div className="about-card">
+            <h3>Wistron<span className="dot">.</span></h3>
+            <p className={zh ? 'zh' : ''}>{tr(language,
+              "Wistron is one of the world's leading manufacturers in the ICT industry. In recent years it has invested in R&D, technology innovation, and diversified product development, integrating hardware devices, software services, and cloud data systems into technical-service platforms and solutions — building new technology supply chains and innovation platforms, and expanding into new fields such as education, enterprise services, IoT, and healthcare. Building toward a sustainable, long-term business, Wistron pursues forward-looking strategic investments and technology partners, and in recent years has already invested over NT$14 billion across more than 60 companies.",
+              "緯創資通集團身為全球 ICT 產業領導廠商之一，正積極佈局未來、邁向永續。憑藉堅強的研發及技術創新能力，以及多元化產品發展，將硬體設備結合軟體服務、雲端數據系統，提供技術服務與解決方案，建立新技術產業鏈以及創新平台，大力將事業擴展至教育、企業服務、物聯網及醫療等新領域。緯創邁向永續的關鍵作法之一，就是採取積極的前瞻性投資，引進策略技術夥伴，投資並攜手新創團隊；近幾年已投入超過新台幣 140 億元、橫跨超過 60 家投資甚或長期經營的案例。")}</p>
+            <div className="stats-inline">
+              <div className="stat"><div className="v"><span className="num">NT$14B+</span></div><div className="l">{tr(language, 'Invested', '累計投資')}</div></div>
+              <div className="stat"><div className="v"><span className="num">60+</span></div><div className="l">{tr(language, 'Companies', '投資案例')}</div></div>
+              <div className="stat"><div className="v"><span style={{ color: '#ff6b0f' }}>ICT</span></div><div className="l">{tr(language, 'Global leader', '全球領導廠商')}</div></div>
+            </div>
+            <a className="btn outline sm arrow" href="https://www.wistron.com/" target="_blank" rel="noopener">{tr(language, 'More information', '更多資訊')} <I.arrow /></a>
+          </div>
           <div className="about-card">
             <h3>Wistron Accelerator<span className="dot">.</span></h3>
-            <p>{tr(language, "A corporate accelerator focused on AI, robotics, sustainability, and next-gen computing — pairing startups with Wistron's global manufacturing network and enterprise customers. Program #10 brings another cohort of teams with commercial POC pathways built in.", ZH.partners.body)}</p>
+            <p className={zh ? 'zh' : ''}>{tr(language,
+              "To broaden and deepen its collaboration with startups, Wistron set up its corporate venture capital office (CVC) in 2021 and launched the Wistron Accelerator together with AppWorks — a leading launchpad for bold and ambitious entrepreneurs targeting Greater Southeast Asia (GSEA). Through strategic investment and partnership, it actively builds Wistron's growth engines for the future. The program is operated by AppWorks, runs twice a year, and recruits a limited cohort of 7 startups per batch.",
+              "為了擴大與新創合作的廣度與深度，緯創在 2021 年成立企業投資辦公室 (CVC)，並與大東南亞領先的新創加速器 AppWorks 合作啟動 Wistron Accelerator 緯創垂直加速器，透過策略投資與結盟，積極佈局未來的成長引擎；由 AppWorks 提供營運等核心業務，並以每年舉辦兩屆、限額招募 7 家新創來進行。")}</p>
             <div className="stats-inline">
               <div className="stat"><div className="v"><span className="num">10</span></div><div className="l">{tr(language, 'Programs', ZH.partners.programs)}</div></div>
-              <div className="stat"><div className="v"><span className="num">80</span></div><div className="l">{tr(language, 'Alumni', ZH.partners.alumni)}</div></div>
+              <div className="stat"><div className="v"><span className="num">7</span></div><div className="l">{tr(language, 'Per batch', '每屆名額')}</div></div>
               <div className="stat"><div className="v"><span className="num">4</span></div><div className="l">{tr(language, 'Teams pitching today', ZH.partners.pitching)}</div></div>
             </div>
-            <a className="btn outline sm" href="https://appworks.tw/wistron/" target="_blank" rel="noopener">{tr(language, 'More information', '更多資訊')} <I.arrow /></a>
+            <a className="btn outline sm arrow" href="https://appworks.tw/wistron/" target="_blank" rel="noopener">{tr(language, 'More information', '更多資訊')} <I.arrow /></a>
           </div>
         </div>
         {waTeams.length > 0 && window.TeamCard &&

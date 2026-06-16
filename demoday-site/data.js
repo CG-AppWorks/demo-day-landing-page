@@ -75,7 +75,7 @@ const ZH = {
   partners: {
     cardTitle: 'Wistron Accelerator',
     body: '專注於 AI、機器人、永續與次世代運算的企業加速器，為新創串接 Wistron 的全球製造網路與企業客戶。第 10 屆帶來新一批具備商業 POC 路徑的團隊。',
-    programs: '屆數', alumni: '校友', pitching: '今日簡報團隊',
+    programs: '屆數', alumni: '校友', pitching: '今日登台團隊',
   },
   sponsors: { eyebrow: '感謝我們的贊助商與合作夥伴', heading: 'Demo Day 贊助夥伴。' },
   footer: { ctaTitle: 'AW#33 正在招募中！', ctaSub: '加入我們——或推薦一位創業者朋友。' },
