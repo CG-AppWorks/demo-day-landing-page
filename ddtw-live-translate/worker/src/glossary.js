@@ -25,7 +25,7 @@ export const GLOSSARY = [
 
   // --- #32 startups (keep English company names) ---
   { en: "NOTAG KOREA",  zh: "KEEP" },
-  { en: "Notifly",      zh: "KEEP" },
+  { en: "Notifly",      zh: "KEEP", note: "Korean marketing-automation startup (founder Minyong Lee). Brand is 'Notifly', NOT 'Notify' — STT may mishear it. But 'notify'/'notification' as a plain verb/noun = 通知; only render the brand when the company is clearly meant." },
   { en: "Krush",        zh: "KEEP" },
   { en: "Innowave Tech",zh: "KEEP" },
   { en: "LIPS",         zh: "KEEP" },
