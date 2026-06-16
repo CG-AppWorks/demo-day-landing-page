@@ -214,6 +214,9 @@ window.CaptionsLive = CaptionsLive;
 function LiveCaptionsWidget({ sessionId = 'DXRS-1194', captionLanguage = 'zh-TW' }) {
   const worker = (window.EVENT_CONFIG && window.EVENT_CONFIG.captionsWorker) || '';
   const [open, setOpen] = useState(false);
+  // Compact ("docked") mode: a slim bottom bar showing the latest line, so the
+  // page stays browsable behind it. Tap ▴ to expand back to the full panel.
+  const [compact, setCompact] = useState(false);
   const source = useActiveCaptionSource(open ? worker : '') || 'wordly';
   // Let the nav caption buttons open this widget.
   useEffect(() => {
@@ -223,12 +226,15 @@ function LiveCaptionsWidget({ sessionId = 'DXRS-1194', captionLanguage = 'zh-TW'
   if (!worker) return null;
   const isWordly = source === 'wordly';
   return (
-    <div className="ddcap">
+    <div className={`ddcap ${compact ? 'compact' : ''}`}>
       {open &&
-      <div className="ddcap-panel" role="dialog" aria-label="Live captions">
+      <div className={`ddcap-panel ${compact ? 'compact' : ''}`} role="dialog" aria-label="Live captions">
         <div className="ddcap-head">
           <span className="ddcap-badge"><span className="ddcap-dot" />{CAPTION_SOURCE_LABEL[source] || 'Wordly'}</span>
           <span className="ddcap-title">即時翻譯 · Live captions</span>
+          <button className="ddcap-min" onClick={() => setCompact((c) => !c)}
+            aria-label={compact ? 'Expand captions' : 'Shrink to a bar'}
+            title={compact ? '放大 Expand' : '縮小成字幕條 Dock'}>{compact ? '▴' : '▾'}</button>
           <button className="ddcap-x" onClick={() => setOpen(false)} aria-label="Close captions">×</button>
         </div>
         <div className="ddcap-body">

@@ -1972,12 +1972,19 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
 .ddcap-badge { display: inline-flex; align-items: center; gap: 6px; color: #4c8dff; font-weight: 600; }
 .ddcap-title { color: #8c98a4; font-weight: 600; flex: 1; }
 .ddcap-x { background: none; border: 0; color: #8c98a4; font-size: 20px; line-height: 1; cursor: pointer; padding: 0 4px; }
+.ddcap-min { background: none; border: 0; color: #8c98a4; font-size: 15px; line-height: 1; cursor: pointer; padding: 0 5px; }
+.ddcap-min:hover, .ddcap-x:hover { color: #f4f7fa; }
+/* Docked / compact: a slim caption bar instead of the full panel. */
+.ddcap-panel.compact { height: 180px; }
 .ddcap-body { flex: 1; min-height: 0; background: #0b0d10; overflow: hidden; }
 .ddcap-frame { width: 100%; height: 100%; border: 0; background: #0b0d10; }
 .ddcap-body .caption-live-stack, .ddcap-body .caption-live-frame { height: 100%; }
 .ddcap-body .caption-live-frame iframe { width: 100%; height: 100%; border: 0; }
 @media (max-width: 560px) {
   .ddcap { right: 10px; bottom: 10px; left: 10px; align-items: stretch; }
-  .ddcap-panel { width: auto; height: 82vh; }
+  /* Default opens at ~58% height (was ~full screen) so the page stays visible. */
+  .ddcap-panel { width: auto; height: 58vh; }
+  /* Docked: a slim bottom bar (latest line) — browse the page above it. */
+  .ddcap-panel.compact { height: 26vh; min-height: 116px; }
   .ddcap-fab { align-self: center; }
 }
