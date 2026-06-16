@@ -232,7 +232,7 @@ function EventPartners({ language }) {
     { name: 'USPACE', logo: 'assets/logos/partner-uspace.png', note: 'AW#18', offers: [
       { perk: tr(language, 'Parking voucher · NT$30 ×1', 'USPACE 停車券 $30 ×1'), code: 'APPWORKS31', valid: tr(language, 'Valid until 12/31', '使用期限至 12/31') },
     ] },
-    { name: 'LINE GO', note: '', offers: [
+    { name: 'LINE GO', logo: 'assets/logos/partner-linego.png', note: '', offers: [
       { perk: tr(language, 'Taxi ride voucher · NT$50', '計程車乘車券 50 元'), code: 'APPWORKS32', valid: tr(language, 'Collect & use on 6/17 only', '限 6/17 當天領取使用') },
     ] },
   ];
