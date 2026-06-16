@@ -1947,7 +1947,8 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
 /* ─── Event partners (attendee perks) ─── */
 .ep-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
 .ep-card { border: 1px solid var(--border); border-radius: var(--border-radius-lg, 12px); padding: 16px 18px; background: var(--bone, #faf9f5); }
-.ep-name { font-size: 16px; font-weight: 500; display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+.ep-name { font-size: 16px; font-weight: 500; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.ep-logo { height: 22px; width: auto; max-width: 130px; object-fit: contain; }
 .ep-batch { font-size: 11px; color: var(--fg2); font-weight: 400; }
 .ep-offer { padding: 8px 0; border-top: 1px dashed var(--border); }
 .ep-offer:first-of-type { border-top: 0; }
