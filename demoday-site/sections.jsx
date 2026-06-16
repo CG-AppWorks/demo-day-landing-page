@@ -245,7 +245,9 @@ function EventPartners({ language }) {
       { perk: tr(language, 'WeMo PASS · buy a season, get a season', 'WeMo PASS 買季送季'), code: 'APPWORKS32Q', valid: tr(language, 'Enter on 6/17 only', '限 6/17 當天輸入兌換') },
     ] },
     { name: 'USPACE', logo: 'assets/logos/partner-uspace.png', note: 'AW#18', offers: [
-      { perk: tr(language, 'Parking voucher · NT$30 ×1', 'USPACE 停車券 $30 ×1'), code: 'APPWORKS31', valid: tr(language, 'Valid until 12/31', '使用期限至 12/31') },
+      { perk: tr(language, 'Parking credit · NT$150 (NT$15 ×10)', '停車金 $150（$15 × 10 張）'), code: 'AW32USPACE', valid: tr(language, 'Valid until 2026/12/31', '使用期限至 2026/12/31') },
+      { perk: tr(language, 'Car rental · NT$1,000 voucher (3+ days)', '租車 $1,000 折價券（租 3 日以上）'), code: 'AW32USPACE', valid: tr(language, 'Valid until 2026/12/31', '使用期限至 2026/12/31') },
+      { perk: tr(language, 'USPACE Premium · 10% off first month', 'USPACE Premium 首月 9 折'), code: 'uspace.app.link/appworks2026', valid: tr(language, 'Valid until 2026/12/31', '使用期限至 2026/12/31') },
     ] },
     { name: 'LINE GO', logo: 'assets/logos/partner-linego.png', note: '', offers: [
       { perk: tr(language, 'Taxi ride voucher · NT$50', '計程車乘車券 50 元'), code: 'APPWORKS32', valid: tr(language, 'Collect & use on 6/17 only', '限 6/17 當天領取使用') },

@@ -18,6 +18,7 @@ const LOGOS = {
   notifly:'assets/logos/notifly.png', greenbidz:'assets/logos/greenbidz.jpg',
   cloudstation:'assets/logos/cloudstation.png', arrivl:'assets/logos/arrivl.png',
   ruomei:'assets/logos/ruomei.png', clika:'assets/logos/clika.svg',
+  sixsense:'assets/logos/sixsense.jpeg',
 };
 
 // Founder portraits, keyed by team id. Missing ids fall back to the HQ flag glyph.
