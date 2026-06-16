@@ -25,6 +25,44 @@ function bilingualSystemPrompt(extraTerms) {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// ---- hallucination filter ----------------------------------------------
+// STT models (Whisper-family + Gemini) "complete" silence/noise with plausible
+// boilerplate instead of returning nothing. We drop those phantom lines so they
+// never reach a viewer. Matched on a normalized form: lowercased, with all
+// whitespace + ASCII/CJK punctuation/symbols stripped.
+function normPhantom(s) {
+  return (s || "").toLowerCase().replace(/[\s\p{P}\p{S}]/gu, "");
+}
+// Whole-line generic phantoms — the classic things STT invents on silence.
+// Dropped only when they ARE the entire line (a real talk rarely is just these).
+const PHANTOM_EXACT = [
+  "thankyou", "thankyouverymuch", "thanksforwatching", "thankyouforwatching",
+  "pleasesubscribe", "pleasesubscribeandlike", "謝謝大家", "謝謝觀看",
+  "謝謝收看", "謝謝大家的收看", "請訂閱", "請訂閱我的頻道", "我們下次再見",
+];
+// Substrings that only ever appear in hallucinated/caption-artifact text —
+// includes the event welcome-line phantom the model keeps inventing here.
+const PHANTOM_CONTAINS = [
+  "展示區域內最具潛力", "最具潛力的新創公司", "歡迎來到appworksdemoday",
+  "welcometoappworksdemoday", "showcasethemostpromisingstartups",
+  "字幕由", "字幕志願者", "請不吝點贊", "點贊訂閱", "明鏡與點點", "轉發打賞",
+  "subscribetomychannel", "amaraorg", "transcribedby", "captionsby",
+];
+// [music] / (applause) / 【掌聲】 style non-speech markers.
+const PHANTOM_MARKER = /^[\[\(（【].{0,14}(music|音樂|音乐|掌聲|掌声|applause|laughter|笑聲|noise|背景音)/iu;
+
+function looksLikeHallucination(text) {
+  const t = (text || "").trim();
+  if (!t) return true;
+  const n = normPhantom(t);
+  if (n.length < 2) return true;                              // punctuation/symbol only
+  if (PHANTOM_MARKER.test(t)) return true;                   // [music] / (applause)
+  if (PHANTOM_EXACT.includes(n)) return true;                // whole-line generic phantom
+  if (PHANTOM_CONTAINS.some((p) => n.includes(p))) return true;
+  if (/(.{2,12})\1{4,}/u.test(n)) return true;               // looped repetition hallucination
+  return false;
+}
+
 // Gemini flash models throw transient 429/503 under load — retry with backoff.
 async function geminiFetch(url, init, tries = 4) {
   for (let a = 0; a < tries; a++) {
@@ -119,10 +157,13 @@ async function translateGemini(env, text, ctx, extraTerms) {
 // One audio chunk -> {transcript, en, zh} for the given engine.
 export async function captionChunk(env, engine, blob, bytes, mime, ctx, extraTerms) {
   const transcript = engine === "gemini" ? await sttGemini(env, bytes, mime) : await sttOpenAI(env, blob);
-  if (!transcript) return { transcript: "", en: "", zh: "" };
+  // Drop phantom transcripts before spending a translation call on them.
+  if (!transcript || looksLikeHallucination(transcript)) return { transcript: "", en: "", zh: "" };
   const pair = engine === "gemini"
     ? await translateGemini(env, transcript, ctx, extraTerms)
     : await translateOpenAI(env, transcript, ctx, extraTerms);
+  // Belt-and-braces: also drop if the rendered caption is a known phantom.
+  if (looksLikeHallucination(pair.en) || looksLikeHallucination(pair.zh)) return { transcript: "", en: "", zh: "" };
   return { transcript, en: pair.en || "", zh: pair.zh || "" };
 }
 
