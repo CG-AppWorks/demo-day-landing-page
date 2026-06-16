@@ -104,9 +104,16 @@
   };
 
   // ---- engine select ----
+  // Switching model resets the session: clears stored captions + wipes every
+  // viewer, then makes the newly-picked engine the live one.
   $("engine").querySelectorAll("button").forEach(function(b){
-    b.onclick = function(){ engine = b.dataset.e;
-      $("engine").querySelectorAll("button").forEach(function(x){ x.classList.toggle("on", x===b); }); };
+    b.onclick = function(){
+      if(b.dataset.e === engine) return;
+      engine = b.dataset.e;
+      $("engine").querySelectorAll("button").forEach(function(x){ x.classList.toggle("on", x===b); });
+      resetSession("engine → "+engine.toUpperCase());
+      pushEngineLive();
+    };
   });
 
   // ---- threshold slider ----
@@ -146,6 +153,7 @@
     $("start").classList.add("hidden"); $("stop").classList.remove("hidden");
     $("recDot").className="dot on"; $("recState").textContent="listening";
     $("msg").className="msg"; $("msg").textContent="";
+    await resetSession("new session");   // fresh session: clear old captions + wipe viewers
     pushEngineLive(); // auto-push this engine to guests so captions show immediately
   }
 
@@ -156,6 +164,7 @@
     if(ctx) ctx.close();
     $("stop").classList.add("hidden"); $("start").classList.remove("hidden");
     $("recDot").className="dot idle"; $("recState").textContent="idle";
+    resetSession("stopped");   // clear captions + wipe viewers when broadcast ends
   }
 
   function onAudio(e){
@@ -241,6 +250,19 @@
     }catch(e){ $("msg").className="msg err"; $("msg").textContent="switch error: "+e.message; }
   }
   $("pushLive").onclick = pushEngineLive;
+
+  // Clear the stored session on the Worker (segments + KV) and broadcast a
+  // 'clear' event so every viewer wipes; also reset this page's local log/seq.
+  async function resetSession(why){
+    try{
+      var r = await fetch(BASE + "/api/reset", { method:"POST", headers:{ Authorization:"Bearer "+token } });
+      if(!r.ok){ var j = await r.json().catch(function(){return {};});
+        $("msg").className="msg err"; $("msg").textContent="reset failed: "+(j.error||r.status); }
+    }catch(e){ $("msg").className="msg err"; $("msg").textContent="reset error: "+e.message; }
+    // wipe local UI regardless, so the broadcaster matches the cleared viewers
+    $("log").innerHTML=""; lastCtx=[]; seq=(Date.now()%1e7); $("counter").textContent="";
+    if(why){ $("recState").setAttribute("title", why); }
+  }
 })();
 </script>
 </body>
