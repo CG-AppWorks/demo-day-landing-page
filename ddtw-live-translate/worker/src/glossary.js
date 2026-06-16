@@ -233,6 +233,26 @@ export const GLOSSARY = [
   { en: "Ameline Mamin", zh: "KEEP", note: "CloudStation CPO" },
   { en: "governed AI", zh: "KEEP", note: "CloudStation positioning (受治理的 AI)" },
   { en: "Axentel", zh: "KEEP", note: "Jerry Yiu's prior company (acquired)" },
+  // --- from on-stage master deck + final MC script; always-on ---
+  { en: "Jamie Lin", zh: "KEEP", note: "AppWorks Chairman & Partner (keynote)" },
+  { en: "Johnny Chuang", zh: "KEEP", note: "AppWorks analyst (Web3 Arm); MC" },
+  { en: "Michelle Lin", zh: "KEEP", note: "AppWorks associate (AI Arm); MC" },
+  { en: "Avery Hung", zh: "KEEP", note: "Senior Investment Manager, Wistron CVC" },
+  { en: "Simon Lin", zh: "KEEP", note: "Chairman & CSO of Wistron" },
+  { en: "希鈞", zh: "希鈞", note: "AppWorks Accelerator Program Manager; English name HsiChun Tsai" },
+  { en: "Brandon Lu", zh: "KEEP", note: "Pathors co-founder & COO; on-stage presenter" },
+  { en: "Jacky Lin", zh: "KEEP", note: "Ruomei co-founder & CSO; on-stage presenter" },
+  { en: "RFS", zh: "KEEP", note: "Request for Startups (AppWorks investment themes)" },
+  { en: "Request for Startups", zh: "KEEP", note: "RFS" },
+  { en: "Defense Tech", zh: "國防科技", note: "AW#33 RFS theme" },
+  { en: "On-Chain Banking", zh: "鏈上銀行", note: "AW#33 RFS theme" },
+  { en: "PQC", zh: "KEEP", note: "Post-Quantum Cryptography (AW#33 RFS)" },
+  { en: "Post-Quantum Cryptography", zh: "後量子密碼學" },
+  { en: "Blockchain", zh: "區塊鏈" },
+  { en: "Mobile Internet", zh: "行動網路", note: "often kept in English" },
+  { en: "paradigm shift", zh: "典範轉移" },
+  { en: "Wistron CVC", zh: "KEEP", note: "Wistron corporate venture capital" },
+  { en: "Vibe coding", zh: "KEEP", note: "building software by prompting AI" },
 ];
 
 // Render the glossary block for the translation system prompt.
