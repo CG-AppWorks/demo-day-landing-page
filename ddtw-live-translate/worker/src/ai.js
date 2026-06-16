@@ -54,6 +54,7 @@ const PHANTOM_MARKER = /^[\[\(（【].{0,14}(music|音樂|音乐|掌聲|掌声|a
 function looksLikeHallucination(text) {
   const t = (text || "").trim();
   if (!t) return true;
+  if (!/\p{L}/u.test(t)) return true;                        // no letters: timecodes (00:00), bare numbers, punctuation
   const n = normPhantom(t);
   if (n.length < 2) return true;                              // punctuation/symbol only
   if (PHANTOM_MARKER.test(t)) return true;                   // [music] / (applause)
