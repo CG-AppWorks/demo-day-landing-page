@@ -24,7 +24,7 @@ function Agenda({ language }) {
 window.Agenda = Agenda;
 
 function Album({ language }) {
-  const ALBUM_URL = "https://live.accupai.com/live/54753741?utm_source=DD32TW&utm_medium=website&utm_campaign=demoday";
+  const ALBUM_URL = "https://live.accupai.com/live/54823180?utm_source=DD32TW&utm_medium=website&utm_campaign=demoday";
   const QR = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=0&data=${encodeURIComponent(ALBUM_URL)}`;
   return (
     <section className="section" id="album">
