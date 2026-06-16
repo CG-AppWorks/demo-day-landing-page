@@ -47,6 +47,9 @@ const PHANTOM_CONTAINS = [
   "welcometoappworksdemoday", "showcasethemostpromisingstartups",
   "字幕由", "字幕志願者", "請不吝點贊", "點贊訂閱", "明鏡與點點", "轉發打賞",
   "subscribetomychannel", "amaraorg", "transcribedby", "captionsby",
+  // walk-up hype-music lyrics / crowd cheering / promo-video phantoms seen in testing
+  "老虎般", "在烈火中起舞", "我是個贏家", "我是個戰士", "兄弟們加油",
+  "irx的創辦人", "farhan",
 ];
 // [music] / (applause) / 【掌聲】 style non-speech markers.
 const PHANTOM_MARKER = /^[\[\(（【].{0,14}(music|音樂|音乐|掌聲|掌声|applause|laughter|笑聲|noise|背景音)/iu;
