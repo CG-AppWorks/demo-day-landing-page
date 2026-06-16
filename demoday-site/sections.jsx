@@ -220,6 +220,50 @@ function Sponsors({ language }) {
 }
 window.Sponsors = Sponsors;
 
+/* ─── Event partners (attendee perks + promo codes, from the deck) ─── */
+function EventPartners({ language }) {
+  // Taipei-event perks only — not shown on the Singapore edition.
+  if (!window.EVENT_CONFIG || window.EVENT_CONFIG.edition !== 'TW') return null;
+  const partners = [
+    { name: 'WeMo', note: 'AW#11 · #12', offers: [
+      { perk: tr(language, 'WeMo PASS · 2-month free trial', 'WeMo PASS 2 個月 0 元體驗'), code: 'APPWORKS32', valid: tr(language, 'Redeem 2026/6/17–7/19', '兌換期限 2026/6/17–7/19') },
+      { perk: tr(language, 'WeMo PASS · buy a season, get a season', 'WeMo PASS 買季送季'), code: 'APPWORKS32Q', valid: tr(language, 'Enter on 6/17 only', '限 6/17 當天輸入兌換') },
+    ] },
+    { name: 'USPACE', note: 'AW#18', offers: [
+      { perk: tr(language, 'Parking voucher · NT$30 ×1', 'USPACE 停車券 $30 ×1'), code: 'APPWORKS31', valid: tr(language, 'Valid until 12/31', '使用期限至 12/31') },
+    ] },
+    { name: tr(language, 'Taxi voucher', '計程車乘車券'), note: '', offers: [
+      { perk: tr(language, 'Taxi ride voucher · NT$50', '計程車乘車券 50 元'), code: 'APPWORKS32', valid: tr(language, 'Collect & use on 6/17 only', '限 6/17 當天領取使用') },
+    ] },
+  ];
+  return (
+    <section className="section tight" id="event-partners">
+      <div className="container">
+        <div className="section-head">
+          <div>
+            <div className="eyebrow">{tr(language, 'Perks for attendees', '與會者專屬優惠')}</div>
+            <h2>{tr(language, 'Event partners.', '活動夥伴。')}</h2>
+          </div>
+        </div>
+        <div className="ep-grid">
+          {partners.map((p, i) =>
+          <div key={i} className="ep-card">
+            <div className="ep-name">{p.name}{p.note && <span className="ep-batch">{p.note}</span>}</div>
+            {p.offers.map((o, j) =>
+            <div key={j} className="ep-offer">
+              <div className="ep-perk">{o.perk}</div>
+              <div className="ep-meta"><code className="ep-code">{o.code}</code><span className="ep-valid">{o.valid}</span></div>
+            </div>
+            )}
+          </div>
+          )}
+        </div>
+      </div>
+    </section>);
+
+}
+window.EventPartners = EventPartners;
+
 /* ─── Intro modal ─── */
 function IntroModal({ team, onClose }) {
   const [copied, setCopied] = useState(false);

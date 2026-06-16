@@ -1944,6 +1944,18 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
   .live-body, .filters, .nav-sheet-panel { -webkit-overflow-scrolling: touch; }
 }
 
+/* ─── Event partners (attendee perks) ─── */
+.ep-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.ep-card { border: 1px solid var(--border); border-radius: var(--border-radius-lg, 12px); padding: 16px 18px; background: var(--bone, #faf9f5); }
+.ep-name { font-size: 16px; font-weight: 500; display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+.ep-batch { font-size: 11px; color: var(--fg2); font-weight: 400; }
+.ep-offer { padding: 8px 0; border-top: 1px dashed var(--border); }
+.ep-offer:first-of-type { border-top: 0; }
+.ep-perk { font-size: 14px; margin-bottom: 6px; }
+.ep-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ep-code { font-family: var(--font-mono, monospace); font-size: 13px; font-weight: 600; letter-spacing: .04em; background: var(--aw-orange-wash, #fff1e6); color: var(--accent, #ff6b0f); border: 1px solid var(--accent, #ff6b0f); border-radius: 6px; padding: 3px 9px; }
+.ep-valid { font-size: 12px; color: var(--fg2); }
+
 /* ─── In-page caption launcher (above Sponsors) ─── */
 .ddcap-launch { display: flex; justify-content: center; padding: 18px 0 6px; }
 .ddcap-launch-btn { display: inline-flex; align-items: center; gap: 9px; background: #0b0d10; color: #f4f7fa; border: 1px solid #2a323a; border-radius: 999px; padding: 13px 24px; font-size: 15px; font-weight: 600; cursor: pointer; }

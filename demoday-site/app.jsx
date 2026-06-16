@@ -110,6 +110,7 @@ function App() {
         language={lang}/>}
       <CaptionsLauncher language={lang}/>
       <Sponsors language={lang}/>
+      <EventPartners language={lang}/>
       <Footer language={lang}/>
 
       <IntroModal team={introTeam} onClose={() => setIntroTeam(null)}/>
