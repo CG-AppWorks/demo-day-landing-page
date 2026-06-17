@@ -1988,3 +1988,22 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
   .ddcap-panel.compact { height: 26vh; min-height: 116px; }
   .ddcap-fab { align-self: center; }
 }
+
+/* ── Booth map ─────────────────────────────────────────────── */
+.bm-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; }
+.bm-venue { min-width: 780px; display: flex; flex-direction: column; gap: 26px; padding: 14px 0 4px; }
+.bm-stage { align-self: center; border: 3px solid #0b0d10; border-radius: 7px; padding: 13px 64px;
+  font-weight: 800; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; }
+.bm-mid { display: flex; justify-content: space-between; align-items: stretch; gap: 24px; min-height: 230px; }
+.bm-col { display: flex; flex-direction: column; gap: 12px; width: 152px; }
+.bm-col .bm-booth { flex: 1; }
+.bm-bottom { display: flex; gap: 11px; }
+.bm-bottom .bm-booth { flex: 1; }
+.bm-booth { color: #fff; font-weight: 700; font-size: 13px; line-height: 1.25; text-align: center;
+  padding: 13px 9px; border-radius: 5px; min-height: 56px; display: flex; align-items: center; justify-content: center; }
+.bm-booth.aw { background: #ff6b0f; }
+.bm-booth.wa { background: #1668a3; }
+.bm-legend { display: flex; gap: 22px; justify-content: center; margin-top: 14px; font-size: 13px; color: var(--muted, #5b6470); }
+.bm-dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 7px; vertical-align: middle; }
+.bm-dot.aw { background: #ff6b0f; }
+.bm-dot.wa { background: #1668a3; }

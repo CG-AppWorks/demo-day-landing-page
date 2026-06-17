@@ -245,8 +245,7 @@ function EventPartners({ language }) {
       { perk: tr(language, 'WeMo PASS · buy a season, get a season', 'WeMo PASS 買季送季'), code: 'APPWORKS32Q', valid: tr(language, 'Enter on 6/17 only', '限 6/17 當天輸入兌換') },
     ] },
     { name: 'USPACE', logo: 'assets/logos/partner-uspace.png', note: 'AW#18', offers: [
-      { perk: tr(language, 'Parking credit · NT$150 (NT$15 ×10)', '停車金 $150（$15 × 10 張）'), code: 'AW32USPACE', valid: tr(language, 'Valid until 2026/12/31', '使用期限至 2026/12/31') },
-      { perk: tr(language, 'Car rental · NT$1,000 voucher (3+ days)', '租車 $1,000 折價券（租 3 日以上）'), code: 'AW32USPACE', valid: tr(language, 'Valid until 2026/12/31', '使用期限至 2026/12/31') },
+      { perk: tr(language, 'Parking credit NT$150 (NT$15 ×10) + car rental NT$1,000 voucher (3+ days)', '停車金 $150（$15×10）＋ 租車 $1,000 折價券（租 3 日以上）'), code: 'AW32USPACE', valid: tr(language, 'Valid until 2026/12/31', '使用期限至 2026/12/31') },
       { perk: tr(language, 'USPACE Premium · 10% off first month', 'USPACE Premium 首月 9 折'), code: 'uspace.app.link/appworks2026', valid: tr(language, 'Valid until 2026/12/31', '使用期限至 2026/12/31') },
     ] },
     { name: 'LINE GO', logo: 'assets/logos/partner-linego.png', note: '', offers: [
@@ -280,6 +279,43 @@ function EventPartners({ language }) {
 
 }
 window.EventPartners = EventPartners;
+
+function BoothMap({ language }) {
+  // Taipei venue layout — not shown on the Singapore edition.
+  if (!window.EVENT_CONFIG || window.EVENT_CONFIG.edition !== 'TW') return null;
+  const left   = ['GreenBidz', 'Ruomei', 'Phasetrum', 'CloudStation'];          // Wistron #10
+  const right  = ['Arrivl', 'CLIKA', 'Notifly', 'Krush'];                       // AppWorks #32
+  const bottom = ['SixSense', 'Shieldbase', 'Rosary Labs', 'Pathors', 'OmniEase AI',
+                  'Novo AI', 'NOTAG KOREA', 'LIPS', 'Innowave Tech', 'Hyarks', 'Decisions Lab'];
+  const booth = (n, cls) => <div key={n} className={`bm-booth ${cls}`}>{n}</div>;
+  return (
+    <section className="section tight" id="booth-map">
+      <div className="container">
+        <div className="section-head">
+          <div>
+            <div className="eyebrow">{tr(language, 'At the venue', '活動現場')}</div>
+            <h2>{tr(language, 'Booth map.', '攤位地圖。')}</h2>
+            <p className="sub">{tr(language, 'Find each team during the open-floor networking.', '交流時間在這裡找到各團隊。')}</p>
+          </div>
+        </div>
+        <div className="bm-scroll">
+          <div className="bm-venue">
+            <div className="bm-stage">{tr(language, 'Stage', '舞台')}</div>
+            <div className="bm-mid">
+              <div className="bm-col">{left.map((n) => booth(n, 'wa'))}</div>
+              <div className="bm-col">{right.map((n) => booth(n, 'aw'))}</div>
+            </div>
+            <div className="bm-bottom">{bottom.map((n) => booth(n, 'aw'))}</div>
+          </div>
+        </div>
+        <div className="bm-legend">
+          <span><i className="bm-dot aw" />{tr(language, 'AppWorks #32', 'AppWorks #32')}</span>
+          <span><i className="bm-dot wa" />{tr(language, 'Wistron #10', '緯創 #10')}</span>
+        </div>
+      </div>
+    </section>);
+}
+window.BoothMap = BoothMap;
 
 /* ─── Intro modal ─── */
 function IntroModal({ team, onClose }) {
