@@ -98,7 +98,6 @@ function App() {
         language={lang}/>
 
       <Agenda language={lang}/>
-      {CFG.album !== false && <Album language={lang}/>}
       <About language={lang}/>
       {CFG.wistron !== false && <Partners
         favorites={favorites}
@@ -108,10 +107,11 @@ function App() {
         density={tweaks.cardDensity}
         accentIntensity={tweaks.accentIntensity}
         language={lang}/>}
+      {CFG.album !== false && <Album language={lang}/>}
+      <BoothMap language={lang}/>
       <CaptionsLauncher language={lang}/>
       <Sponsors language={lang}/>
       <EventPartners language={lang}/>
-      <BoothMap language={lang}/>
       <Footer language={lang}/>
 
       <IntroModal team={introTeam} onClose={() => setIntroTeam(null)}/>

@@ -27,39 +27,20 @@ function Album({ language }) {
   const ALBUM_URL = "https://live.accupai.com/live/54823180?utm_source=DD32TW&utm_medium=website&utm_campaign=demoday";
   const QR = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=0&data=${encodeURIComponent(ALBUM_URL)}`;
   return (
-    <section className="section" id="album">
+    <section className="section tight" id="album">
       <div className="container">
         <div className="section-head">
           <div>
             <div className="eyebrow">{tr(language, 'POWERED BY ACCUPAI', ZH.album.eyebrow)}</div>
             <h2>{tr(language, 'Live photo album.', ZH.album.heading)}</h2>
-            <p className="sub">{tr(language, 'Real-time event photography from the floor — view, download, and share on the spot.', ZH.album.sub)}</p>
-          </div>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <a className="btn primary" href={ALBUM_URL} target="_blank" rel="noopener">
-              Open live album <I.arrow />
-            </a>
+            <p className="sub">{tr(language, 'Real-time event photos — view, download, and share on the spot.', ZH.album.sub)}</p>
           </div>
         </div>
-        <a className="album-cta" href={ALBUM_URL} target="_blank" rel="noopener">
-          <div className="album-cta-art" aria-hidden="true">
-            <span className="lens"><I.camera /></span>
-            <div className="frames">
-              {Array.from({ length: 5 }).map((_, i) => <span key={i} className={`fr fr-${i}`} />)}
-            </div>
-          </div>
-          <div className="album-cta-body">
-            <div className="eyebrow">Accupai · DD#32 live album</div>
-            <h3>Tap to open the live photo wall.</h3>
-            <p>Hundreds of shots from the floor, uploaded through the event. Browse, download and share straight to your phone — long-press any photo to save.</p>
-            <div className="album-cta-actions">
-              <span className="btn primary sm">Open album <I.arrow /></span>
-              <span className="hint">Opens the Accupai viewer in a new tab</span>
-            </div>
-          </div>
-          <div className="album-cta-qr">
-            <img src={QR} alt="Scan to open the live album" width="148" height="148" />
-            <div className="k">Scan to open<br />on your phone</div>
+        <a className="album-mini" href={ALBUM_URL} target="_blank" rel="noopener">
+          <img className="album-mini-qr" src={QR} alt={tr(language, 'Scan to open the live album', '掃描開啟即時相簿')} width="116" height="116" />
+          <div className="album-mini-body">
+            <div className="album-mini-k">{tr(language, 'Scan to open on your phone', '掃描即可在手機上開啟')}</div>
+            <span className="btn primary sm">{tr(language, 'Open live album', '開啟即時相簿')} <I.arrow /></span>
           </div>
         </a>
       </div>
