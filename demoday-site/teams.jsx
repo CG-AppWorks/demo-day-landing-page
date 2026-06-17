@@ -59,7 +59,7 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
 
   if (density === 'compact') {
     return (
-      <article className={`team-card ${liveCls} ${tagCls}`} onClick={() => onOpenLive(team)}>
+      <article id={`team-${team.id}`} className={`team-card ${liveCls} ${tagCls}`} onClick={() => onOpenLive(team)}>
         <div className="logo order">{orderStr}</div>
         <div>
           {logo
@@ -96,7 +96,7 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
 
   if (density === 'editorial') {
     return (
-      <article className={`team-card ${liveCls} ${tagCls}`} onClick={() => onOpenLive(team)}>
+      <article id={`team-${team.id}`} className={`team-card ${liveCls} ${tagCls}`} onClick={() => onOpenLive(team)}>
         <div className="cover">
           <span className="order-tag">{orderStr}</span>
         </div>
@@ -143,7 +143,7 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
 
   // default / comfy
   return (
-    <article className={`team-card ${liveCls} ${tagCls}`} onClick={() => onOpenLive(team)}>
+    <article id={`team-${team.id}`} className={`team-card ${liveCls} ${tagCls}`} onClick={() => onOpenLive(team)}>
       {logo
         ? <div className="card-logo-row"><img className="card-logo-img" src={logo} alt={team.name}/></div>
         : (

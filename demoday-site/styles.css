@@ -1945,8 +1945,10 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
 }
 
 /* ─── Event partners (attendee perks) ─── */
-.ep-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-.ep-card { border: 1px solid var(--border); border-radius: var(--border-radius-lg, 12px); padding: 16px 18px; background: var(--bone, #faf9f5); }
+.ep-grid { display: flex; flex-wrap: wrap; gap: 14px; }
+.ep-card { flex: 1 1 260px; border: 1px solid var(--border); border-radius: var(--border-radius-lg, 12px); padding: 16px 18px; background: var(--bone, #faf9f5); }
+.ep-card.wide { flex: 1.7 1 330px; }       /* USPACE — more text */
+.ep-card.narrow { flex: 0.7 1 200px; }     /* LINE GO — single short offer */
 .ep-name { font-size: 16px; font-weight: 500; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
 .ep-logo { height: 22px; width: auto; max-width: 130px; object-fit: contain; }
 .ep-batch { font-size: 11px; color: var(--fg2); font-weight: 400; }
@@ -1999,10 +2001,19 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
 .bm-col .bm-booth { flex: 1; }
 .bm-bottom { display: flex; gap: 11px; }
 .bm-bottom .bm-booth { flex: 1; }
-.bm-booth { color: #fff; font-weight: 700; font-size: 13px; line-height: 1.25; text-align: center;
-  padding: 13px 9px; border-radius: 5px; min-height: 56px; display: flex; align-items: center; justify-content: center; }
+.bm-booth { appearance: none; border: 0; font-family: inherit; cursor: pointer; color: #fff; font-weight: 700;
+  font-size: 13px; line-height: 1.25; text-align: center; padding: 13px 9px; border-radius: 5px; min-height: 56px;
+  display: flex; align-items: center; justify-content: center; transition: transform .08s ease, box-shadow .12s ease, filter .12s ease; }
+.bm-booth:hover { filter: brightness(1.08); box-shadow: 0 5px 16px rgba(0,0,0,.2); transform: translateY(-1px); }
+.bm-booth:active { transform: translateY(0); }
 .bm-booth.aw { background: #ff6b0f; }
 .bm-booth.wa { background: #1668a3; }
+/* flash a team card when arrived at from the booth map */
+.card-flash { animation: cardFlash 1.5s ease; }
+@keyframes cardFlash {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,15,0); }
+  12%, 62% { box-shadow: 0 0 0 3px rgba(255,107,15,.85); }
+}
 .bm-legend { display: flex; gap: 22px; justify-content: center; margin-top: 14px; font-size: 13px; color: var(--muted, #5b6470); }
 .bm-dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 7px; vertical-align: middle; }
 .bm-dot.aw { background: #ff6b0f; }

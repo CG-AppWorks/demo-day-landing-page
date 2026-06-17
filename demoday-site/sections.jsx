@@ -244,11 +244,11 @@ function EventPartners({ language }) {
       { perk: tr(language, 'WeMo PASS · 2-month free trial', 'WeMo PASS 2 個月 0 元體驗'), code: 'APPWORKS32', valid: tr(language, 'Redeem 2026/6/17–7/19', '兌換期限 2026/6/17–7/19') },
       { perk: tr(language, 'WeMo PASS · buy a season, get a season', 'WeMo PASS 買季送季'), code: 'APPWORKS32Q', valid: tr(language, 'Enter on 6/17 only', '限 6/17 當天輸入兌換') },
     ] },
-    { name: 'USPACE', logo: 'assets/logos/partner-uspace.png', note: 'AW#18', offers: [
+    { name: 'USPACE', logo: 'assets/logos/partner-uspace.png', note: 'AW#18', width: 'wide', offers: [
       { perk: tr(language, 'Parking credit NT$150 (NT$15 ×10) + car rental NT$1,000 voucher (3+ days)', '停車金 $150（$15×10）＋ 租車 $1,000 折價券（租 3 日以上）'), code: 'AW32USPACE', valid: tr(language, 'Valid until 2026/12/31', '使用期限至 2026/12/31') },
       { perk: tr(language, 'USPACE Premium · 10% off first month', 'USPACE Premium 首月 9 折'), code: 'uspace.app.link/appworks2026', valid: tr(language, 'Valid until 2026/12/31', '使用期限至 2026/12/31') },
     ] },
-    { name: 'LINE GO', logo: 'assets/logos/partner-linego.png', note: '', offers: [
+    { name: 'LINE GO', logo: 'assets/logos/partner-linego.png', note: '', width: 'narrow', offers: [
       { perk: tr(language, 'Taxi ride voucher · NT$50', '計程車乘車券 50 元'), code: 'APPWORKS32', valid: tr(language, 'Collect & use on 6/17 only', '限 6/17 當天領取使用') },
     ] },
   ];
@@ -263,7 +263,7 @@ function EventPartners({ language }) {
         </div>
         <div className="ep-grid">
           {partners.map((p, i) =>
-          <div key={i} className="ep-card">
+          <div key={i} className={`ep-card ${p.width || ''}`}>
             <div className="ep-name">{p.logo ? <img className="ep-logo" src={p.logo} alt={p.name}/> : <span>{p.name}</span>}{p.note && <span className="ep-batch">{p.note}</span>}</div>
             {p.offers.map((o, j) =>
             <div key={j} className="ep-offer">
@@ -283,11 +283,21 @@ window.EventPartners = EventPartners;
 function BoothMap({ language }) {
   // Taipei venue layout — not shown on the Singapore edition.
   if (!window.EVENT_CONFIG || window.EVENT_CONFIG.edition !== 'TW') return null;
-  const left   = ['GreenBidz', 'Ruomei', 'Phasetrum', 'CloudStation'];          // Wistron #10
-  const right  = ['Arrivl', 'CLIKA', 'Notifly', 'Krush'];                       // AppWorks #32
-  const bottom = ['SixSense', 'Shieldbase', 'Rosary Labs', 'Pathors', 'OmniEase AI',
-                  'Novo AI', 'NOTAG KOREA', 'LIPS', 'Innowave Tech', 'Hyarks', 'Decisions Lab'];
-  const booth = (n, cls) => <div key={n} className={`bm-booth ${cls}`}>{n}</div>;
+  const left   = [['GreenBidz','greenbidz'], ['Ruomei','ruomei'], ['Phasetrum','phasetrum'], ['CloudStation','cloudstation']];      // Wistron #10
+  const right  = [['Arrivl','arrivl'], ['CLIKA','clika'], ['Notifly','notifly'], ['Krush','krush']];                              // AppWorks #32
+  const bottom = [['SixSense','sixsense'], ['Shieldbase','shieldbase'], ['Rosary Labs','rosary'], ['Pathors','pathors'],
+                  ['OmniEase AI','omniease'], ['Novo AI','novo'], ['NOTAG KOREA','notag'], ['LIPS','lips'],
+                  ['Innowave Tech','innowave'], ['Hyarks','hyarks'], ['Decisions Lab','decisionslab']];
+  // Tap a booth -> scroll to that team's card and flash it.
+  const jump = (id) => {
+    const card = document.getElementById('team-' + id);
+    const target = card || document.getElementById('teams');
+    if (!target) return;
+    const y = target.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+    if (card) { card.classList.add('card-flash'); setTimeout(() => card.classList.remove('card-flash'), 1500); }
+  };
+  const booth = ([n, id], cls) => <button key={id} type="button" className={`bm-booth ${cls}`} onClick={() => jump(id)}>{n}</button>;
   return (
     <section className="section tight" id="booth-map">
       <div className="container">
