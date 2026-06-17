@@ -2015,14 +2015,18 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
   12%, 62% { box-shadow: 0 0 0 3px rgba(255,107,15,.85); }
 }
 
-/* ── Live photo album (compact) ────────────────────────────── */
-.album-mini { display: inline-flex; align-items: center; gap: 18px; max-width: 460px;
-  padding: 14px 18px; border: 1px solid var(--border); border-radius: var(--border-radius-lg, 12px);
-  background: var(--bone, #faf9f5); text-decoration: none; color: inherit; transition: box-shadow .15s ease; }
-.album-mini:hover { box-shadow: 0 6px 20px rgba(0,0,0,.08); }
-.album-mini-qr { flex: none; display: block; border-radius: 6px; }
-.album-mini-body { display: flex; flex-direction: column; gap: 12px; }
-.album-mini-k { font-weight: 600; font-size: 14px; line-height: 1.35; }
+/* ── Live photo album (button + click-to-play embed) ───────── */
+.album-frame { margin-top: 18px; border: 1px solid var(--border); border-radius: var(--border-radius-lg, 12px);
+  overflow: hidden; background: #0b0d10; }
+.album-embed { display: block; width: 100%; height: 540px; border: 0; background: #0b0d10; }
+.album-play { width: 100%; min-height: 220px; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 10px; padding: 28px; background: var(--bone, #faf9f5); border: 0; cursor: pointer;
+  font: inherit; font-weight: 700; font-size: 16px; color: var(--ink, #0b0d10); transition: background .15s ease; }
+.album-play:hover { background: #efece4; }
+.album-play-ico { display: inline-flex; width: 46px; height: 46px; align-items: center; justify-content: center;
+  border-radius: 50%; background: #ff6b0f; color: #fff; }
+.album-play-hint { font-weight: 500; font-size: 13px; color: var(--muted, #5b6470); }
+@media (max-width: 560px) { .album-embed { height: 76vh; } }
 .bm-legend { display: flex; gap: 22px; justify-content: center; margin-top: 14px; font-size: 13px; color: var(--muted, #5b6470); }
 .bm-dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 7px; vertical-align: middle; }
 .bm-dot.aw { background: #ff6b0f; }

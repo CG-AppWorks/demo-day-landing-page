@@ -25,7 +25,7 @@ window.Agenda = Agenda;
 
 function Album({ language }) {
   const ALBUM_URL = "https://live.accupai.com/live/54823180?utm_source=DD32TW&utm_medium=website&utm_campaign=demoday";
-  const QR = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=0&data=${encodeURIComponent(ALBUM_URL)}`;
+  const [playing, setPlaying] = useState(false);
   return (
     <section className="section tight" id="album">
       <div className="container">
@@ -35,14 +35,19 @@ function Album({ language }) {
             <h2>{tr(language, 'Live photo album.', ZH.album.heading)}</h2>
             <p className="sub">{tr(language, 'Real-time event photos — view, download, and share on the spot.', ZH.album.sub)}</p>
           </div>
-        </div>
-        <a className="album-mini" href={ALBUM_URL} target="_blank" rel="noopener">
-          <img className="album-mini-qr" src={QR} alt={tr(language, 'Scan to open the live album', '掃描開啟即時相簿')} width="116" height="116" />
-          <div className="album-mini-body">
-            <div className="album-mini-k">{tr(language, 'Scan to open on your phone', '掃描即可在手機上開啟')}</div>
-            <span className="btn primary sm">{tr(language, 'Open live album', '開啟即時相簿')} <I.arrow /></span>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <a className="btn primary" href={ALBUM_URL} target="_blank" rel="noopener">{tr(language, 'Open live album', '開啟即時相簿')} <I.arrow /></a>
           </div>
-        </a>
+        </div>
+        <div className="album-frame">
+          {playing
+            ? <iframe className="album-embed" src={ALBUM_URL} title="Live photo album" loading="lazy" allow="fullscreen" />
+            : <button type="button" className="album-play" onClick={() => setPlaying(true)}>
+                <span className="album-play-ico"><I.camera /></span>
+                <span>{tr(language, 'Play the live photo wall', '播放即時相片牆')}</span>
+                <span className="album-play-hint">{tr(language, 'Loads the latest photos right here', '在此載入最新照片')}</span>
+              </button>}
+        </div>
       </div>
     </section>);
 }
