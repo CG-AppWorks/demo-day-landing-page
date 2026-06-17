@@ -125,7 +125,7 @@ window.EVENT_CONFIG = {
   venue: 'Taipei Marriott Hotel · 5F Grand Ballroom',
   bilingual: true,   // EN + 中文
   wordly: true,      // AI live interpretation
-  album: false,      // Accupai photo album — disabled (no time to manage uploads)
+  album: true,       // Accupai photo album — link only (no on-page embed)
   wistron: true,     // WA#10 cohort + partners section
   keyVisual: true,   // use the printed key-visual lockup in the hero
   nowOnStage: false, // captions live in the floating 即時翻譯 widget, not an inline page strip
