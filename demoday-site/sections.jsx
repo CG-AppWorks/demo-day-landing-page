@@ -216,7 +216,7 @@ function EventPartners({ language }) {
   // Taipei-event perks only — not shown on the Singapore edition.
   if (!window.EVENT_CONFIG || window.EVENT_CONFIG.edition !== 'TW') return null;
   const partners = [
-    { name: 'WeMo', logo: 'assets/logos/partner-wemo.png', note: 'AW#11 · #12', offers: [
+    { name: 'WeMo', logo: 'assets/logos/partner-wemo.png', note: 'AW#12', offers: [
       { perk: tr(language, 'WeMo PASS · 2-month free trial', 'WeMo PASS 2 個月 0 元體驗'), code: 'APPWORKS32', valid: tr(language, 'Redeem 2026/6/17–7/19', '兌換期限 2026/6/17–7/19') },
       { perk: tr(language, 'WeMo PASS · buy a season, get a season', 'WeMo PASS 買季送季'), code: 'APPWORKS32Q', valid: tr(language, 'Enter on 6/17 only', '限 6/17 當天輸入兌換') },
     ] },
