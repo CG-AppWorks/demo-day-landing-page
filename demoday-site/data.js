@@ -43,7 +43,7 @@ const TEAMS = [
     pitch:"Nano-scale thermal solder mask + microchannel cooling that drop in to existing SMT lines, cutting AI-chip temperatures with zero process change — 'aluminum-for-copper' lightweighting." },
   { id:"greenbidz", linkedin:"https://www.linkedin.com/in/yiu-che-wei-143795209/", order:3, name:"GreenBidz", sub:"Circular-asset marketplace & ESG", tags:["AI","Enterprise"], batch:"WA#10", stage:"Pitching", market:"Asia", hq:"TW", language:"Mandarin", presenter:"Jerry Yiu", title:"Founder & CEO", email:"jyiu@greenbidz.com", website:"https://greenbidz.com", speakerOrder:3,
     pitch:"SaaS-enabled B2B marketplace that helps factories recover value from surplus equipment while auto-capturing the CO₂ and lifecycle data enterprises need for ESG reporting." },
-  { id:"cloudstation", linkedin:"https://www.linkedin.com/in/oumnyabenhassou/", order:4, name:"CloudStation", sub:"Deploy apps & AI agents to any cloud", tags:["AI","Enterprise"], batch:"WA#10", stage:"Pitching", market:"Global", hq:"FR", language:"English", presenter:"Oumnya Benhassou", title:"Co-Founder & CEO", email:"oumnya@cloud-station.io", website:"https://cloud-station.io", speakerOrder:4,
+  { id:"cloudstation", linkedin:"https://www.linkedin.com/in/oumnyabenhassou/", order:4, name:"CloudStation", sub:"Deploy apps & AI agents to any cloud", tags:["AI","Enterprise"], batch:"WA#10", stage:"Pitching", market:"Global", hq:"AE", language:"English", presenter:"Oumnya Benhassou", title:"Co-Founder & CEO", email:"oumnya@cloud-station.io", website:"https://cloud-station.io", speakerOrder:4,
     pitch:"A no-code, multi-cloud platform that lets non-technical founders deploy apps, databases and autonomous AI agents — 'the technical co-founder you don't give equity to.'" },
 ];
 
