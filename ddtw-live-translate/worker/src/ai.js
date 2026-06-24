@@ -8,14 +8,19 @@ const GEMINI_MT_MODEL = "gemini-3.5-flash"; // 3.5 gives the better glossary rec
 const OPENAI_STT_MODEL = "gpt-4o-transcribe";
 const OPENAI_MT_MODEL = "gpt-4o-mini";
 
-function bilingualSystemPrompt(extraTerms) {
+function bilingualSystemPrompt(extraTerms, lang) {
+  const ja = lang === "ja"; // secondary language: Japanese (Tokyo) vs the default zh-TW
   return [
-    "You caption a bilingual startup Demo Day in Taipei for a MIXED audience (Mandarin + English).",
+    `You caption a bilingual startup pitch event for a MIXED audience (${ja ? "Japanese + English" : "Mandarin + English"}).`,
     "For the given caption line, output BOTH:",
     '  - "en": a natural, concise English caption.',
-    '  - "zh": Traditional Chinese as used in Taiwan (繁體中文，台灣慣用語).',
+    ja
+      ? '  - "zh": a natural Japanese (日本語) caption — this field carries the Japanese translation.'
+      : '  - "zh": Traditional Chinese as used in Taiwan (繁體中文，台灣慣用語).',
     "If the line is already in one language, keep that side faithful and translate the other.",
-    "Taiwan vocabulary ONLY in zh: 軟體 not 软件, 網路 not 网络, 影片 not 视频, 新創 not 初创, 人工智慧/AI not 人工智能.",
+    ja
+      ? "Use natural spoken Japanese (敬体/丁寧). Keep brand/product names and acronyms in their original form."
+      : "Taiwan vocabulary ONLY in zh: 軟體 not 软件, 網路 not 网络, 影片 not 视频, 新創 not 初创, 人工智慧/AI not 人工智能.",
     "Proper nouns must be rendered exactly; 'keep as' means leave in English (in BOTH en and zh):",
     glossaryForPrompt(),
     extraTerms ? "Speaker-specific terms for this segment:\n" + extraTerms : "",
@@ -115,7 +120,7 @@ async function sttGemini(env, bytes, mime) {
 }
 
 // ---- bilingual translation of a single caption line ----
-async function translateOpenAI(env, text, ctx, extraTerms) {
+async function translateOpenAI(env, text, ctx, extraTerms, lang) {
   const r = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: { Authorization: `Bearer ${env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
@@ -130,7 +135,7 @@ async function translateOpenAI(env, text, ctx, extraTerms) {
         },
       },
       messages: [
-        { role: "system", content: bilingualSystemPrompt(extraTerms) },
+        { role: "system", content: bilingualSystemPrompt(extraTerms, lang) },
         { role: "user", content: (ctx ? `Recent context:\n${ctx}\n\n` : "") + `Caption this line:\n${text}` },
       ],
     }),
@@ -139,11 +144,11 @@ async function translateOpenAI(env, text, ctx, extraTerms) {
   return JSON.parse((await r.json()).choices[0].message.content);
 }
 
-async function translateGemini(env, text, ctx, extraTerms) {
+async function translateGemini(env, text, ctx, extraTerms, lang) {
   const r = await geminiFetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MT_MODEL}:generateContent?key=${env.GEMINI_API_KEY}`, {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      systemInstruction: { parts: [{ text: bilingualSystemPrompt(extraTerms) }] },
+      systemInstruction: { parts: [{ text: bilingualSystemPrompt(extraTerms, lang) }] },
       contents: [{ parts: [{ text: (ctx ? `Recent context:\n${ctx}\n\n` : "") + `Caption this line:\n${text}` }] }],
       generationConfig: {
         temperature: 0.2, responseMimeType: "application/json",
@@ -159,21 +164,21 @@ async function translateGemini(env, text, ctx, extraTerms) {
 }
 
 // One audio chunk -> {transcript, en, zh} for the given engine.
-export async function captionChunk(env, engine, blob, bytes, mime, ctx, extraTerms) {
+export async function captionChunk(env, engine, blob, bytes, mime, ctx, extraTerms, lang) {
   const transcript = engine === "gemini" ? await sttGemini(env, bytes, mime) : await sttOpenAI(env, blob);
   // Drop phantom transcripts before spending a translation call on them.
   if (!transcript || looksLikeHallucination(transcript)) return { transcript: "", en: "", zh: "" };
   const pair = engine === "gemini"
-    ? await translateGemini(env, transcript, ctx, extraTerms)
-    : await translateOpenAI(env, transcript, ctx, extraTerms);
+    ? await translateGemini(env, transcript, ctx, extraTerms, lang)
+    : await translateOpenAI(env, transcript, ctx, extraTerms, lang);
   // Belt-and-braces: also drop if the rendered caption is a known phantom.
   if (looksLikeHallucination(pair.en) || looksLikeHallucination(pair.zh)) return { transcript: "", en: "", zh: "" };
   return { transcript, en: pair.en || "", zh: pair.zh || "" };
 }
 
 // Text-only bilingual translate (for /api/translate testing + reuse).
-export async function translateText(env, engine, text, ctx, extraTerms) {
+export async function translateText(env, engine, text, ctx, extraTerms, lang) {
   return engine === "gemini"
-    ? translateGemini(env, text, ctx, extraTerms)
-    : translateOpenAI(env, text, ctx, extraTerms);
+    ? translateGemini(env, text, ctx, extraTerms, lang)
+    : translateOpenAI(env, text, ctx, extraTerms, lang);
 }

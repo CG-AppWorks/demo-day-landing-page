@@ -95,12 +95,13 @@ export default {
         const seq = Number(form.get("seq"));
         const ctx = String(form.get("context") || "");
         const terms = String(form.get("terms") || "");
+        const lang = String(form.get("lang") || "zh-TW"); // secondary caption language ('zh-TW' default, 'ja' for Tokyo)
         if (!file || typeof file === "string") return json({ error: "no_audio" }, { status: 400 });
         if (!ENGINES.has(engine)) return json({ error: "bad_engine" }, { status: 400 });
         if (!Number.isFinite(seq)) return json({ error: "bad_seq" }, { status: 400 });
 
         const bytes = new Uint8Array(await file.arrayBuffer());
-        const res = await captionChunk(env, engine, file, bytes, file.type || "audio/wav", ctx, terms);
+        const res = await captionChunk(env, engine, file, bytes, file.type || "audio/wav", ctx, terms, lang);
         if (res.transcript) {
           await postSegment(env, { channel: engine, seq, en: res.en, zh: res.zh, final: true });
         }
@@ -116,7 +117,7 @@ export default {
         const b = await request.json();
         if (!b || !b.text) return json({ error: "no_text" }, { status: 400 });
         const engine = ENGINES.has(b.engine) ? b.engine : "openai";
-        const pair = await translateText(env, engine, String(b.text), String(b.context || ""), String(b.terms || ""));
+        const pair = await translateText(env, engine, String(b.text), String(b.context || ""), String(b.terms || ""), String(b.lang || "zh-TW"));
         return json({ ok: true, ...pair });
       } catch (e) {
         return json({ error: "translate_failed", message: String(e.message || e).slice(0, 300) }, { status: 502 });

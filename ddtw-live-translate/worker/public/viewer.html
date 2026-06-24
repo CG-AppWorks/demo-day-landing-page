@@ -70,8 +70,8 @@
     <span id="src">·</span>
     <span class="spacer"></span>
     <div class="langseg" id="langseg" role="radiogroup" aria-label="Caption language">
-      <button data-m="zh" role="radio">中</button>
-      <button data-m="both" class="on" role="radio" aria-checked="true">雙語</button>
+      <button data-m="zh" id="secBtn" role="radio">中</button>
+      <button data-m="both" class="on" id="bothBtn" role="radio" aria-checked="true">雙語</button>
       <button data-m="en" role="radio">EN</button>
     </div>
   </header>
@@ -93,6 +93,10 @@
   var qs = new URLSearchParams(location.search);
   // Worker base: same origin by default; override with ?base=https://...
   var BASE = (qs.get("base") || "").replace(/\/$/,"");
+  // Relabel the secondary-language toggle (?sec=日本語) for non-Chinese editions.
+  var SEC = qs.get("sec");
+  if (SEC) { var _sb = document.getElementById("secBtn"); if (_sb) _sb.textContent = SEC;
+             var _bb = document.getElementById("bothBtn"); if (_bb) _bb.textContent = SEC + "+EN"; }
   var WORDLY_SESSION = qs.get("wordly") || ""; // Wordly session id for backup mode
   var WORDLY_LANG = qs.get("lang") || "zh-Hant";
 

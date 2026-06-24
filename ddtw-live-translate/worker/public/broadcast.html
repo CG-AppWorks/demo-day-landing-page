@@ -85,6 +85,8 @@
 (function(){
   "use strict";
   var BASE = (new URLSearchParams(location.search).get("base") || "").replace(/\/$/,"");
+  // Secondary caption language: ?lang=ja (Tokyo) — defaults to zh-TW on the server.
+  var LANG = (new URLSearchParams(location.search).get("lang") || "").trim();
   var $ = function(id){ return document.getElementById(id); };
   var token = "", engine = "openai", seq = (Date.now() % 1e7);
   var ctx, source, proc, stream;
@@ -219,6 +221,7 @@
     var fd = new FormData();
     fd.append("engine", engine); fd.append("seq", String(mySeq));
     fd.append("context", lastCtx.join(" "));
+    if (LANG) fd.append("lang", LANG);
     fd.append("audio", wavBlob(pcm16), "chunk.wav");
     var row = addRow("…", "（轉譯中）", false);
     try{
