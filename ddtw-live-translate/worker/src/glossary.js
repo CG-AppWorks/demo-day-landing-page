@@ -322,6 +322,24 @@ export const GLOSSARY = [
   { en: "FUNNOW", zh: "KEEP", note: "FunNow (lifestyle booking)" },
   { en: "Far Glory", zh: "KEEP", note: "Far Glory Group (Taiwan)" },
   { en: "MIT NANDA", zh: "KEEP", note: "MIT NANDA report on enterprise AI" },
+  // --- IVS clients & partners named in the pitches; KEEP-as-English ---
+  { en: "JTCG", zh: "KEEP", note: "Raccoon AI's parent group (J-TCG)" },
+  { en: "Google", zh: "KEEP", note: "keep brand name" },
+  { en: "BenQ", zh: "KEEP", note: "Taiwan electronics brand (client)" },
+  { en: "Philips", zh: "KEEP", note: "electronics brand (client)" },
+  { en: "Whoscall", zh: "KEEP", note: "Gogolook caller-ID app, Taiwan (client)" },
+  { en: "PAUL & JOE", zh: "KEEP", note: "fashion brand (client)" },
+  { en: "Fandora", zh: "KEEP", note: "Taiwan creator-merch platform (client)" },
+  { en: "CHECKinn", zh: "KEEP", note: "booking/hospitality (client)" },
+  { en: "Le-yan", zh: "KEEP", note: "brand (client)" },
+  { en: "Simmpeq", zh: "KEEP", note: "brand (client)" },
+  { en: "Hsin-Fei Study", zh: "KEEP", note: "brand (client)" },
+  { en: "TEAMJOINED", zh: "KEEP", note: "brand (client)" },
+  { en: "FASHION FOR YES", zh: "KEEP", note: "brand (client)" },
+  { en: "WEEX", zh: "KEEP", note: "crypto exchange (client)" },
+  { en: "VERVE", zh: "KEEP", note: "brand (client)" },
+  { en: "Far Glory Real Estate", zh: "KEEP", note: "遠雄 — Taiwan real estate (client)" },
+  { en: "WeMo Scooter", zh: "KEEP", note: "WeMo scooter-sharing, Taiwan (client)" },
 ];
 
 // Render the glossary block for the translation system prompt.
