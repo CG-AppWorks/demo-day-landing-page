@@ -287,11 +287,49 @@ export const GLOSSARY = [
   { en: "Corbin", zh: "KEEP", note: "CLIKA Head of Research" },
   { en: "Yogi", zh: "KEEP", note: "CLIKA Head of Platform" },
   { en: "ARM", zh: "KEEP", note: "CPU architecture" },
+  // --- from IVS 2026 pitch content (Taiwan Startup Pitch Session, Tokyo/Kyoto); KEEP-as-English proper nouns ---
+  { en: "GNTC", zh: "KEEP", note: "Taiwan startup @ IVS; enterprise AI agents for non-engineers" },
+  { en: "Voiss", zh: "KEEP", note: "Taiwan startup @ IVS; enterprise AI voice platform" },
+  { en: "BarkingDog", zh: "KEEP", note: "Taiwan startup @ IVS; no-code AI agents & virtual humans" },
+  { en: "Raccoon AI", zh: "KEEP", note: "Taiwan startup @ IVS; autonomous AI customer service" },
+  { en: "Omnichat", zh: "KEEP", note: "Taiwan startup @ IVS; AI chat-commerce platform" },
+  { en: "Cake", zh: "KEEP", note: "Taiwan startup @ IVS (CakeResume); AI for careers & hiring — company name, not the food" },
+  { en: "ReturnHelper", zh: "KEEP", note: "Taiwan startup @ IVS; e-commerce returns optimization" },
+  { en: "KopherBit", zh: "KEEP", note: "Taiwan startup @ IVS; AI software for commercial EVs" },
+  { en: "Luggagent", zh: "KEEP", note: "Taiwan startup @ IVS; luggage-free travel (also written LuggAgent)" },
+  { en: "Kytu Lin", zh: "KEEP", note: "GNTC founder & CEO" },
+  { en: "Max Tseng", zh: "KEEP", note: "Voiss CEO & founder" },
+  { en: "Guan-Wen Hsu", zh: "KEEP", note: "BarkingDog founder & CEO (許冠文 / Alex)" },
+  { en: "James Chou", zh: "KEEP", note: "Raccoon AI co-founder & CEO" },
+  { en: "Alan Chan", zh: "KEEP", note: "Omnichat founder & CEO" },
+  { en: "Trantor Liu", zh: "KEEP", note: "Cake founder & CEO" },
+  { en: "Shumpei Shibata", zh: "KEEP", note: "ReturnHelper GM of JP/KR (also spelled Shunpei)" },
+  { en: "Yung Chen Wang", zh: "KEEP", note: "KopherBit founder & CEO" },
+  { en: "Lance Lin", zh: "KEEP", note: "Luggagent CEO & founder" },
+  { en: "Digital Employee", zh: "KEEP", note: "GNTC product concept" },
+  { en: "GEO", zh: "KEEP", note: "Generative Engine Optimization (brand visibility in AI search)" },
+  { en: "SDV", zh: "KEEP", note: "software-defined vehicle" },
+  { en: "ECU", zh: "KEEP", note: "electronic control unit (vehicle)" },
+  { en: "LINE WORKS", zh: "KEEP", note: "business messaging app" },
+  { en: "LINE", zh: "KEEP", note: "LINE messaging app (brand; keep, not the word 'line')" },
+  { en: "GMB", zh: "KEEP", note: "Google Business Profile / Google My Business" },
+  { en: "SOV", zh: "KEEP", note: "share of voice" },
+  { en: "NLU", zh: "KEEP", note: "natural language understanding" },
+  { en: "Voice AI", zh: "KEEP" },
+  { en: "JINS", zh: "KEEP", note: "JINS eyewear (Japan)" },
+  { en: "WeMo", zh: "KEEP", note: "WeMo scooter-sharing (Taiwan)" },
+  { en: "momo", zh: "KEEP", note: "momo (Taiwan e-commerce)" },
+  { en: "FUNNOW", zh: "KEEP", note: "FunNow (lifestyle booking)" },
+  { en: "Far Glory", zh: "KEEP", note: "Far Glory Group (Taiwan)" },
+  { en: "MIT NANDA", zh: "KEEP", note: "MIT NANDA report on enterprise AI" },
 ];
 
 // Render the glossary block for the translation system prompt.
-export function glossaryForPrompt() {
-  return GLOSSARY.map((g) =>
+// For non-Chinese targets (e.g. lang='ja'), only the KEEP entries apply —
+// the zh-TW renderings would otherwise push Chinese into the caption.
+export function glossaryForPrompt(lang) {
+  const entries = lang === "ja" ? GLOSSARY.filter((g) => g.zh === "KEEP") : GLOSSARY;
+  return entries.map((g) =>
     g.zh === "KEEP"
       ? `- "${g.en}" -> keep as "${g.en}"${g.note ? ` (${g.note})` : ""}`
       : `- "${g.en}" -> "${g.zh}"${g.note ? ` (${g.note})` : ""}`

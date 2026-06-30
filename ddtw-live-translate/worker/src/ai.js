@@ -22,7 +22,7 @@ function bilingualSystemPrompt(extraTerms, lang) {
       ? "Use natural spoken Japanese (敬体/丁寧). Keep brand/product names and acronyms in their original form."
       : "Taiwan vocabulary ONLY in zh: 軟體 not 软件, 網路 not 网络, 影片 not 视频, 新創 not 初创, 人工智慧/AI not 人工智能.",
     "Proper nouns must be rendered exactly; 'keep as' means leave in English (in BOTH en and zh):",
-    glossaryForPrompt(),
+    glossaryForPrompt(lang),
     extraTerms ? "Speaker-specific terms for this segment:\n" + extraTerms : "",
     "Keep numbers, currencies, units exact. Output ONLY the caption.",
   ].filter(Boolean).join("\n");
