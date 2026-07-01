@@ -124,6 +124,23 @@ export default {
       }
     }
 
+    // Show/hide the whole live-translation UI on the site, for ALL guests.
+    // GET is public (the page polls it); POST sets it (backstage passphrase or admin token).
+    if (pathname === "/api/visibility") {
+      if (request.method === "POST") {
+        const auth = (request.headers.get("Authorization") || "").replace(/^Bearer\s+/, "");
+        if (auth !== "ilovetaiwan" && !isAdmin(request, env)) {
+          return json({ error: "unauthorized" }, { status: 401 });
+        }
+        let b = {}; try { b = await request.json(); } catch (e) {}
+        const enabled = b.enabled !== false;
+        await env.CAPTIONS_KV.put("captionsEnabled", enabled ? "1" : "0");
+        return json({ ok: true, enabled });
+      }
+      const v = await env.CAPTIONS_KV.get("captionsEnabled");
+      return json({ enabled: v !== "0" }); // default: shown
+    }
+
     if (DO_ROUTES.has(pathname)) {
       const id = env.CAPTION_HUB.idFromName("event");
       const stub = env.CAPTION_HUB.get(id);
