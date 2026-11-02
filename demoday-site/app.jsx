@@ -10,7 +10,7 @@ function App() {
     "showNowOnStage": true,
     "wordlySessionId": "DXRS-1194",
     "eventPhase": "live",
-    "liveTeamId": "notag"
+    "liveTeamId": "ailytics"
   }/*EDITMODE-END*/;
 
   const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);

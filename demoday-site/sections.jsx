@@ -24,7 +24,7 @@ function Agenda({ language }) {
 window.Agenda = Agenda;
 
 function Album({ language }) {
-  const ALBUM_URL = "https://live.accupai.com/live/54823180?utm_source=DD32TW&utm_medium=website&utm_campaign=demoday";
+  const ALBUM_URL = (window.EVENT_CONFIG || {}).albumUrl;
   return (
     <section className="section tight" id="album">
       <div className="container">
@@ -129,14 +129,15 @@ function About({ language }) {
 window.About = About;
 
 function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpenLive = () => {}, density = 'comfy', accentIntensity = 'balanced', language }) {
-  const waTeams = (window.TEAMS || []).filter((t) => t.batch === 'WA#10');
+  const CFG = window.EVENT_CONFIG || {};
+  const waTeams = (window.TEAMS || []).filter((t) => t.batch === CFG.wistronBatch);
   const zh = (window.EVENT_CONFIG ? window.EVENT_CONFIG.bilingual !== false : true) && language === 'zh';
   return (
     <section className="section bone" id="partners">
       <div className="container">
         <div className="section-head">
           <div>
-            <h2>Wistron #10.</h2>
+            <h2>{CFG.wistronLabel}.</h2>
           </div>
         </div>
         <div className="about-grid">
@@ -158,9 +159,9 @@ function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpen
               "To broaden and deepen its collaboration with startups, Wistron set up its corporate venture capital office (CVC) in 2021 and launched the Wistron Accelerator together with AppWorks — a leading launchpad for bold and ambitious entrepreneurs targeting Greater Southeast Asia (GSEA). Through strategic investment and partnership, it actively builds Wistron's growth engines for the future. The program is operated by AppWorks, runs twice a year, and recruits a limited cohort of 7 startups per batch.",
               "為了擴大與新創合作的廣度與深度，緯創在 2021 年成立企業投資辦公室 (CVC)，並與大東南亞領先的新創加速器 AppWorks 合作啟動 Wistron Accelerator 緯創垂直加速器，透過策略投資與結盟，積極佈局未來的成長引擎；由 AppWorks 提供營運等核心業務，並以每年舉辦兩屆、限額招募 7 家新創來進行。")}</p>
             <div className="stats-inline">
-              <div className="stat"><div className="v"><span className="num">10</span></div><div className="l">{tr(language, 'Programs', ZH.partners.programs)}</div></div>
+              <div className="stat"><div className="v"><span className="num">{CFG.wistronPrograms}</span></div><div className="l">{tr(language, 'Programs', ZH.partners.programs)}</div></div>
               <div className="stat"><div className="v"><span className="num">7</span></div><div className="l">{tr(language, 'Per batch', '每屆名額')}</div></div>
-              <div className="stat"><div className="v"><span className="num">4</span></div><div className="l">{tr(language, 'Teams pitching today', ZH.partners.pitching)}</div></div>
+              <div className="stat"><div className="v"><span className="num">{waTeams.length}</span></div><div className="l">{tr(language, 'Teams pitching today', ZH.partners.pitching)}</div></div>
             </div>
             <a className="btn outline sm arrow" href="https://appworks.tw/wistron/" target="_blank" rel="noopener">{tr(language, 'More information', '更多資訊')} <I.arrow /></a>
           </div>
@@ -183,7 +184,7 @@ function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpen
 window.Partners = Partners;
 
 function Sponsors({ language }) {
-  // DD#32 sponsors + event partner — logo lockups, shown together.
+  // Demo Day sponsors — logo lockups, shown together (same three since DD#32).
   const sponsors = [
   { name: 'Google Cloud', src: 'assets/sponsor-google.svg', h: 30 },
   { name: 'AWS', src: 'assets/sponsor-aws.svg', h: 34 },
@@ -213,21 +214,12 @@ window.Sponsors = Sponsors;
 
 /* ─── Event partners (attendee perks + promo codes, from the deck) ─── */
 function EventPartners({ language }) {
-  // Taipei-event perks only — not shown on the Singapore edition.
-  if (!window.EVENT_CONFIG || window.EVENT_CONFIG.edition !== 'TW') return null;
-  const partners = [
-    { name: 'WeMo', logo: 'assets/logos/partner-wemo.png', note: 'AW#12', offers: [
-      { perk: tr(language, 'WeMo PASS · 2-month free trial', 'WeMo PASS 2 個月 0 元體驗'), code: 'APPWORKS32', valid: tr(language, 'Redeem 2026/6/17–7/19', '兌換期限 2026/6/17–7/19') },
-      { perk: tr(language, 'WeMo PASS · buy a season, get a season', 'WeMo PASS 買季送季'), code: 'APPWORKS32Q', valid: tr(language, 'Enter on 6/17 only', '限 6/17 當天輸入兌換') },
-    ] },
-    { name: 'USPACE', logo: 'assets/logos/partner-uspace.png', note: 'AW#18', width: 'wide', offers: [
-      { perk: tr(language, 'Parking credit NT$150 (NT$15 ×10) + car rental NT$1,000 voucher (3+ days)', '停車金 $150（$15×10）＋ 租車 $1,000 折價券（租 3 日以上）'), code: 'AW32USPACE', valid: tr(language, 'Valid until 2026/12/31', '使用期限至 2026/12/31') },
-      { perk: tr(language, 'USPACE Premium · 10% off first month', 'USPACE Premium 首月 9 折'), code: 'uspace.app.link/appworks2026', valid: tr(language, 'Valid until 2026/12/31', '使用期限至 2026/12/31') },
-    ] },
-    { name: 'LINE GO', logo: 'assets/logos/partner-linego.png', note: '', width: 'narrow', offers: [
-      { perk: tr(language, 'Taxi ride voucher · NT$50', '計程車乘車券 50 元'), code: 'APPWORKS32', valid: tr(language, 'Collect & use on 6/17 only', '限 6/17 當天領取使用') },
-    ] },
-  ];
+  // Perks come from EVENT_PARTNERS in the data file; [en, zh] pairs.
+  // Renders nothing until that edition's perks are confirmed.
+  const list = window.EVENT_PARTNERS || [];
+  if (!list.length) return null;
+  const partners = list.map((p) => ({ ...p, offers: p.offers.map((o) => ({
+    perk: tr(language, o.perk[0], o.perk[1]), code: o.code, valid: tr(language, o.valid[0], o.valid[1]) })) }));
   return (
     <section className="section tight" id="event-partners">
       <div className="container">
@@ -257,13 +249,12 @@ function EventPartners({ language }) {
 window.EventPartners = EventPartners;
 
 function BoothMap({ language }) {
-  // Taipei venue layout — not shown on the Singapore edition.
-  if (!window.EVENT_CONFIG || window.EVENT_CONFIG.edition !== 'TW') return null;
-  const left   = [['GreenBidz','greenbidz'], ['Ruomei','ruomei'], ['Phasetrum','phasetrum'], ['CloudStation','cloudstation']];      // Wistron #10
-  const right  = [['Arrivl','arrivl'], ['CLIKA','clika'], ['Notifly','notifly'], ['Krush','krush']];                              // AppWorks #32
-  const bottom = [['SixSense','sixsense'], ['Shieldbase','shieldbase'], ['Rosary Labs','rosary'], ['Pathors','pathors'],
-                  ['OmniEase AI','omniease'], ['Novo AI','novo'], ['NOTAG KOREA','notag'], ['LIPS','lips'],
-                  ['Innowave Tech','innowave'], ['Hyarks','hyarks'], ['Decisions Lab','decisionslab']];
+  // Venue layout comes from BOOTH_MAP in the data file ([name, team id] per
+  // booth); renders nothing until the floor plan is set.
+  const BM = window.BOOTH_MAP;
+  if (!BM) return null;
+  const CFG = window.EVENT_CONFIG || {};
+  const { left, right, bottom } = BM;
   // Tap a booth -> scroll to that team's card and flash it.
   const jump = (id) => {
     const card = document.getElementById('team-' + id);
@@ -295,8 +286,8 @@ function BoothMap({ language }) {
           </div>
         </div>
         <div className="bm-legend">
-          <span><i className="bm-dot aw" />{tr(language, 'AppWorks #32', 'AppWorks #32')}</span>
-          <span><i className="bm-dot wa" />{tr(language, 'Wistron #10', '緯創 #10')}</span>
+          <span><i className="bm-dot aw" />{CFG.batchLabel}</span>
+          <span><i className="bm-dot wa" />{tr(language, CFG.wistronLabel, CFG.wistronLabelZh)}</span>
         </div>
       </div>
     </section>);
@@ -312,7 +303,7 @@ function IntroModal({ team, onClose }) {
   const body =
   `Hi ${team.name} team,
 
-I'm connecting after attending ${window.EVENT_CONFIG && window.EVENT_CONFIG.wistron === false ? 'AppWorks #32 Demo Day' : 'AppWorks #32 + Wistron #10 Demo Day'} in ${window.EVENT_CONFIG && window.EVENT_CONFIG.city || 'Taipei'}. Your pitch — "${team.pitch}" — resonated with us, and we'd love to explore working together.
+I'm connecting after attending ${window.EVENT_CONFIG && window.EVENT_CONFIG.eventName} in ${window.EVENT_CONFIG && window.EVENT_CONFIG.city || 'Taipei'}. Your pitch — "${team.pitch}" — resonated with us, and we'd love to explore working together.
 
 A quick note about us:
 • Name / Role:

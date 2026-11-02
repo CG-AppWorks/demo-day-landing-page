@@ -9,7 +9,7 @@
 //   • Footer:    the small "Backstage" link in the footer
 const { useState: useBkState, useEffect: useBkEffect } = React;
 
-const BACKSTAGE_KEY = 'dd32.backstage.' + ((window.EVENT_CONFIG && window.EVENT_CONFIG.edition) || 'TW') + '.v1';
+const BACKSTAGE_KEY = 'dd33.backstage.' + ((window.EVENT_CONFIG && window.EVENT_CONFIG.edition) || 'TW') + '.v1';
 
 function useBackstage(defaults) {
   const [state, setState] = useBkState(() => {
@@ -86,14 +86,14 @@ function Backstage({ open, onClose, stage, setStage, reset }) {
 
   // Password gate — unlocks for this browser session only.
   const [unlocked, setUnlocked] = useBkState(() => {
-    try { return sessionStorage.getItem('dd32.bk.unlocked') === '1'; } catch (e) { return false; }
+    try { return sessionStorage.getItem('dd33.bk.unlocked') === '1'; } catch (e) { return false; }
   });
   const [pw, setPw] = useBkState('');
   const [pwErr, setPwErr] = useBkState(false);
   const tryUnlock = () => {
     if (pw === 'il0veT@iwan') {
       setUnlocked(true); setPwErr(false);
-      try { sessionStorage.setItem('dd32.bk.unlocked', '1'); } catch (e) {}
+      try { sessionStorage.setItem('dd33.bk.unlocked', '1'); } catch (e) {}
     } else { setPwErr(true); }
   };
 

@@ -1,39 +1,87 @@
 // data-sg.js — Singapore edition team directory + supporting data.
-// Source: Airtable "Company-Grid view" CSV, rows where DD SG = Yes (12 teams).
-// English-only · no Wistron · no Wordly · no album.
-// Pitch order is provisional (no SG order column in the sheet yet).
+// DD#33 Singapore lineup (Tue 17 Nov 2026, Marina One West) — DRAFT.
+// Source: "DD#33 MC materials (Cg)" sheet, tab "DD founder info for MCs" (SG = 1),
+//   in its "Pitching order (SG)" order: 17 AppWorks Accelerator #33 teams.
+// Card copy mirrors data.js (product-level only); presenters differ for Coinpilot
+//   (Jonathan Mui) and Predictefy (SG only).
+// English-only · no Wistron · no live captions · no album.
 const TEAMS = [
-  { id:"innowave", linkedin:"https://www.linkedin.com/in/jinsong-xu-6ab5901b2/",     name:"Innowave Tech",   sub:"Agentic AI for semiconductor manufacturing", tags:["AI","Manufacturing"], batch:"AW#32", stage:"Pitching", market:"Global",   hq:"SG", language:"English", presenter:"Jinsong Xu",          title:"Founder & CEO",    email:"jinsong.xu@innowave.com.sg", website:"https://www.innowave.com.sg", speakerOrder:1,
-    pitch:"Agentic AI for semiconductor and advanced manufacturing — driving factory autonomy." },
-  { id:"lips", linkedin:"https://www.linkedin.com/in/luke-liu-b301063b/",         name:"LIPS",            sub:"Robotics vision & edge AI",                  tags:["AI","Manufacturing"], batch:"AW#32", stage:"Pitching", market:"Global",   hq:"TW", language:"English", presenter:"Luke Liu",            title:"Founder",          email:"lukeliu@lips-hci.com",      website:"https://www.lips-hci.com",    speakerOrder:2,
-    pitch:"Robotics vision platform and edge-AI solution provider." },
-  { id:"shieldbase", linkedin:"https://www.linkedin.com/in/diegolrojas",   name:"Shieldbase",      sub:"Secure enterprise AI OS",                    tags:["AI","Enterprise"],    batch:"AW#32", stage:"Pitching", market:"SEA",      hq:"SG", language:"English", presenter:"Diego Rojas",         title:"Founder & CEO",    email:"diego@shieldbase.ai",       website:"https://shieldbase.ai",       speakerOrder:3,
-    pitch:"Secure enterprise AI OS unifying knowledge and systems to power agents and workflows." },
-  { id:"notag", linkedin:"https://www.linkedin.com/in/aiden-ung-choi-6672b94a/",        name:"NOTAG KOREA",     sub:"AI trading for e-commerce export",           tags:["AI","Enterprise"],    batch:"AW#32", stage:"Pitching", market:"SEA · KR", hq:"KR", language:"English", presenter:"Aiden Ung Choi",      title:"Founder",          email:"aiden0808@notaggroup.com",  website:"https://www.notaggroup.com/", speakerOrder:4,
-    pitch:"AI trading firm automating multi-country, multi-channel and multi-brand e-commerce export logistics and distribution." },
-  { id:"refundy", linkedin:"https://www.linkedin.com/in/jaekyeumkim/",      name:"Refundy",         sub:"Returns & refunds for cross-border commerce", tags:["AI","Enterprise"],   batch:"AW#32", stage:"Pitching", market:"KR · Global", hq:"KR", language:"English", presenter:"Jaekyeum Kim",        title:"Co-Founder & COO", email:"jk.kim@refundy.co",         website:"https://www.refundy.co/en",   speakerOrder:5,
-    pitch:"Returns and refunds automation for cross-border e-commerce sellers sourcing from China to global marketplaces." },
-  { id:"krush", linkedin:"https://www.linkedin.com/in/stephenkyungshinmoon/",        name:"Krush",           sub:"Social & dating for the global Asian community", tags:["AI"],             batch:"AW#32", stage:"Pitching", market:"US · APAC", hq:"US", language:"English", presenter:"Stephen Moon",        title:"Founder & CEO",    email:"stephen.moon@curelation.co", website:"https://www.krushdating.co", speakerOrder:6,
-    pitch:"Dating and social platform connecting the global Asian community through cultural matching, offline events, and cross-border interactions." },
-  { id:"novo", linkedin:"https://www.linkedin.com/in/juliencondamines/",         name:"Novo AI",         sub:"AI claims processing for insurance",         tags:["AI","Enterprise"],    batch:"AW#32", stage:"Pitching", market:"APAC · EU", hq:"HK", language:"English", presenter:"Julien Condamines",       title:"Co-Founder & CEO", email:"julien@heynovo.ai",         website:"https://heynovo.ai",          speakerOrder:7,
-    pitch:"AI claim-processing automation and abuse prevention for insurance companies." },
-  { id:"hyarks", linkedin:"https://www.linkedin.com/in/jhvalero/",       name:"Hyarks",          sub:"Robotics for the marine industry",           tags:["Dual-Use"],           batch:"AW#32", stage:"Pitching", market:"Global",   hq:"TW", language:"English", presenter:"Juan Herrero Valero", title:"Founder & CEO",    email:"juan.herrero@hyarks.com",   website:"https://www.hyarks.com/",     speakerOrder:8,
-    pitch:"Multi-domain robotic solutions to make the maritime ecosystem safe, sustainable and accessible — built for ports, coast guards, oil & gas and navies." },
-  { id:"rosary", linkedin:"https://www.linkedin.com/in/may-law/",       name:"Rosary Labs",     sub:"AI agents for AEC workflows",                tags:["AI","Enterprise"],    batch:"AW#32", stage:"Pitching", market:"MY",       hq:"MY", language:"English", presenter:"May Law",             title:"Co-Founder",       email:"may@rosarylabs.ai",         website:"https://www.rosarylabs.ai",   speakerOrder:9,
-    pitch:"AI agents that automate workflows across PDF, CAD, and BIM for the Architecture, Engineering & Construction (AEC) industry." },
-  { id:"pathors", linkedin:"https://www.linkedin.com/in/brandonlu0924",      name:"Pathors",         sub:"Voice AI for phone interactions",            tags:["AI","Enterprise"],    batch:"AW#32", stage:"Pitching", market:"TW · US",  hq:"TW", language:"English", presenter:"Yu-Chieh Cheng",      title:"Co-Founder & CEO", email:"brandon@pathors.com",       website:"https://pathors.com/",        speakerOrder:10,
-    pitch:"Transforming complex phone interactions into guided, verifiable Voice AI workflows." },
-  { id:"decisionslab", linkedin:"https://www.linkedin.com/in/louis-dlb11/", name:"Decisions Lab",  sub:"Persona-simulating AI for B2B sales",        tags:["AI","Enterprise"],    batch:"AW#32", stage:"Pitching", market:"HK · US",  hq:"HK", language:"English", presenter:"Louis Cheung",        title:"Co-Founder & CEO", email:"louis@decisionslab.io",     website:"https://www.decisionslab.io", speakerOrder:11,
-    pitch:"Persona-simulating AI for B2B sales teams to predict each prospect's reaction before you send outreach." },
+  { id:"ailytics", linkedin:"https://www.linkedin.com/in/wei-zhuang-tan/", portrait:"assets/portraits/ailytics.jpg",
+    name:"Ailytics", sub:"AI safety & productivity from existing cameras", tags:["AI","Manufacturing"], batch:"AW#33", hq:"SG", language:"English",
+    presenter:"Lenard Tan", title:"Founder & CEO", email:"weizhuang.tan@ailytics.ai", website:"https://ailytics.ai/", speakerOrder:1,
+    pitch:"Turns the cameras a construction site or factory already has into an AI system that spots safety risks and productivity losses in real time." },
+  { id:"mimin", linkedin:"https://www.linkedin.com/in/joseph-simbar-6aa44a17/", portrait:"assets/portraits/mimin.jpg",
+    name:"Mimin", sub:"Customer-service AI agents for chat & voice", tags:["AI","Enterprise"], batch:"AW#33", hq:"SG", language:"English",
+    presenter:"Joseph Simbar", title:"CEO", email:"joseph@mimin.io", website:"https://www.mimin.io", speakerOrder:2,
+    pitch:"Lets mid-market and enterprise businesses build their own customer-service AI agents for chat and voice, on one platform." },
+  { id:"remited", linkedin:"https://www.linkedin.com/in/brian-bae-ba638a131/",
+    name:"Team REmited", sub:"Receipt rewards that become purchase data", tags:["AI","Enterprise"], batch:"AW#33", hq:"KR", language:"English",
+    presenter:"Brian Bae", title:"Co-founder & CEO", email:"sh.bae@teamremited.com", website:"https://www.teamremited.com", speakerOrder:3,
+    pitch:"Carty rewards shoppers for uploading receipts, turning them into item-level purchase data that powers commerce AI for brands." },
+  { id:"huemankind", linkedin:"https://www.linkedin.com/in/jenn-woei-loh-66719131/", portrait:"assets/portraits/huemankind.jpg",
+    name:"huemankind", sub:"AI content studio for SMEs selling on WhatsApp", tags:["AI","Enterprise"], batch:"AW#33", hq:"MY", language:"English",
+    presenter:"Jenn Woei Loh", title:"CEO", email:"zennith@huemankind.world", website:"https://zenneth.ai", speakerOrder:4,
+    pitch:"An AI content studio for SMEs that sell over WhatsApp: it creates and publishes the content, then traces each ad through the chat to the sale it produced." },
+  { id:"alphaswift", linkedin:"https://www.linkedin.com/in/shianlee/", portrait:"assets/portraits/alphaswift.jpg",
+    name:"Alphaswift Industries", sub:"Autonomous cargo drones, built in Malaysia", tags:["Dual-Use"], batch:"AW#33", hq:"MY", language:"English",
+    presenter:"Dr. Shian Lee", title:"Co-founder & CEO", email:"shian@alphaswift.com", website:"https://alphaswift.com/", speakerOrder:5,
+    pitch:"Designs, builds and flies autonomous cargo drones with its own flight controllers and software, giving defence and industrial buyers a drone supply chain free of Chinese components." },
+  { id:"ennovation", linkedin:"https://www.linkedin.com/in/adeline-yang-h", portrait:"assets/portraits/ennovation.jpg",
+    name:"Ennovation", sub:"One-size myopia control for children", tags:["Health"], batch:"AW#33", hq:"SG", language:"English",
+    presenter:"Adeline Yang", title:"Founder", email:"contact@ennovation.io", website:"https://www.myopreva.com", speakerOrder:6,
+    pitch:"MyoPREVA, a one-size myopia-control product for children that is easy to apply and non-invasive." },
+  { id:"pqstation", linkedin:"https://www.linkedin.com/in/prasanna-ravi-071a8679/", portrait:"assets/portraits/pqstation.jpg",
+    name:"PQStation", sub:"Post-quantum migration for enterprises", tags:["Deep Tech","Enterprise"], batch:"AW#33", hq:"SG", language:"English",
+    presenter:"Dr. Prasanna Ravi", title:"CEO", email:"prasanna@pqstation.com", website:"https://www.pqstation.com", speakerOrder:7,
+    pitch:"Finds every place an enterprise still uses encryption that quantum computers will break, then helps fix it." },
+  { id:"screened", linkedin:"https://www.linkedin.com/in/wen-chen/", portrait:"assets/portraits/screened.jpg",
+    name:"Screened", sub:"AI recruiter", tags:["AI","Enterprise"], batch:"AW#33", hq:"SG", language:"English",
+    presenter:"Wen Chen", title:"Co-founder & CEO", email:"wen@screened.io", website:"https://screened.io/", speakerOrder:8,
+    pitch:"An AI recruiter that screens resumes, runs first-round interviews and handles candidate messages, with a structured interview framework built in." },
+  { id:"federation", linkedin:"https://www.linkedin.com/in/gaheeseo/", portrait:"assets/portraits/federation.jpg",
+    name:"Federation", sub:"AI agents for trade paperwork", tags:["AI","Enterprise"], batch:"AW#33", hq:"KR", language:"English",
+    presenter:"Gahee Seo", title:"CEO", email:"gahee@federationlabs.ai", website:"https://www.federationlabs.ai", speakerOrder:9,
+    pitch:"AI agents that handle the trade paperwork manufacturers can't staff for — HS codes, tariffs, export rules — and use that knowledge to help them find and close deals." },
+  { id:"vernus", linkedin:"https://www.linkedin.com/in/jimmy-yen-chu-lin-74785199/", portrait:"assets/portraits/vernus.jpg",
+    name:"Vernus AI", sub:"AI & quantum simulation for drug manufacturing", tags:["AI","Manufacturing"], batch:"AW#33", hq:"TW", language:"English",
+    presenter:"Jimmy Lin", title:"CEO", email:"jimmy.lin@vernus.ai", website:"https://vernus.ai/", speakerOrder:10,
+    pitch:"ReAIX, an AI and quantum-simulation platform that optimizes how active pharmaceutical ingredients are manufactured, to bring production costs down." },
+  { id:"netellus", linkedin:"https://www.linkedin.com/in/justinwu567/", portrait:"assets/portraits/netellus.jpg",
+    name:"Netellus", sub:"Energy-saving upgrades for factories", tags:["Energy","Manufacturing"], batch:"AW#33", hq:"TW", language:"English",
+    presenter:"Justin Wu", title:"CEO", email:"justin@netellus.com", website:"https://www.netellus.com/", speakerOrder:11,
+    pitch:"Matches manufacturers with vetted energy-saving vendors and finances the equipment upgrade, so a factory can replace major equipment with nothing upfront." },
+  { id:"teamsync", linkedin:"https://www.linkedin.com/in/jason-kao-66481a15a/", portrait:"assets/portraits/teamsync.jpg",
+    name:"TeamSync AI", sub:"Enterprise AI OS", tags:["AI","Enterprise"], batch:"AW#33", hq:"TW", language:"English",
+    presenter:"Jason Kao", title:"Founder & CEO", email:"jasonvan701228@gmail.com", website:"https://shuchenai.com", speakerOrder:12,
+    pitch:"An enterprise AI OS that connects a company's scattered knowledge, AI agents and workflows — including the ERP — into one governed collaboration hub." },
+  { id:"ofek",
+    name:"Ofek", sub:"AI quality control for electronics lines", tags:["AI","Manufacturing"], batch:"AW#33", hq:"TW", language:"English",
+    presenter:"Dario Weissmann", title:"CEO", email:"dariow@ofektaiwan.com", website:"https://www.ofektaiwan.com", speakerOrder:13,
+    pitch:"Reads the data from every station on an electronics production line — inspection, test, repair — and flags defects and process drift before the boards ship." },
+  { id:"coinpilot", linkedin:"https://www.linkedin.com/in/muijonathan/", portrait:"assets/portraits/coinpilot-sg.jpg",
+    name:"Coinpilot", sub:"AI copilot for crypto trading", tags:["AI","On-chain"], batch:"AW#33", hq:"HK", language:"English",
+    presenter:"Jonathan Mui", title:"Co-founder & CEO", email:"jon@coinpilot.com", website:"https://coinpilot.com", speakerOrder:14,
+    pitch:"Arlo, an AI copilot that researches, monitors and reviews crypto trades while the human keeps control of every decision." },
+  { id:"fluidkey", linkedin:"https://www.linkedin.com/in/moritzboullenger/", portrait:"assets/portraits/fluidkey.jpg",
+    name:"Fluidkey", sub:"Offshore brokerage on crypto rails", tags:["On-chain"], batch:"AW#33", hq:"CH", language:"English",
+    presenter:"Moritz Boullenger", title:"Co-founder & CEO", email:"moritz@fluidkey.com", website:"https://fluidkey.com", speakerOrder:15,
+    pitch:"An offshore brokerage rebuilt on crypto rails, for investors in Asia." },
+  { id:"stablecorp", linkedin:"https://linkedin.com/in/sangharsh-bhustalimath", portrait:"assets/portraits/stablecorp.jpg",
+    name:"Stablecorp", sub:"Back office for stablecoin earners", tags:["On-chain"], batch:"AW#33", hq:"MY", language:"English",
+    presenter:"Sangharsh Bhustalimath", title:"Co-founder & CEO", email:"10k@xelio.xyz", website:"https://mystablecorp.xyz", speakerOrder:16,
+    pitch:"For founders and freelancers paid in stablecoins: a US company, business accounts, invoicing and tax filings in one place." },
+  { id:"predictefy", linkedin:"https://www.linkedin.com/in/arvin-nathan-16638a16a/", portrait:"assets/portraits/predictefy.jpg",
+    name:"Predictefy", sub:"Data & API layer for prediction markets", tags:["On-chain"], batch:"AW#33", hq:"MY", language:"English",
+    presenter:"Arvin Nathan", title:"CEO", email:"tafcir@predictefy.com", website:"https://predictefy.com", speakerOrder:17,
+    pitch:"One terminal and one API across prediction markets: normalized data, and matching of equivalent markets across venues." },
 ];
 
-// Singapore run-of-show — Tue 9 June 2026, Guoco Midtown Network Hub.
+// Singapore run of show — per the SG Luma page (luma.com/DD33SGVIP).
 const AGENDA = [
-  { t:"16:45–17:00", title:"VIP Registration",                       tag:"Lobby",      now:false },
-  { t:"17:00–17:05", title:"Opening Remarks",                        tag:"Keynote",    now:false },
-  { t:"17:05–17:20", title:"Keynote · KS Pua, Chairman & CEO of Phison",        tag:"Keynote",    now:false },
-  { t:"17:20–17:50", title:"AppWorks #32 Startups Demo",             tag:"Pitches",    now:true  },
-  { t:"17:50–19:00", title:"Happy Hour · Cocktails & Networking",      tag:"Networking", now:false },
+  { t:"15:45–16:00", title:"Registration",                                        tag:"Lobby",      now:false },
+  { t:"16:00–16:05", title:"Opening Remarks",                                     tag:"Keynote",    now:false },
+  { t:"16:05–16:40", title:`AppWorks #33 Startups Demo · ${TEAMS.length} teams`,  tag:"Pitches",    now:true  },
+  { t:"16:40–18:00", title:"Open Floor & Networking · light bites, red & white wine", tag:"Networking", now:false },
 ];
 
 const TABS = [
@@ -44,52 +92,19 @@ const TABS = [
 
 Object.assign(window, { TEAMS, AGENDA, TABS });
 
-// ─── Traditional-Chinese (Taiwan) copy for the language toggle. ───
-// Kept in English on purpose: Demo Day, AppWorks, Wistron, company + founder
-// names, product names. Edit the wording here — it's the single source for 中文.
+// Shared components read ZH for labels; Singapore is English-only, so only the
+// keys they touch are kept here.
 const ZH = {
   tabs: { teams: '團隊', agenda: '議程', about: '關於' },
   teams: { heading: '登台團隊。', sub: '點選任一團隊即可收藏，或預約與創辦人交流。' },
   agenda: { heading: '議程。' },
-  agendaTitles: ['報到', '開場', 'AppWorks #32 Demo · 15 組', 'Wistron #10 Demo · 4 組', '自由交流與酒會'],
-  album: { eyebrow: 'ACCUPAI 提供', heading: '活動即時相簿。', sub: '由 Accupai 即時拍攝活動現場——可即時觀看、下載與分享。' },
-  partners: {
-    cardTitle: 'Wistron Accelerator',
-    body: '專注於 AI、機器人、永續與次世代運算的企業加速器，為新創串接 Wistron 的全球製造網路與企業客戶。第 10 屆帶來新一批具備商業 POC 路徑的團隊。',
-    programs: '屆數', alumni: '校友', pitching: '今日登台團隊',
-  },
+  agendaTitles: [],
+  album: { eyebrow: 'ACCUPAI 提供', heading: '活動即時相簿。', sub: '' },
+  partners: { programs: '屆數', pitching: '今日登台團隊' },
   sponsors: { eyebrow: '感謝我們的贊助商與合作夥伴', heading: 'Demo Day 贊助夥伴。' },
-  footer: { ctaTitle: 'AW#33 正在招募中！', ctaSub: '加入我們——或推薦一位創業者朋友。' },
-  teamSub: {
-    notag: 'AI 驅動的電商出口貿易與配送', notifly: 'AI 原生的行銷自動化', krush: '為全球亞洲社群打造的交友與社交平台',
-    clika: '邊緣 AI 的模型壓縮與編譯', innowave: '半導體製造的代理式 AI', lips: '機器人視覺與邊緣 AI',
-    shieldbase: '企業級安全 AI 作業系統', omniease: '貿易合規與報關的自動化 AI', pathors: '電話互動的語音 AI',
-    rosary: 'AEC 工作流程的 AI 代理', novo: '保險理賠的 AI 自動化', hyarks: '海洋產業的機器人解決方案',
-    arrivl: 'AI 能見度與代理驅動的銷售', decisionslab: 'B2B 銷售的人物模擬 AI', sixsense: '製造業的 AI 品質控管',
-    phasetrum: '衛星用相位陣列 RF 晶片', ruomei: '奈米散熱管理材料', greenbidz: '循環資產交易市場與 ESG',
-    cloudstation: '將應用與 AI 代理部署到任何雲端',
-  },
-  teamPitch: {
-    notag: 'AI 貿易公司，自動化跨國、跨通路、跨品牌的電商出口物流與配送。',
-    notifly: '為亞洲行動應用與電商業者打造的 AI 原生行銷自動化。',
-    krush: '交友與社交平台，透過文化匹配、線下活動與跨境互動連結全球亞洲社群。',
-    clika: '模型壓縮與編譯技術，讓 AI 模型縮小並在邊緣裝置上高效運行。',
-    innowave: '面向半導體與先進製造的代理式 AI，推動工廠自主化。',
-    lips: '機器人視覺平台與邊緣 AI 解決方案供應商。',
-    shieldbase: '企業級安全 AI 作業系統，整合知識與系統以驅動 AI 代理與工作流程。',
-    omniease: '面向全球貿易合規與報關自動化的代理式 AI。',
-    pathors: '將複雜的電話互動轉化為有引導、可驗證的語音 AI 工作流程。',
-    rosary: '為建築、工程與營造（AEC）產業打造的 AI 代理，自動化 PDF、CAD 與 BIM 工作流程。',
-    novo: '為保險公司提供 AI 理賠處理自動化與濫用防範。',
-    hyarks: '多領域機器人解決方案，讓海事生態更安全、永續且易於使用——為港口、海巡、油氣與海軍打造。',
-    arrivl: '讓你的內容更容易被 AI 代理看見，並將代理造訪轉化為銷售的工具。',
-    decisionslab: '為 B2B 銷售團隊打造的人物模擬 AI，在發出開發信前預測每位潛在客戶的反應。',
-    sixsense: 'AI 製造平台，自動化瑕疵檢測與預測性品質控管，為半導體與先進製造產線提升良率與週期時間。',
-    phasetrum: 'AIP + 專利 Phase Tuner 架構打造相位陣列天線——99% 良率、功耗降低 50%、校準速度提升 10 倍，適用於 LEO 衛星、AESA 雷達與 6G。',
-    ruomei: '奈米級散熱焊罩 + 微流道冷卻，可直接導入現有 SMT 產線，零製程變更即為 AI 晶片降溫——以鋁代銅的輕量化方案。',
-    greenbidz: 'SaaS 驅動的 B2B 交易市場，協助工廠回收閒置設備價值，並自動擷取企業 ESG 報告所需的碳排與生命週期數據。',
-    cloudstation: '無程式碼、多雲平台，讓非技術背景的創辦人也能部署應用、資料庫與自主 AI 代理——「不必給股份的技術共同創辦人」。',
-  },
+  footer: { ctaTitle: 'AW#34 正在招募中！', ctaSub: '加入我們——或推薦一位創業者朋友。' },
+  teamSub: {},
+  teamPitch: {},
 };
 // Pick the right language; falls back to English if no zh string or not bilingual.
 function tr(lang, en, zh) {
@@ -97,25 +112,36 @@ function tr(lang, en, zh) {
 }
 Object.assign(window, { ZH, tr });
 
-// Edition config — Singapore: English-only, no Wistron / Wordly / album.
+// Markets named in the hero lede, most teams first.
+const COUNTRY = { TW:'Taiwan', SG:'Singapore', MY:'Malaysia', KR:'Korea', US:'the US', HK:'Hong Kong', CH:'Switzerland' };
+const MARKET_NAMES = (() => {
+  const n = {};
+  TEAMS.forEach((t) => { if (t.hq) n[t.hq] = (n[t.hq] || 0) + 1; });
+  const names = Object.keys(n).sort((a, b) => n[b] - n[a]).map((c) => COUNTRY[c] || c);
+  return names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+})();
+
+// Edition config — Singapore: English-only, no Wistron / live captions / album.
 window.EVENT_CONFIG = {
   edition: 'SG',
   city: 'Singapore',
-  venue: 'Guoco Midtown Network Hub · Singapore',
+  eventName: 'AppWorks #33 Demo Day',
+  batchLabel: 'AppWorks #33',
+  nextBatch: 'AW#34',
   bilingual: false,
   wordly: false,
   album: false,
   wistron: false,
-  keyVisual: false,       // use the text headline lockup
+  // Key visual: image path = printed lockup · false = text wordmark · '' = empty slot (until the DD#33 artwork lands)
+  keyVisual: '',
   nowOnStage: false,      // no live "on stage" takeover for SG
-  heroDate: '9 Jun',
-  heroTime: 'Tue · 17:00–19:00',
-  heroVenueShort: 'Guoco Midtown',
-  heroVenueSub: 'MICE Room 2+3 · Singapore',
-  heroTeamsNote: 'AppWorks #32',
-  heroGuest: {
-    name: 'KS Pua',
-    role: 'Chairman & CEO of Phison',
-    url: 'https://www.linkedin.com/in/k-s-pua-1090054/',
+  heroDate: '17 Nov',
+  heroTime: 'Tue · 15:45–18:00',
+  heroVenueShort: 'Marina One',
+  heroVenueSub: 'West Tower · Meeting Room 2',
+  heroTeamsNote: 'AppWorks #33',
+  heroLede: {
+    en: `**${TEAMS.length} selected startups** from the **AppWorks #33** cohort — founders from ${MARKET_NAMES}.\n` +
+        `The batch theme is **Compiling the Uncompilable**: AI that captures expert know-how and turns it into software any company can run — alongside **post-quantum security**, **defence drones** and **on-chain finance**.`,
   },
 };

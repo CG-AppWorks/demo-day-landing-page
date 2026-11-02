@@ -1,11 +1,13 @@
-# AppWorks #32 — Demo Day landing pages (Taiwan + Singapore)
+# AppWorks Demo Day landing pages (Taiwan + Singapore)
+
+Current edition: **DD#33** (SG Tue 17 Nov 2026 · TW Thu 3 Dec 2026). DD#32 lives in git history (`main` before the `dd33-draft` branch).
 
 Two single-page event sites that share the same components:
 
-- **`index.html`** — **Taiwan** edition. AppWorks #32 + Wistron #10, bilingual (EN/中文),
-  with Wordly live AI interpretation and the Accupai photo album.
-- **`singapore.html`** — **Singapore** edition. AppWorks #32 only, English-only, no
-  Wistron / Wordly / album. Edition differences are driven by `EVENT_CONFIG` in the data file.
+- **`index.html`** — **Taiwan** edition. AppWorks #33 + Wistron #11, bilingual (EN/中文),
+  with live AI interpretation (captions Worker, Wordly as backup).
+- **`singapore.html`** — **Singapore** edition. AppWorks #33 only, English-only, no
+  Wistron / captions / album. (Served at ddsg.appworks.tw from the `demo-day-singapore` repo.) Edition differences are driven by `EVENT_CONFIG` in the data file.
 
 Audience-facing: browse the pitching teams, open the founder intro email, and (TW) follow
 the live captions + photo album.
@@ -60,8 +62,20 @@ embedded Wordly / QR / Accupai resources.
   the page never drifts out of sync with the real schedule.
 - **Photo album** — the Accupai link in `sections.jsx` (`Album`) opens the live album.
 
-## Placeholders to replace
+## Edition config (`EVENT_CONFIG` in the data file)
 
-- The 4 **Wistron #10 (WA#10)** teams in `data.js` are placeholders — swap in the real
-  lineup (same field shape as the AppWorks teams).
-- **Sponsor** names (Google Cloud, AWS) are text-set; drop in official logo files if wanted.
+Everything batch-specific lives in the data file, not the components: `eventName`,
+`batchLabel`, `nextBatch` (footer CTA), `wistronBatch` / `wistronLabel` / `wistronPrograms`,
+hero date/time/venue (`heroDate`, `heroDateZh`, …), `heroLede` ({en, zh}, `**bold**` + newlines),
+`keyVisual` (image path · `false` = text wordmark · `''` = empty placeholder slot),
+`album` + `albumUrl`, `captionsWorker`. Team cards take `logo` / `portrait` paths per team.
+`window.BOOTH_MAP` and `window.EVENT_PARTNERS` turn on the booth map and perks sections.
+
+## Placeholders to replace (DD#33)
+
+- **Key visual** — drop the artwork in `assets/` and set `keyVisual` to its path (both data files).
+- **Wistron #11** teams in `data.js` are name-only (Hanomi, ZiG, Waydosoft, Sonice).
+- **Team logos** — none yet (cards fall back to the pitching-order box).
+- **Booth map, event-partner perks, photo album** — off until confirmed.
+- **Live-caption glossary** (`../ddtw-live-translate/worker/src/glossary.js`) still holds DD#32 +
+  IVS terms; rebuild from the DD#33 pitch scripts, then `npx wrangler deploy`.

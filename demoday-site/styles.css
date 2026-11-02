@@ -152,6 +152,24 @@ body {
   filter: drop-shadow(0 6px 24px rgba(66,79,87,0.12));
 }
 
+/* Empty key-visual slot (keyVisual: '' in EVENT_CONFIG) — same footprint as the
+   printed lockup, so the hero keeps its proportions until the artwork lands. */
+.hero-kv-slot {
+  width: min(760px, 86vw); aspect-ratio: 1506 / 748;
+  margin: 8px auto 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px dashed var(--border-strong); border-radius: var(--radius-lg, 16px);
+  background: rgba(255,255,255,0.45);
+}
+.hero-kv-label {
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--aw-slate-70);
+}
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
 /* Text headline lockup (editions without a printed key visual, e.g. SG) */
 .hero-wordmark {
   display: flex; flex-direction: column; align-items: center;
@@ -970,6 +988,10 @@ body {
 .badge.enterprise { background: #1d4ed8; color: #fff; }
 .badge.manufacturing { background: #b45309; color: #fff; }
 .badge.dual-use { background: #0f766e; color: #fff; }
+.badge.on-chain { background: #6d28d9; color: #fff; }
+.badge.deep-tech { background: #0369a1; color: #fff; }
+.badge.health { background: #be123c; color: #fff; }
+.badge.energy { background: #15803d; color: #fff; }
 .badge.batch { background: transparent; color: var(--fg1); border: 1px solid var(--border-strong); }
 .team-card .pitch {
   font-size: 13.5px; line-height: 1.5; color: var(--fg1);
@@ -1013,6 +1035,10 @@ body {
 .teams.editorial .team-card.tag-enterprise .cover { background: linear-gradient(135deg, #1d4ed8, #424F57); }
 .teams.editorial .team-card.tag-manufacturing .cover { background: linear-gradient(135deg, #b45309, #424F57); }
 .teams.editorial .team-card.tag-dual-use .cover { background: linear-gradient(135deg, #0f766e, #424F57); }
+.teams.editorial .team-card.tag-on-chain .cover { background: linear-gradient(135deg, #6d28d9, #424F57); }
+.teams.editorial .team-card.tag-deep-tech .cover { background: linear-gradient(135deg, #0369a1, #424F57); }
+.teams.editorial .team-card.tag-health .cover { background: linear-gradient(135deg, #be123c, #424F57); }
+.teams.editorial .team-card.tag-energy .cover { background: linear-gradient(135deg, #15803d, #424F57); }
 .teams.editorial .team-card .body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
 .teams.editorial .team-card .pill { top: 18px; right: 18px; }
 .teams.editorial .team-card .pitch { font-size: 14.5px; }

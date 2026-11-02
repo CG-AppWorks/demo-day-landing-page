@@ -146,15 +146,28 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
 }
 window.TopNav = TopNav;
 
+/* Render data-file copy: **bold** -> <b>, newline -> <br/>. */
+function rich(text) {
+  return String(text || '').split('\n').map((line, i, lines) =>
+  <React.Fragment key={i}>
+      {line.split('**').map((part, j) => j % 2 ? <b key={j}>{part}</b> : part)}
+      {i < lines.length - 1 && <br />}
+    </React.Fragment>
+  );
+}
+window.rich = rich;
+
 /* ─── Hero ─── */
 function Hero({ variant = 'photo', language, kpis }) {
   const CFG = window.EVENT_CONFIG || {};
   const city = CFG.city || 'Taipei';
-  const venue = CFG.venue || 'Taipei Marriott Hotel · 5F Grand Ballroom';
-  const wistron = CFG.wistron !== false;
-  const enLede = wistron ?
-  <p className="lede center"><b>{kpis.teams} select startups, one room.</b> 15 from <b>AppWorks Accelerator #32</b> + 4 from <b>Wistron Accelerator #10</b> — founders from Taiwan, Singapore, Korea, Malaysia, Hong Kong and the US, working at the forefront of <b>Enterprise AI</b>, <b>Manufacturing AI</b> and <b>Dual-Use Tech</b>.</p> :
-  <p className="lede center"><b>{kpis.teams} selected startups,</b> the <b>AppWorks #32</b> cohort -<br />Founders from Taiwan, Singapore, Korea, Malaysia, Hong Kong and the US,<br />working at the forefront of <b>Enterprise AI</b>, <b>Manufacturing AI</b>, <b>Web3</b> and <b>Dual-Use Tech</b>.</p>;
+  const lede = CFG.heroLede || {};
+  // Markets = distinct HQs of the teams on this page, most teams first
+  // (placeholder teams have none).
+  const hqCount = {};
+  TEAMS.forEach((t) => { if (t.hq) hqCount[t.hq] = (hqCount[t.hq] || 0) + 1; });
+  const markets = Object.keys(hqCount).sort((a, b) => hqCount[b] - hqCount[a]);
+  const enLede = <p className="lede center">{rich(lede.en)}</p>;
 
   return (
     <section className="hero photo" id="top">
@@ -167,23 +180,26 @@ function Hero({ variant = 'photo', language, kpis }) {
         )}
 
         <div className="hero-headline-block">
-          {CFG.keyVisual !== false ?
-          <img className="hero-keyvisual" src="assets/dd-keyvisual.png"
-          alt="AppWorks Demo Day #32 · Wistron Demo Day #10" /> :
-
+          {CFG.keyVisual ?
+          <img className="hero-keyvisual" src={CFG.keyVisual} alt={CFG.eventName} /> :
+          CFG.keyVisual === false ?
           <h1 className="hero-wordmark">
-              <span className="hw-mark">AppWorks #32</span>
+              <span className="hw-mark">{CFG.batchLabel}</span>
               <span className="hw-big">Demo Day</span>
               <span className="hw-city">{city}</span>
-            </h1>
+            </h1> :
+
+          // No key visual yet: an empty slot sized like the printed lockup.
+          <div className="hero-kv-slot">
+              <h1 className="sr-only">{CFG.eventName} · {city}</h1>
+              <span className="hero-kv-label">Key visual · coming soon</span>
+            </div>
           }
         </div>
 
         {(language === 'en' || language === 'both') && enLede}
         {(language === 'zh' || language === 'both') &&
-        <p className="lede zh zh-line center">
-            一場專屬於 AI 與亞洲跨境新創的盛會 — {kpis.teams} 組精選潛力團隊登台，<br />包含 15 組 AppWorks #32 與 4 組 Wistron #10 新創，齊聚台北、連接全球。
-          </p>
+        <p className="lede zh zh-line center">{rich(lede.zh)}</p>
         }
         {CFG.heroGuest &&
         <a className="hero-guest" href={CFG.heroGuest.url || '#'} target="_blank" rel="noopener">
@@ -195,19 +211,19 @@ function Hero({ variant = 'photo', language, kpis }) {
         <div className="hero-meta">
           <div className="item">
             <div className="k">{language === 'zh' ? '日期' : 'Date'}</div>
-            <div className="v">{tr(language, CFG.heroDate || '17 Jun', '6/17')}<small>{CFG.heroTime || 'Wed · 12:00–16:30'}</small></div>
+            <div className="v">{tr(language, CFG.heroDate, CFG.heroDateZh)}<small>{tr(language, CFG.heroTime, CFG.heroTimeZh)}</small></div>
           </div>
           <div className="item">
             <div className="k">{language === 'zh' ? '地點' : 'Venue'}</div>
-            <div className="v">{tr(language, CFG.heroVenueShort || 'Marriott', '萬豪酒店')}<small>{CFG.heroVenueSub || (language === 'zh' ? '5F 大廳 · 台北' : '5F Grand Ballroom · Taipei')}</small></div>
+            <div className="v">{tr(language, CFG.heroVenueShort, CFG.heroVenueShortZh)}<small>{tr(language, CFG.heroVenueSub, CFG.heroVenueSubZh)}</small></div>
           </div>
           <div className="item">
             <div className="k">{tr(language, 'Teams', '團隊')}</div>
-            <div className="v"><span className="num">{kpis.teams}</span><small>{CFG.heroTeamsNote || (wistron ? '15 AppWorks · 4 Wistron' : 'AppWorks #32')}</small></div>
+            <div className="v"><span className="num">{kpis.teams}</span><small>{CFG.heroTeamsNote}</small></div>
           </div>
           <div className="item">
             <div className="k">{tr(language, 'Markets', '市場')}</div>
-            <div className="v"><span className="num">6</span><small>TW · SG · KR · MY · US · HK</small></div>
+            <div className="v"><span className="num">{markets.length}</span><small>{markets.join(' · ')}</small></div>
           </div>
         </div>
       </div>
@@ -385,7 +401,7 @@ function Footer({ language }) {
       <div className="container">
         <a className="foot-cta" href="https://appworks.tw/accelerator/" target="_blank" rel="noopener">
           <div className="foot-cta-text">
-            <b>{tr(language, 'AW#33 is now taking applications!', ZH.footer.ctaTitle)}</b>
+            <b>{tr(language, `${(window.EVENT_CONFIG || {}).nextBatch} is now taking applications!`, ZH.footer.ctaTitle)}</b>
             <span>{tr(language, 'Join us — or refer a founder friend.', ZH.footer.ctaSub)}</span>
           </div>
           <span className="foot-cta-btn">{tr(language, 'Apply / Refer', '申請 / 推薦')} <I.arrow/></span>
