@@ -53,20 +53,20 @@ function About({ language }) {
     zh: "2009 年成立，由「創業者」為「創業者」設立的加速器，以及基於加速器發展的新創社群與創投機構，致力協助下世代的創業者抓住數位革命的成長機會。正如 Mobile Internet 曾引發巨大的產業變革，我們相信 AI 與區塊鏈正推動新一波關鍵的典範轉移。創業者是主角，投資人是配角；我們從種子時期開始支持團隊，陪著他們打造區域級、世界級的偉大企業。",
     link: "https://appworks.tw/",
     stats: [
-    { v: "663", l: "Startups", num: true },
-    { v: "2,189", l: "Founders", num: true },
+    { v: "680", l: "Startups", num: true },
+    { v: "2,168", l: "Founders", num: true },
     { v: <span style={{ color: '#ff6b0f' }}>{zh ? "亞洲跨境" : "Pan-Asia"}</span>, l: "Region" }]
 
   },
   {
     title: "AppWorks Accelerator",
-    en: "Founded in 2010, AppWorks Accelerator selects the most promising teams every six months, helping founders go from 0 to 1 to product–market fit and scale. The ecosystem now spans 663 active startups and 2,189 founders — including 135 AI startups and 144 Web3 startups. Collectively they have raised US$ 8.1B, reached US$ 42.1B in valuation, generate US$ 18.6B in annual revenue, and created 28,256 jobs across 9 markets.",
-    zh: "2010 年成立，每半年遴選最具潛力的團隊，協助創業者從 0 到 1 找到 Product-Market Fit、並在成長階段建立可持續且可擴張的商業模式。生態系共有 663 家活躍新創、2,189 位創業者，包含 135 家 AI 新創與 144 家 Web3 新創；合計募得 81 億美元，總市值 421 億美元，年營收 186 億美元，提供 28,581 個工作機會，橫跨台灣、印尼、新加坡、馬來西亞、越南、菲律賓、韓國、日本與香港等九大市場。",
+    en: "Founded in 2010, AppWorks Accelerator selects the most promising teams every six months, helping founders go from 0 to 1 to product–market fit and scale. As of Q3 2026, the ecosystem spans 680 active startups and 2,168 founders — including 135 AI startups and 144 Web3 startups. Collectively they have raised US$ 8.2B, reached US$ 43.4B in valuation, generate US$ 19.7B in annual revenue, and created 28,592 jobs across 9 markets.",
+    zh: "2010 年成立，每半年遴選最具潛力的團隊，協助創業者從 0 到 1 找到 Product-Market Fit、並在成長階段建立可持續且可擴張的商業模式。截至 2026 年第三季，生態系共有 680 家活躍新創、2,168 位創業者，包含 135 家 AI 新創與 144 家 Web3 新創；合計募得 82 億美元，總市值 434 億美元，年營收 197 億美元，提供 28,592 個工作機會，橫跨台灣、印尼、新加坡、馬來西亞、越南、菲律賓、韓國、日本與香港等九大市場。",
     link: "https://appworks.tw/accelerator/",
     stats: [
-    { v: "US$ 8.1B", l: "Total Raised", num: true },
-    { v: "US$ 42.1B", l: "Total Valuation", num: true },
-    { v: "28,256", l: "Jobs Created", num: true }]
+    { v: "US$ 8.2B", l: "Total Raised", num: true },
+    { v: "US$ 43.4B", l: "Total Valuation", num: true },
+    { v: "28,592", l: "Jobs Created", num: true }]
 
   },
   {
