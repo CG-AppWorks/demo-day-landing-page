@@ -10,11 +10,21 @@ compatibility_date = "2026-06-01"
 name = "CAPTION_HUB"
 class_name = "CaptionHub"
 
+# Second DO instance ("stats"): anonymous page-view / click counts for the
+# Demo Day landing pages (POST /api/track, GET /api/stats, page at /stats).
+[[durable_objects.bindings]]
+name = "STATS_HUB"
+class_name = "StatsHub"
+
 [[migrations]]
 tag = "v1"
 # SQLite-backed DOs are required on the free plan (and are now the default).
 # The storage KV API (storage.get/put) used by CaptionHub works unchanged.
 new_sqlite_classes = ["CaptionHub"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["StatsHub"]
 
 # ---------------------------------------------------------------------------
 # KV: persistence + polling fallback (latest N segments per channel, active

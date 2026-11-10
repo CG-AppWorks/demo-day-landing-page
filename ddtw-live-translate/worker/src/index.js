@@ -8,10 +8,11 @@
 // POST /api/ephemeral/gemini (return 501 for now so the contract is visible).
 
 import { CaptionHub } from "./caption-hub.js";
+import { StatsHub } from "./stats-hub.js";
 import { CORS_HEADERS, json } from "./http.js";
 import { captionChunk, translateText } from "./ai.js";
 
-export { CaptionHub };
+export { CaptionHub, StatsHub };
 
 // Routes the broadcaster posts to — require the admin bearer token.
 const ADMIN_ROUTES = new Set([
@@ -22,6 +23,8 @@ const ADMIN_ROUTES = new Set([
   "/api/caption",
   "/api/ephemeral/openai",
   "/api/ephemeral/gemini",
+  "/api/stats",
+  "/api/stats/reset",
 ]);
 
 // Stateful routes handled by the Durable Object.
@@ -40,6 +43,28 @@ const NOT_YET = new Set([
 ]);
 
 const ENGINES = new Set(["openai", "gemini"]);
+
+// Landing-page analytics (StatsHub). Beacons come from the Demo Day pages only;
+// the Origin check is a soft filter against stray traffic, not a security gate.
+const STATS_ROUTES = new Set(["/api/track", "/api/stats", "/api/stats/reset"]);
+const TRACK_ORIGINS = /^(https:\/\/(ddtw|ddsg)\.appworks\.tw|https:\/\/cg-appworks\.github\.io|http:\/\/(localhost|127\.0\.0\.1)(:\d+)?)$/;
+const clean = (s, max) => String(s || "").toLowerCase().replace(/[^a-z0-9._:-]+/g, "-").slice(0, max);
+
+// Validate a beacon body ({ed, e, t, x, v, src}) into a row, or null to drop it.
+function trackRow(body, request) {
+  let b;
+  try { b = JSON.parse(body); } catch { return null; }
+  if (!b || (b.ed !== "TW" && b.ed !== "SG")) return null;
+  if (!/^[a-z_]{2,32}$/.test(b.e || "")) return null;
+  if (!/^[a-z0-9]{8,40}$/.test(b.v || "")) return null;
+  return {
+    ed: b.ed, e: b.e, v: b.v,
+    t: /^[a-z0-9-]{1,32}$/.test(b.t || "") ? b.t : "",
+    x: clean(b.x, 40),
+    src: clean(b.src, 60) || "direct",
+    cc: String((request.cf && request.cf.country) || "").slice(0, 2),
+  };
+}
 
 // Post a finished segment to the single DO instance (store + SSE fan-out).
 function postSegment(env, seg) {
@@ -139,6 +164,25 @@ export default {
       }
       const v = await env.CAPTIONS_KV.get("captionsEnabled");
       return json({ enabled: v !== "0" }); // default: shown
+    }
+
+    if (STATS_ROUTES.has(pathname)) {
+      const stub = env.STATS_HUB.get(env.STATS_HUB.idFromName("stats"));
+      if (pathname !== "/api/track") return stub.fetch(request); // admin-gated above
+      if (request.method !== "POST") return json({ error: "method" }, { status: 405 });
+      if (!TRACK_ORIGINS.test(request.headers.get("Origin") || "")) {
+        return new Response(null, { status: 204, headers: CORS_HEADERS }); // drop silently
+      }
+      // Beacons are text/plain (no CORS preflight); cap the size before parsing.
+      const row = trackRow((await request.text()).slice(0, 2000), request);
+      if (row) {
+        await stub.fetch(new Request("https://do/api/track", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(row),
+        }));
+      }
+      return new Response(null, { status: 204, headers: CORS_HEADERS });
     }
 
     if (DO_ROUTES.has(pathname)) {

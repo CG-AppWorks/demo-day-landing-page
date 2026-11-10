@@ -35,7 +35,7 @@ function Album({ language }) {
             <p className="sub">{tr(language, 'Real-time event photos — view, download, and share on the spot.', ZH.album.sub)}</p>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <a className="btn primary" href={ALBUM_URL} target="_blank" rel="noopener">{tr(language, 'Open live album', '開啟即時相簿')} <I.arrow /></a>
+            <a className="btn primary" href={ALBUM_URL} target="_blank" rel="noopener" data-track="album" data-x="open">{tr(language, 'Open live album', '開啟即時相簿')} <I.arrow /></a>
           </div>
         </div>
       </div>
@@ -116,7 +116,7 @@ function About({ language }) {
                   </div>
               )}
               </div>
-              <a className="btn outline sm arrow" href={c.link} target="_blank" rel="noopener">
+              <a className="btn outline sm arrow" href={c.link} target="_blank" rel="noopener" data-track="about_link" data-x={c.title}>
                 More information <I.arrow />
               </a>
             </div>
@@ -151,7 +151,7 @@ function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpen
               <div className="stat"><div className="v"><span className="num">60+</span></div><div className="l">{tr(language, 'Companies', '投資案例')}</div></div>
               <div className="stat"><div className="v"><span style={{ color: '#ff6b0f' }}>ICT</span></div><div className="l">{tr(language, 'Global leader', '全球領導廠商')}</div></div>
             </div>
-            <a className="btn outline sm arrow" href="https://www.wistron.com/" target="_blank" rel="noopener">{tr(language, 'More information', '更多資訊')} <I.arrow /></a>
+            <a className="btn outline sm arrow" href="https://www.wistron.com/" target="_blank" rel="noopener" data-track="wistron_link" data-x="wistron">{tr(language, 'More information', '更多資訊')} <I.arrow /></a>
           </div>
           <div className="about-card">
             <h3>Wistron Accelerator<span className="dot">.</span></h3>
@@ -163,7 +163,7 @@ function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpen
               <div className="stat"><div className="v"><span className="num">7</span></div><div className="l">{tr(language, 'Per batch', '每屆名額')}</div></div>
               <div className="stat"><div className="v"><span className="num">{waTeams.length}</span></div><div className="l">{tr(language, 'Teams pitching today', ZH.partners.pitching)}</div></div>
             </div>
-            <a className="btn outline sm arrow" href="https://appworks.tw/wistron/" target="_blank" rel="noopener">{tr(language, 'More information', '更多資訊')} <I.arrow /></a>
+            <a className="btn outline sm arrow" href="https://appworks.tw/wistron/" target="_blank" rel="noopener" data-track="wistron_link" data-x="wistron-accelerator">{tr(language, 'More information', '更多資訊')} <I.arrow /></a>
           </div>
         </div>
         {waTeams.length > 0 && window.TeamCard &&
@@ -345,8 +345,8 @@ Best,
         </div>
         <div className="foot">
           <span className="hint">Opens your default email client, pre-filled.</span>
-          <button className="btn outline sm" onClick={copy}>{copied ? 'Copied ✓' : 'Copy to clipboard'}</button>
-          <a className="btn primary sm" href={mailto}>Open email <I.send /></a>
+          <button className="btn outline sm" onClick={copy} data-track="contact_copy" data-team={team.id}>{copied ? 'Copied ✓' : 'Copy to clipboard'}</button>
+          <a className="btn primary sm" href={mailto} data-track="contact_email" data-team={team.id}>Open email <I.send /></a>
         </div>
       </div>
     </div>);

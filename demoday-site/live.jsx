@@ -245,7 +245,7 @@ function LiveCaptionsWidget({ sessionId = 'DXRS-1194', captionLanguage = 'zh-TW'
             title="Live captions" allow="autoplay" loading="lazy" />}
         </div>
       </div>}
-      <button className={`ddcap-fab ${open ? 'on' : ''}`} onClick={() => setOpen((o) => !o)} aria-expanded={open}>
+      <button className={`ddcap-fab ${open ? 'on' : ''}`} onClick={() => setOpen((o) => !o)} aria-expanded={open} data-track="captions" data-x={open ? 'close' : 'open'}>
         <span className="ddcap-dot" />{open ? '收合 Hide' : '即時翻譯 Captions'}
       </button>
     </div>);
@@ -260,7 +260,7 @@ function CaptionsLauncher({ language = 'en' }) {
   if (!worker) return null;
   return (
     <div className="container ddcap-launch">
-      <button className="ddcap-launch-btn" onClick={() => window.ddOpenCaptions && window.ddOpenCaptions()}>
+      <button className="ddcap-launch-btn" data-track="captions" data-x="inline" onClick={() => window.ddOpenCaptions && window.ddOpenCaptions()}>
         <span className="ddcap-dot" />
         {language === 'zh' ? '即時翻譯 · 開啟 (EN + 中文)' : '即時翻譯 · Open live captions (EN + 中文)'}
       </button>

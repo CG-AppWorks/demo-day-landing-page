@@ -71,6 +71,20 @@ hero date/time/venue (`heroDate`, `heroDateZh`, …), `heroLede` ({en, zh}, `**b
 `album` + `albumUrl`, `captionsWorker`. Team cards take `logo` / `portrait` paths per team.
 `window.BOOTH_MAP` and `window.EVENT_PARTNERS` turn on the booth map and perks sections.
 
+## Visitor + click stats
+
+`analytics.js` sends anonymous counts (page views, and every element tagged `data-track`:
+contact founder → open email / copy, LinkedIn, website, favorite, nav, language, captions,
+Apply) to the captions Worker (`EVENT_CONFIG.analytics`). No cookies or personal data — a random
+visitor id in localStorage, plus the link's `utm_source` / referrer and Cloudflare's country.
+
+- **Read them:** `https://ddtw-captions.hsichun.workers.dev/stats` (admin token; SG/TW toggle, per-team
+  founder-contact table + CSV).
+- **Tag the links you share** with `?utm_source=luma` / `linkedin` / `email` to see which channel works.
+- **Staff devices:** open the page once with `?notrack=1` (undo with `?notrack=0`); clear pre-launch
+  test clicks with the dashboard's reset button.
+- On `localhost` the beacons go to a local `wrangler dev` on :8787, never production.
+
 ## Placeholders to replace (DD#33)
 
 - **Key visual** — drop the artwork in `assets/` and set `keyVisual` to its path (both data files).

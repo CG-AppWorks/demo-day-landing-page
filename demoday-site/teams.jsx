@@ -10,6 +10,13 @@ const FLAG = { TW:"🇹🇼", SG:"🇸🇬", KR:"🇰🇷", MY:"🇲🇾", US:"�
 // Logos and founder portraits come from each team's `logo` / `portrait` field in
 // the data file. No logo -> order/initials box; no portrait -> HQ flag glyph.
 
+// Wordmark logos stand alone; icon-only marks (team.logoMark) carry the name beside them.
+function LogoRow({ team, sm }) {
+  const img = <img className={`card-logo-img${sm ? ' sm' : ''}${team.logoMark ? ' mark' : ''}`} src={team.logo} alt={team.name}/>;
+  if (!team.logoMark) return sm ? img : <div className="card-logo-row">{img}</div>;
+  return <div className={`card-logo-row with-name${sm ? ' sm' : ''}`}>{img}<h4>{team.name}</h4></div>;
+}
+
 function LangBadge({ language }) {
   if (window.EVENT_CONFIG && window.EVENT_CONFIG.wordly === false) return null;
   if (!/^(mandarin|english)/i.test(language || '')) return null; // not confirmed yet
@@ -38,7 +45,7 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
         <div className="logo order">{orderStr}</div>
         <div>
           {logo
-            ? <img className="card-logo-img sm" src={logo} alt={team.name}/>
+            ? <LogoRow team={team} sm/>
             : <h4>{team.name}</h4>}
           <div className="sub" style={{marginTop:2}}>{sub}</div>
         </div>
@@ -58,12 +65,12 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
           <div className="role">{team.title}</div>
         </div>
         <div className="compact-actions">
-          <button className={`iconbtn ${favorited ? 'on' : ''}`} onClick={(e) => {e.stopPropagation(); onFav(team.id);}} title="Save to shortlist">
+          <button className={`iconbtn ${favorited ? 'on' : ''}`} onClick={(e) => {e.stopPropagation(); onFav(team.id);}} title="Save to shortlist" data-track="favorite" data-team={team.id} data-x={favorited ? 'remove' : 'add'}>
             {favorited ? <I.heartFill/> : <I.heart/>}
           </button>
-          {team.linkedin && <a className="iconbtn" href={team.linkedin} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title={`${team.presenter} on LinkedIn`}><I.linkedin/></a>}
-          {team.website && <a className="iconbtn" href={team.website} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title="Visit website"><I.globe/></a>}
-          {team.email && <button className="btn primary sm" onClick={(e)=>{e.stopPropagation(); onIntro(team);}} title={`Email ${team.presenter}`}><I.mail/> Contact</button>}
+          {team.linkedin && <a className="iconbtn" href={team.linkedin} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title={`${team.presenter} on LinkedIn`} data-track="linkedin" data-team={team.id}><I.linkedin/></a>}
+          {team.website && <a className="iconbtn" href={team.website} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title="Visit website" data-track="website" data-team={team.id}><I.globe/></a>}
+          {team.email && <button className="btn primary sm" onClick={(e)=>{e.stopPropagation(); onIntro(team);}} title={`Email ${team.presenter}`} data-track="contact_open" data-team={team.id}><I.mail/> Contact</button>}
         </div>
       </article>
     );
@@ -77,7 +84,7 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
         </div>
         <div className="body">
           {logo
-            ? <div className="card-logo-row"><img className="card-logo-img" src={logo} alt={team.name}/></div>
+            ? <LogoRow team={team}/>
             : (
             <div className="head">
               <div className="logo">{initials(team.name)}</div>
@@ -103,12 +110,12 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
           <div className="foot">
             <div style={{flex:1}}/>
             <div className="actions">
-              <button className={`iconbtn ${favorited ? 'on' : ''}`} onClick={(e)=>{e.stopPropagation(); onFav(team.id);}} title="Save to shortlist">
+              <button className={`iconbtn ${favorited ? 'on' : ''}`} onClick={(e)=>{e.stopPropagation(); onFav(team.id);}} title="Save to shortlist" data-track="favorite" data-team={team.id} data-x={favorited ? 'remove' : 'add'}>
                 {favorited ? <I.heartFill/> : <I.heart/>}
               </button>
-              {team.linkedin && <a className="iconbtn" href={team.linkedin} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title={`${team.presenter} on LinkedIn`}><I.linkedin/></a>}
-              {team.website && <a className="iconbtn" href={team.website} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title="Visit website"><I.globe/></a>}
-              {team.email && <button className="btn primary sm" onClick={(e)=>{e.stopPropagation(); onIntro(team);}} title={`Email ${team.presenter}`}><I.mail/> Contact founder</button>}
+              {team.linkedin && <a className="iconbtn" href={team.linkedin} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title={`${team.presenter} on LinkedIn`} data-track="linkedin" data-team={team.id}><I.linkedin/></a>}
+              {team.website && <a className="iconbtn" href={team.website} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title="Visit website" data-track="website" data-team={team.id}><I.globe/></a>}
+              {team.email && <button className="btn primary sm" onClick={(e)=>{e.stopPropagation(); onIntro(team);}} title={`Email ${team.presenter}`} data-track="contact_open" data-team={team.id}><I.mail/> Contact founder</button>}
             </div>
           </div>
         </div>
@@ -120,7 +127,7 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
   return (
     <article id={`team-${team.id}`} className={`team-card ${liveCls} ${tagCls}`} onClick={() => onOpenLive(team)}>
       {logo
-        ? <div className="card-logo-row"><img className="card-logo-img" src={logo} alt={team.name}/></div>
+        ? <LogoRow team={team}/>
         : (
         <div className="head">
           <div className="logo order">{orderStr}</div>
@@ -146,12 +153,12 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
       <div className="foot">
         <div style={{flex:1}}/>
         <div className="actions">
-          <button className={`iconbtn ${favorited ? 'on' : ''}`} onClick={(e)=>{e.stopPropagation(); onFav(team.id);}} title="Save to shortlist">
+          <button className={`iconbtn ${favorited ? 'on' : ''}`} onClick={(e)=>{e.stopPropagation(); onFav(team.id);}} title="Save to shortlist" data-track="favorite" data-team={team.id} data-x={favorited ? 'remove' : 'add'}>
             {favorited ? <I.heartFill/> : <I.heart/>}
           </button>
-          {team.linkedin && <a className="iconbtn" href={team.linkedin} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title={`${team.presenter} on LinkedIn`}><I.linkedin/></a>}
-          {team.website && <a className="iconbtn" href={team.website} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title="Visit website"><I.globe/></a>}
-          {team.email && <button className="btn primary sm" onClick={(e)=>{e.stopPropagation(); onIntro(team);}} title={`Email ${team.presenter}`}><I.mail/> Contact founder</button>}
+          {team.linkedin && <a className="iconbtn" href={team.linkedin} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title={`${team.presenter} on LinkedIn`} data-track="linkedin" data-team={team.id}><I.linkedin/></a>}
+          {team.website && <a className="iconbtn" href={team.website} target="_blank" rel="noopener" onClick={(e)=>e.stopPropagation()} title="Visit website" data-track="website" data-team={team.id}><I.globe/></a>}
+          {team.email && <button className="btn primary sm" onClick={(e)=>{e.stopPropagation(); onIntro(team);}} title={`Email ${team.presenter}`} data-track="contact_open" data-team={team.id}><I.mail/> Contact founder</button>}
         </div>
       </div>
     </article>

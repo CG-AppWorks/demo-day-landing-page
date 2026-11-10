@@ -76,24 +76,24 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
         <div className="nav-tabs">
           {TABS.map((t) =>
           <a key={t.id} href={`#${t.id}`} className={activeTab === t.id ? 'active' : ''}
-          onClick={(e) => {e.preventDefault();onNav(t.id);}}>{tr(language, t.label, window.ZH && window.ZH.tabs[t.id])}</a>
+          onClick={(e) => {e.preventDefault();onNav(t.id);}} data-track="nav" data-x={t.id}>{tr(language, t.label, window.ZH && window.ZH.tabs[t.id])}</a>
           )}
         </div>
         <div className="nav-cta">
           {CFG.bilingual !== false &&
           <button className="btn ghost sm" onClick={() => {
             onLanguageChange(language === 'zh' ? 'en' : 'zh');
-          }} title="Toggle language">
+          }} title="Toggle language" data-track="lang" data-x={language === 'zh' ? 'en' : 'zh'}>
             {language === 'zh' ? 'EN' : '中文'}
           </button>
           }
           {CFG.wordly !== false && !hasLiveCaptions &&
-          <a className="btn outline sm" href={captionsUrl} target="_blank" rel="noopener" onClick={openCaptions} title="Open AI live interpretation">
+          <a className="btn outline sm" href={captionsUrl} target="_blank" rel="noopener" onClick={openCaptions} data-track="captions" data-x="nav" title="Open AI live interpretation">
             <I.globe /> {language === 'zh' ? '即時翻譯' : 'Live Captions'}
           </a>
           }
           {CFG.album !== false &&
-          <a className="btn primary sm" href="#album" onClick={(e) => {e.preventDefault();go('album');}}>
+          <a className="btn primary sm" href="#album" data-track="album" data-x="nav" onClick={(e) => {e.preventDefault();go('album');}}>
             <span className="live-dot" /> {language === 'zh' ? '活動相簿' : 'Live Album'}
           </a>
           }
@@ -102,7 +102,7 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
         {/* Mobile: compact captions pill + hamburger */}
         <div className="nav-mobile">
           {CFG.wordly !== false && !hasLiveCaptions &&
-          <a className="btn primary sm nav-cap-pill" href={captionsUrl} target="_blank" rel="noopener" onClick={openCaptions} title="Live interpretation">
+          <a className="btn primary sm nav-cap-pill" href={captionsUrl} target="_blank" rel="noopener" onClick={openCaptions} data-track="captions" data-x="nav" title="Live interpretation">
             <I.globe /> {language === 'zh' ? '即時翻譯' : 'Captions'}
           </a>
           }
@@ -119,22 +119,22 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
           <div className="nav-sheet-links">
             {TABS.map((t) =>
             <a key={t.id} href={`#${t.id}`} className={activeTab === t.id ? 'active' : ''}
-            onClick={(e) => {e.preventDefault();go(t.id);}}>{tr(language, t.label, window.ZH && window.ZH.tabs[t.id])}</a>
+            onClick={(e) => {e.preventDefault();go(t.id);}} data-track="nav" data-x={t.id}>{tr(language, t.label, window.ZH && window.ZH.tabs[t.id])}</a>
             )}
           </div>
           <div className="nav-sheet-actions">
             {CFG.wordly !== false && !hasLiveCaptions &&
-            <a className="btn primary" href={captionsUrl} target="_blank" rel="noopener" onClick={openCaptions}>
+            <a className="btn primary" href={captionsUrl} target="_blank" rel="noopener" onClick={openCaptions} data-track="captions" data-x="nav">
               <I.globe /> {language === 'zh' ? '即時翻譯' : 'Live Captions'}
             </a>
             }
             {CFG.album !== false &&
-            <a className="btn outline" href="#album" onClick={(e) => {e.preventDefault();go('album');}}>
+            <a className="btn outline" href="#album" data-track="album" data-x="nav" onClick={(e) => {e.preventDefault();go('album');}}>
               <span className="live-dot" style={{ background: 'var(--accent)' }} /> {language === 'zh' ? '活動相簿' : 'Live Photo Album'}
             </a>
             }
             {CFG.bilingual !== false &&
-            <button className="btn ghost" onClick={() => {onLanguageChange(language === 'zh' ? 'en' : 'zh');}}>
+            <button className="btn ghost" onClick={() => {onLanguageChange(language === 'zh' ? 'en' : 'zh');}} data-track="lang" data-x={language === 'zh' ? 'en' : 'zh'}>
               <I.globe /> {language === 'zh' ? 'Switch to English' : '切換為中文'}
             </button>
             }
@@ -399,7 +399,7 @@ function Footer({ language }) {
   return (
     <footer className="foot">
       <div className="container">
-        <a className="foot-cta" href="https://appworks.tw/accelerator/" target="_blank" rel="noopener">
+        <a className="foot-cta" href="https://appworks.tw/accelerator/" data-track="apply" target="_blank" rel="noopener">
           <div className="foot-cta-text">
             <b>{tr(language, `${(window.EVENT_CONFIG || {}).nextBatch} is now taking applications!`, ZH.footer.ctaTitle)}</b>
             <span>{tr(language, 'Join us — or refer a founder friend.', ZH.footer.ctaSub)}</span>

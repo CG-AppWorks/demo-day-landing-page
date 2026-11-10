@@ -860,6 +860,11 @@ body {
   display: block;
 }
 .card-logo-img.sm { max-height: 26px; max-width: 100%; }
+.card-logo-row.with-name { gap: 10px; }
+.card-logo-row.with-name h4 { margin: 0; }
+.card-logo-row.with-name.sm { height: auto; margin: 0; gap: 8px; }
+.card-logo-img.mark { max-width: 40px; }
+.card-logo-row.with-name.sm .card-logo-img { max-height: 24px; }
 .card-logo-sub {
   font-size: 13px; color: var(--fg2); line-height: 1.4;
 }

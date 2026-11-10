@@ -51,6 +51,20 @@ ddtw-live-translate/
 `channel` is `openai` or `gemini`. `active` is a virtual stream channel that
 relays whichever engine the switch currently points at.
 
+## Landing-page stats (StatsHub)
+
+A second Durable Object (`StatsHub`, SQLite) counts anonymous page views and clicks from the
+Demo Day landing pages (`demoday-site/analytics.js`).
+
+| Route | Auth | Purpose |
+|---|---|---|
+| `POST /api/track` | none (Origin-filtered) | `{ed, e, t, x, v, src}` beacon from the page; validated, junk dropped silently |
+| `GET /api/stats?ed=TW\|SG` | bearer `ADMIN_TOKEN` | aggregates: totals, per event, per team, daily, sources, countries, devices |
+| `POST /api/stats/reset` | bearer `ADMIN_TOKEN` | `{ed}` — delete that edition's rows |
+| `/stats` | token entered in the page | operator dashboard |
+
+Adding `StatsHub` is migration `v2` in `wrangler.toml`; it takes effect on the next `npx wrangler deploy`.
+
 ## Run locally
 
 Requires Node ≥ 18 (for `wrangler`).
