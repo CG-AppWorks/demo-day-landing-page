@@ -132,7 +132,7 @@ window.EVENT_CONFIG = {
         `For Singapore, we chose the AW#33 teams that are building for Southeast Asia and its wider region, and they come ready to raise funding and find partners.\n` +
         `In two focused hours, you’ll see ${TEAMS.length} international teams pitch and meet the founders in person.\n\n` +
         `This cohort’s strength is in applied AI. More than half of AW#33 build AI that turns hard-won industry know-how into software any company can run, in areas such as trade compliance, factory engineering and construction safety. Other teams work in deep tech: post-quantum cryptography, defense drones and on-chain finance.\n\n` +
-        `The founders come from ${MARKET_COUNT} markets, and over half the teams include a repeat founder. Four teams already make more than US$1M a year in revenue.\n\n` +
+        `The founders come from ${MARKET_COUNT} markets, and over half the teams include a repeat founder. Two teams already make more than US$1M a year in revenue.\n\n` +
         `Enjoy the show, and let the conversations begin!`,
   },
   // Anonymous page-view / click counts (analytics.js) — read at <this URL>/stats.
