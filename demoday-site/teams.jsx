@@ -165,24 +165,35 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
   );
 }
 
-function FilterBar({ filter, setFilter, search, setSearch }) {
+// Category chips: the four RFS first (#1 Manufacturing AI, #2 Defense Tech,
+// #3 On-Chain Banking, #4 PQC), then the other groups. Only categories present
+// in the list are shown, each with its team count.
+const CATEGORY_ORDER = ['Manufacturing AI', 'Defense Tech', 'On-Chain Banking', 'PQC', 'Enterprise AI', 'Semiconductor', 'Health Tech', 'Media'];
+const tagSlug = (t) => t.toLowerCase().replace(/[^a-z0-9]/g, '-');
+
+function FilterBar({ filter, setFilter, teams, language }) {
+  const counts = {};
+  teams.forEach((t) => (t.tags || []).forEach((g) => { counts[g] = (counts[g] || 0) + 1; }));
+  const rank = (c) => { const i = CATEGORY_ORDER.indexOf(c); return i < 0 ? 99 : i; };
+  const cats = Object.keys(counts).sort((a, b) => rank(a) - rank(b));
+  const pick = (tag) => setFilter((f) => ({ ...f, tag }));
   return (
-    <div className="filters">
-      <div className="search">
-        <I.search/>
-        <input
-          placeholder="Search teams, founders, sectors — e.g. 'agents', 'drones', 'post-quantum'…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        {search
-          ? <button className="search-clear" onClick={() => setSearch('')} aria-label="Clear search">×</button>
-          : <span className="kbd">⌘K</span>}
-      </div>
+    <div className="filters" role="group" aria-label="Filter teams by category">
+      <button className={`chip ${filter.tag === 'All' ? 'on' : ''}`} onClick={() => pick('All')}
+        data-track="filter" data-x="all">
+        {tr(language, 'All', '全部')} <span className="chip-n">{teams.length}</span>
+      </button>
+      {cats.map((c) =>
+      <button key={c} className={`chip tag-${tagSlug(c)} ${filter.tag === c ? 'on' : ''}`}
+        onClick={() => pick(filter.tag === c ? 'All' : c)} data-track="filter" data-x={c}>
+          <span className="dot"/>{c} <span className="chip-n">{counts[c]}</span>
+        </button>
+      )}
+      <span className="chip-divider"/>
       <button
         className={`chip ${filter.favoritesOnly ? 'on' : ''}`}
         onClick={() => setFilter(f => ({...f, favoritesOnly: !f.favoritesOnly}))}>
-        <I.heart/> Favorites
+        <I.heart/> {tr(language, 'Favorites', '收藏')}
       </button>
     </div>
   );
@@ -190,20 +201,15 @@ function FilterBar({ filter, setFilter, search, setSearch }) {
 
 function TeamsSection({ favorites, onFav, onIntro, onOpenLive, density, accentIntensity, captionLanguage, onCaptionLanguageChange, sessionId, liveTeamId, language }) {
   const [filter, setFilter] = useState({ tag: 'All', batches: [], languages: [], markets: [], favoritesOnly: false });
-  const [search, setSearch] = useState('');
 
-  const filtered = TEAMS.filter(t => {
-    if (t.batch === (window.EVENT_CONFIG || {}).wistronBatch) return false; // shown under the Wistron block
+  // Wistron teams are shown under the Wistron block, not here.
+  const listed = TEAMS.filter(t => t.batch !== (window.EVENT_CONFIG || {}).wistronBatch);
+  const filtered = listed.filter(t => {
     if (filter.tag !== 'All' && !t.tags.includes(filter.tag)) return false;
     if (filter.batches.length && !filter.batches.includes(t.batch)) return false;
     if (filter.languages.length && !filter.languages.includes((t.language || '').split(' ')[0])) return false;
     if (filter.markets.length && !filter.markets.includes(t.hq)) return false;
     if (filter.favoritesOnly && !favorites.includes(t.id)) return false;
-    if (search) {
-      const s = search.toLowerCase();
-      const hay = [t.name, t.sub, t.pitch, t.presenter, t.title].join(' ').toLowerCase();
-      if (!hay.includes(s)) return false;
-    }
     return true;
   });
 
@@ -222,7 +228,7 @@ function TeamsSection({ favorites, onFav, onIntro, onOpenLive, density, accentIn
           </div>
         </div>
 
-        <FilterBar filter={filter} setFilter={setFilter} search={search} setSearch={setSearch}/>
+        <FilterBar filter={filter} setFilter={setFilter} teams={listed} language={language}/>
 
         <div className="stage">
           <div className={`teams ${density}`}>
@@ -237,7 +243,7 @@ function TeamsSection({ favorites, onFav, onIntro, onOpenLive, density, accentIn
             )}
             {filtered.length === 0 &&
               <div style={{gridColumn:'1/-1', padding:'48px 24px', textAlign:'center', color:'var(--fg2)'}}>
-                No teams match these filters. <button className="btn ghost sm" onClick={() => {setFilter({tag:'All', batches:[], languages:[], markets:[], favoritesOnly:false}); setSearch('');}}>Clear filters</button>
+                No teams match these filters. <button className="btn ghost sm" onClick={() => setFilter({tag:'All', batches:[], languages:[], markets:[], favoritesOnly:false})}>Clear filters</button>
               </div>
             }
           </div>

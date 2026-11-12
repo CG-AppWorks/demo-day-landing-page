@@ -167,7 +167,12 @@ function Hero({ variant = 'photo', language, kpis }) {
   const hqCount = {};
   TEAMS.forEach((t) => { if (t.hq) hqCount[t.hq] = (hqCount[t.hq] || 0) + 1; });
   const markets = Object.keys(hqCount).sort((a, b) => hqCount[b] - hqCount[a]);
-  const enLede = <p className="lede center">{rich(lede.en)}</p>;
+  // A blank line in the data-file copy starts a new paragraph.
+  const paras = (text) => String(text || '').split('\n\n');
+  const enLede = <>
+    {CFG.heroTitle && <p className="hero-title">{CFG.heroTitle}</p>}
+    {paras(lede.en).map((p, i) => <p key={i} className={`lede center${i ? ' more' : ''}`}>{rich(p)}</p>)}
+  </>;
 
   return (
     <section className="hero photo" id="top">

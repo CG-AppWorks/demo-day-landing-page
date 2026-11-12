@@ -274,6 +274,14 @@ body {
   margin: 40px auto 0;
   text-align: center;
 }
+/* Multi-paragraph intro (blank line in heroLede) + optional title line above it */
+.hero .lede.more { margin-top: 14px; }
+.hero-title {
+  margin: 36px auto 0; max-width: 760px; text-align: center;
+  font-family: var(--font-display); font-size: 22px; font-weight: 800;
+  letter-spacing: -0.01em; color: var(--aw-slate);
+}
+.hero-title + .lede { margin-top: 12px; }
 .hero.slate .lede { color: rgba(255,255,255,0.84); }
 .hero.bone .lede { color: var(--aw-slate-90); }
 .hero.orange .lede { color: rgba(255,255,255,0.94); }
@@ -793,6 +801,32 @@ body {
 .chip.on.tag-dual-use { background: #0f766e; border-color: #0f766e; }
 .chip.on.tag-dual-use .dot { background: #fff; }
 .chip-divider { width: 1px; height: 20px; background: var(--border-strong); margin: 0 4px; }
+/* Category filter chips (DD#33) */
+.chip .chip-n { opacity: 0.55; font-variant-numeric: tabular-nums; }
+.chip.tag-manufacturing-ai .dot { background: #b45309; }
+.chip.on.tag-manufacturing-ai { background: #b45309; border-color: #b45309; }
+.chip.on.tag-manufacturing-ai .dot { background: #fff; }
+.chip.tag-defense-tech .dot { background: #3f6212; }
+.chip.on.tag-defense-tech { background: #3f6212; border-color: #3f6212; }
+.chip.on.tag-defense-tech .dot { background: #fff; }
+.chip.tag-on-chain-banking .dot { background: #6d28d9; }
+.chip.on.tag-on-chain-banking { background: #6d28d9; border-color: #6d28d9; }
+.chip.on.tag-on-chain-banking .dot { background: #fff; }
+.chip.tag-pqc .dot { background: #0e7490; }
+.chip.on.tag-pqc { background: #0e7490; border-color: #0e7490; }
+.chip.on.tag-pqc .dot { background: #fff; }
+.chip.tag-enterprise-ai .dot { background: #1d4ed8; }
+.chip.on.tag-enterprise-ai { background: #1d4ed8; border-color: #1d4ed8; }
+.chip.on.tag-enterprise-ai .dot { background: #fff; }
+.chip.tag-semiconductor .dot { background: #475569; }
+.chip.on.tag-semiconductor { background: #475569; border-color: #475569; }
+.chip.on.tag-semiconductor .dot { background: #fff; }
+.chip.tag-health-tech .dot { background: #be123c; }
+.chip.on.tag-health-tech { background: #be123c; border-color: #be123c; }
+.chip.on.tag-health-tech .dot { background: #fff; }
+.chip.tag-media .dot { background: #a21caf; }
+.chip.on.tag-media { background: #a21caf; border-color: #a21caf; }
+.chip.on.tag-media .dot { background: #fff; }
 
 /* Editions without the on-stage strip: tighten hero→teams gap */
 .edition-nostage .hero .hero-inner { padding-bottom: 52px; }
@@ -993,10 +1027,15 @@ body {
 .badge.enterprise { background: #1d4ed8; color: #fff; }
 .badge.manufacturing { background: #b45309; color: #fff; }
 .badge.dual-use { background: #0f766e; color: #fff; }
-.badge.on-chain { background: #6d28d9; color: #fff; }
-.badge.deep-tech { background: #0369a1; color: #fff; }
-.badge.health { background: #be123c; color: #fff; }
-.badge.energy { background: #15803d; color: #fff; }
+/* DD#33 categories (RFS-aligned) */
+.badge.manufacturing-ai { background: #b45309; color: #fff; }
+.badge.defense-tech { background: #3f6212; color: #fff; }
+.badge.on-chain-banking { background: #6d28d9; color: #fff; }
+.badge.pqc { background: #0e7490; color: #fff; }
+.badge.enterprise-ai { background: #1d4ed8; color: #fff; }
+.badge.semiconductor { background: #475569; color: #fff; }
+.badge.health-tech { background: #be123c; color: #fff; }
+.badge.media { background: #a21caf; color: #fff; }
 .badge.batch { background: transparent; color: var(--fg1); border: 1px solid var(--border-strong); }
 .team-card .pitch {
   font-size: 13.5px; line-height: 1.5; color: var(--fg1);
@@ -1040,10 +1079,14 @@ body {
 .teams.editorial .team-card.tag-enterprise .cover { background: linear-gradient(135deg, #1d4ed8, #424F57); }
 .teams.editorial .team-card.tag-manufacturing .cover { background: linear-gradient(135deg, #b45309, #424F57); }
 .teams.editorial .team-card.tag-dual-use .cover { background: linear-gradient(135deg, #0f766e, #424F57); }
-.teams.editorial .team-card.tag-on-chain .cover { background: linear-gradient(135deg, #6d28d9, #424F57); }
-.teams.editorial .team-card.tag-deep-tech .cover { background: linear-gradient(135deg, #0369a1, #424F57); }
-.teams.editorial .team-card.tag-health .cover { background: linear-gradient(135deg, #be123c, #424F57); }
-.teams.editorial .team-card.tag-energy .cover { background: linear-gradient(135deg, #15803d, #424F57); }
+.teams.editorial .team-card.tag-manufacturing-ai .cover { background: linear-gradient(135deg, #b45309, #424F57); }
+.teams.editorial .team-card.tag-defense-tech .cover { background: linear-gradient(135deg, #3f6212, #424F57); }
+.teams.editorial .team-card.tag-on-chain-banking .cover { background: linear-gradient(135deg, #6d28d9, #424F57); }
+.teams.editorial .team-card.tag-pqc .cover { background: linear-gradient(135deg, #0e7490, #424F57); }
+.teams.editorial .team-card.tag-enterprise-ai .cover { background: linear-gradient(135deg, #1d4ed8, #424F57); }
+.teams.editorial .team-card.tag-semiconductor .cover { background: linear-gradient(135deg, #475569, #424F57); }
+.teams.editorial .team-card.tag-health-tech .cover { background: linear-gradient(135deg, #be123c, #424F57); }
+.teams.editorial .team-card.tag-media .cover { background: linear-gradient(135deg, #a21caf, #424F57); }
 .teams.editorial .team-card .body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
 .teams.editorial .team-card .pill { top: 18px; right: 18px; }
 .teams.editorial .team-card .pitch { font-size: 14.5px; }
