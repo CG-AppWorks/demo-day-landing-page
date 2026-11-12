@@ -71,12 +71,12 @@ function About({ language }) {
   },
   {
     title: "AppWorks Funds",
-    en: "AppWorks manages four venture capital funds totaling US$ 386M. We invest from Seed to Series C, funding 20–30 deals a year, now with 130+ portfolio names — Lalamove, Dapper Labs / Flow, Animoca Brands, 91APP, Figment, Carousell, ShopBack, 17LIVE, KKday — and have produced 6 IPOs, 9 IEOs, 1 hectocorn, 2 decacorns, and 8 unicorns.",
-    zh: "管理四支創投基金，總募集金額 3.86 億美元。通常投資種子輪至 C 輪，每年進行 20–30 個投資案，至今已投資超過 130 家新創，如 Lalamove、Dapper Labs / Flow、Animoca Brands、91APP、Figment、Carousell、ShopBack、17LIVE、KKday；並已有 6 個 IPO、9 個 IEO，以及 1 隻百角獸、2 隻十角獸與 8 隻獨角獸。",
+    en: "AppWorks manages four venture capital funds totaling US$ 386M. We invest from Seed to Series C, funding 20–30 deals a year, now with 130+ portfolio names — Lalamove, Dapper Labs / Flow, Animoca Brands, 91APP, Figment, Carousell, ShopBack, 17LIVE, KKday — and have produced 6 IPOs, 9 IEOs, 1 hectocorn, 2 decacorns, 5 unicorns and 4 centaurs.",
+    zh: "管理四支創投基金，總募集金額 3.86 億美元。通常投資種子輪至 C 輪，每年進行 20–30 個投資案，至今已投資超過 130 家新創，如 Lalamove、Dapper Labs / Flow、Animoca Brands、91APP、Figment、Carousell、ShopBack、17LIVE、KKday；並已有 6 個 IPO、9 個 IEO，以及 1 隻百角獸、2 隻十角獸、5 隻獨角獸與 4 隻 Centaur。",
     link: "https://appworks.tw/investments/",
     stats: [
     { v: "US$ 386M", l: "AUM", num: true },
-    { v: <span style={{ color: '#ff6b0f' }}>6 / 8</span>, l: "IPOs · Unicorns" },
+    { v: <span style={{ color: '#ff6b0f' }}>6 / 5</span>, l: "IPOs · Unicorns" },
     { v: "130+", l: "Portfolio", num: true }]
 
   },
