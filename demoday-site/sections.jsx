@@ -184,11 +184,11 @@ function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpen
 window.Partners = Partners;
 
 function Sponsors({ language }) {
-  // Demo Day sponsors — logo lockups, shown together (same three since DD#32).
-  const sponsors = [
-  { name: 'Google Cloud', src: 'assets/sponsor-google.svg', h: 30 },
-  { name: 'AWS', src: 'assets/sponsor-aws.svg', h: 34 },
-  { name: 'KKCOMPANY', src: 'assets/sponsor-kkcompany.jpg', h: 40 }];
+  // Demo Day sponsors — logo lockups from EVENT_CONFIG.sponsors ({ name, src, h }),
+  // so each edition can list its own (SG adds Stripe).
+  const sponsors = (window.EVENT_CONFIG || {}).sponsors || [];
+  if (!sponsors.length) return null;
+  const layout = { 2: 'two', 3: 'three', 4: 'four' }[sponsors.length] || '';
 
   return (
     <section className="section tight" id="sponsors">
@@ -199,7 +199,7 @@ function Sponsors({ language }) {
             <h2>{tr(language, 'Demo Day sponsors.', ZH.sponsors.heading)}</h2>
           </div>
         </div>
-        <div className="sponsors three">
+        <div className={`sponsors ${layout}`}>
           {sponsors.map((s, i) =>
           <div key={i} className="sp">
               <img src={s.src} alt={s.name} style={{ height: s.h + 'px', width: 'auto' }} />

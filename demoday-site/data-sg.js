@@ -136,6 +136,13 @@ window.EVENT_CONFIG = {
         `The founders come from ${MARKET_COUNT} markets, and over half the teams include a repeat founder. Two teams already make more than US$1M a year in revenue.\n\n` +
         `Enjoy the show, and let the conversations begin!`,
   },
+  // Demo Day sponsors (logos from Ona's "(Newlogos)_DD#33TW" folder, 2026H2 versions).
+  sponsors: [
+    { name: 'Google Cloud', src: 'assets/sponsor-dd33-google-cloud.png', h: 30 },
+    { name: 'AWS', src: 'assets/sponsor-dd33-aws.png', h: 56 },
+    { name: 'KKCOMPANY', src: 'assets/sponsor-dd33-kkcompany.png', h: 50 },
+    { name: 'Stripe', src: 'assets/sponsor-dd33-stripe.png', h: 40 },   // SG only
+  ],
   // Anonymous page-view / click counts (analytics.js) — read at <this URL>/stats.
   analytics: 'https://ddtw-captions.hsichun.workers.dev',
 };

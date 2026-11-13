@@ -1545,6 +1545,20 @@ body {
   .sponsors:not(.two) .sp:nth-child(6n) { border-right: 1px solid var(--border); }
   .sponsors:not(.two) .sp:nth-child(3n) { border-right: 0; }
 }
+/* Four sponsors in one row (SG adds Stripe); 2 × 2 on phones */
+.sponsors.four { grid-template-columns: repeat(4, 1fr); max-width: 1040px; margin: 0 auto; }
+.sponsors.four .sp { min-height: 140px; border-bottom: 0; }
+.sponsors.four .sp:nth-child(4) { border-right: 0; }
+@media (max-width: 780px) {
+  .sponsors.four .sp:nth-child(3n) { border-right: 1px solid var(--border); }
+  .sponsors.four .sp:nth-child(4n) { border-right: 0; }
+}
+@media (max-width: 600px) {
+  .sponsors.four { grid-template-columns: repeat(2, 1fr); max-width: 420px; }
+  .sponsors.four .sp { min-height: 110px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .sponsors.four .sp:nth-child(2n) { border-right: 0; }
+  .sponsors.four .sp:nth-child(n+3) { border-bottom: 0; }
+}
 
 /* ───────── Footer ───────── */
 footer.foot {

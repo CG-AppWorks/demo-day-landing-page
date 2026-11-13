@@ -239,6 +239,12 @@ window.EVENT_CONFIG = {
     zh: `${TEAMS.length} 組新創、一個下午：${AW_COUNT} 組來自 AppWorks Accelerator #33，${WA_COUNT} 組來自 Wistron Accelerator #11。\n` +
         `本屆主題「Compiling the Uncompilable」：用 AI 擷取資深工作者的經驗，轉成企業每天都能使用的軟體。`,
   },
+  // Demo Day sponsors (logos from Ona's "(Newlogos)_DD#33TW" folder, 2026H2 versions).
+  sponsors: [
+    { name: 'Google Cloud', src: 'assets/sponsor-dd33-google-cloud.png', h: 30 },
+    { name: 'AWS', src: 'assets/sponsor-dd33-aws.png', h: 56 },
+    { name: 'KKCOMPANY', src: 'assets/sponsor-dd33-kkcompany.png', h: 50 },
+  ],
   // Live caption engine switch (OpenAI/Gemini/Wordly). When set, the Captions
   // tab follows the server switch; defaults to Wordly so guests see no change
   // until an operator flips it from Backstage.
