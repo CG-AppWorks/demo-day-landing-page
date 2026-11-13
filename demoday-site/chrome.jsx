@@ -151,7 +151,8 @@ function rich(text) {
   return String(text || '').split('\n').map((line, i, lines) =>
   <React.Fragment key={i}>
       {line.split('**').map((part, j) => j % 2 ? <b key={j}>{part}</b> : part)}
-      {i < lines.length - 1 && <br />}
+      {/* the space keeps words apart where phones hide the <br> */}
+      {i < lines.length - 1 && <>{' '}<br /></>}
     </React.Fragment>
   );
 }

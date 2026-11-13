@@ -139,7 +139,7 @@ body {
 .hero.photo { background: #f4f6f8; color: var(--aw-slate); }
 .hero.photo .hero-bg {
   position: absolute; inset: 0; z-index: 0;
-  background: url("assets/hero-bg-dd33.jpg") center/cover no-repeat;
+  background: url("assets/hero-bg-dd33.jpg?v=2") center/cover no-repeat;
 }
 .hero.photo .hero-bg::after {
   content: ""; position: absolute; inset: 0;
@@ -205,7 +205,7 @@ body {
 .hero.photo .hero-meta .v .num { color: var(--accent); }
 
 .hero .hero-inner {
-  padding: 88px 0 72px;
+  padding: 88px var(--gutter) 72px;
   position: relative;
   text-align: center;
   display: flex; flex-direction: column; align-items: center;
@@ -1898,7 +1898,7 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
   .section-head > div:last-child:not(:only-child) { width: 100%; }
 
   /* Hero */
-  .hero .hero-inner { padding: 36px 0 44px; }
+  .hero .hero-inner { padding: 36px var(--gutter) 44px; }
   .hero-keyvisual { max-width: 86%; }
   .hero-headline-block { margin: 18px 0 4px; }
   /* SG text headline — keep "Demo Day" on one strong line, tighten the stack */
@@ -1907,6 +1907,11 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
   .hero-wordmark .hw-big { font-size: clamp(52px, 16vw, 88px); line-height: 0.95; }
   .hero-wordmark .hw-city { font-size: clamp(22px, 7vw, 34px); margin-top: 4px; }
   .hero .lede { font-size: 16px; margin-top: 26px; }
+  /* Let the intro flow on phones: hard line breaks from the data file only make ragged short lines here */
+  .hero .lede br { display: none; }
+  .hero .lede.more { margin-top: 12px; }
+  /* Tall phone hero: pin the artwork to the top instead of stretching it, and blend below with its edge colour */
+  .hero.photo .hero-bg { background-color: #f2f3f5; background-size: 240% auto; background-position: 40% top; }
   .hero .lede.zh { font-size: 14.5px; }
   .hero-meta {
     grid-template-columns: repeat(2, 1fr);
