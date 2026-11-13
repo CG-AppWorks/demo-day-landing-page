@@ -230,8 +230,8 @@ window.EVENT_CONFIG = {
   album: false,      // Accupai photo album — set albumUrl + true once the DD#33 album exists
   albumUrl: '',
   wistron: true,     // WA cohort + partners section
-  // Key visual: image path = printed lockup · false = text wordmark · '' = empty slot (until the DD#33 artwork lands)
-  keyVisual: '',
+  // Key visual: image path = printed lockup · false = text wordmark · '' = empty slot
+  keyVisual: 'assets/dd33-keyvisual-tw.webp',
   nowOnStage: false, // captions live in the floating 即時翻譯 widget, not an inline page strip
   heroDate: '3 Dec',  heroDateZh: '12/3',
   heroTime: 'Thu · 12:00–16:30', heroTimeZh: '週四 · 12:00–16:30',

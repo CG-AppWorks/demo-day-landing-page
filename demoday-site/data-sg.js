@@ -117,8 +117,8 @@ window.EVENT_CONFIG = {
   wordly: false,
   album: false,
   wistron: false,
-  // Key visual: image path = printed lockup · false = text wordmark · '' = empty slot (until the DD#33 artwork lands)
-  keyVisual: '',
+  // Key visual: image path = printed lockup · false = text wordmark · '' = empty slot
+  keyVisual: 'assets/dd33-keyvisual-sg.webp',
   nowOnStage: false,      // no live "on stage" takeover for SG
   heroDate: '17 Nov',
   heroTime: 'Tue · 15:45–18:00',
@@ -126,7 +126,8 @@ window.EVENT_CONFIG = {
   heroVenueSub: 'West Tower · Meeting Room 2',
   heroTeamsNote: 'AppWorks #33',
   // Intro copy from Alyssa (Nov 12). Blank line = new paragraph; team + market counts follow the lineup.
-  heroTitle: 'AppWorks Demo Day #33 · Singapore',
+  // Her title line "AppWorks Demo Day #33 · Singapore" is now carried by the key visual
+  // (set heroTitle to show it as text again).
   heroLede: {
     en: `Twice a year, AppWorks brings a new accelerator cohort to Demo Days in several cities.\n` +
         `For Singapore, we chose the AW#33 teams that are building for Southeast Asia and its wider region, and they come ready to raise funding and find partners.\n` +

@@ -139,11 +139,12 @@ body {
 .hero.photo { background: #f4f6f8; color: var(--aw-slate); }
 .hero.photo .hero-bg {
   position: absolute; inset: 0; z-index: 0;
-  background: url("assets/hero-bg.jpg") center/cover no-repeat;
+  background: url("assets/hero-bg-dd33.jpg") center/cover no-repeat;
 }
 .hero.photo .hero-bg::after {
   content: ""; position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0.55) 70%, #ffffff 100%);
+  /* DD#33 artwork is already light: keep it visible, only fade into the page at the bottom */
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 60%, #ffffff 100%);
 }
 .hero.photo .hero-inner { z-index: 2; }
 .hero-keyvisual {
