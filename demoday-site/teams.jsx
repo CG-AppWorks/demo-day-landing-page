@@ -17,17 +17,6 @@ function LogoRow({ team, sm }) {
   return <div className={`card-logo-row with-name${sm ? ' sm' : ''}`}>{img}<h4>{team.name}</h4></div>;
 }
 
-function LangBadge({ language }) {
-  if (window.EVENT_CONFIG && window.EVENT_CONFIG.wordly === false) return null;
-  if (!/^(mandarin|english)/i.test(language || '')) return null; // not confirmed yet
-  const isZh = language && language.toLowerCase().startsWith('mandarin');
-  return (
-    <span className={`badge lang ${isZh ? 'mandarin' : 'english'}`} title={`Pitch language: ${language}`}>
-      {isZh ? "中" : "EN"}
-    </span>
-  );
-}
-
 function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accentLive, liveTeamId, language }) {
   const sub = tr(language, team.sub, (window.ZH && window.ZH.teamSub && window.ZH.teamSub[team.id]));
   const pitch = tr(language, team.pitch, (window.ZH && window.ZH.teamPitch && window.ZH.teamPitch[team.id]));
@@ -53,7 +42,6 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
           <p className="pitch" style={{minHeight:0}}>{pitch}</p>
           <div className="badges" style={{marginTop:6}}>
             {team.tags.map(t => <span key={t} className={`badge ${t.toLowerCase().replace(/[^a-z0-9]/g,'-')}`}>{t}</span>)}
-            <LangBadge language={team.language}/>
           </div>
         </div>
         <div className="presenter-mini">
@@ -95,7 +83,6 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
             )}
           <div className="badges">
             {team.tags.map(t => <span key={t} className={`badge ${t.toLowerCase().replace(/[^a-z0-9]/g,'-')}`}>{t}</span>)}
-            <LangBadge language={team.language}/>
           </div>
           <p className="pitch">{pitch}</p>
           <div className="presenter">
@@ -138,7 +125,6 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
         )}
       <div className="badges">
         {team.tags.map(t => <span key={t} className={`badge ${t.toLowerCase().replace(/[^a-z0-9]/g,'-')}`}>{t}</span>)}
-        <LangBadge language={team.language}/>
       </div>
       <p className="pitch">{pitch}</p>
       <div className="presenter">
