@@ -131,6 +131,14 @@ window.About = About;
 function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpenLive = () => {}, density = 'comfy', accentIntensity = 'balanced', language }) {
   const CFG = window.EVENT_CONFIG || {};
   const waTeams = (window.TEAMS || []).filter((t) => t.batch === CFG.wistronBatch);
+  const donationTeams = CFG.donationBatch ? (window.TEAMS || []).filter((t) => t.batch === CFG.donationBatch) : [];
+  const card = (t) =>
+    <window.TeamCard key={t.id} team={t}
+      density={density}
+      favorited={favorites.includes(t.id)}
+      onFav={onFav} onIntro={onIntro} onOpenLive={onOpenLive}
+      accentLive={accentIntensity !== 'restrained'}
+      liveTeamId={null} language={language} />;
   const zh = (window.EVENT_CONFIG ? window.EVENT_CONFIG.bilingual !== false : true) && language === 'zh';
   return (
     <section className="section bone" id="partners">
@@ -168,15 +176,18 @@ function Partners({ favorites = [], onFav = () => {}, onIntro = () => {}, onOpen
         </div>
         {waTeams.length > 0 && window.TeamCard &&
         <div className={`teams ${density}`} style={{ marginTop: 24 }}>
-          {waTeams.map((t) =>
-          <window.TeamCard key={t.id} team={t}
-          density={density}
-          favorited={favorites.includes(t.id)}
-          onFav={onFav} onIntro={onIntro} onOpenLive={onOpenLive}
-          accentLive={accentIntensity !== 'restrained'}
-          liveTeamId={null} language={language} />
-          )}
+          {waTeams.map(card)}
         </div>
+        }
+        {/* Computing Power Donation recipients: share results in the Wistron segment */}
+        {donationTeams.length > 0 && window.TeamCard &&
+        <div className="donation-block">
+            <h3>{tr(language, CFG.donationLabel, CFG.donationLabelZh)}<span className="dot">{zh ? '。' : '.'}</span></h3>
+            <p className={`sub${zh ? ' zh' : ''}`}>{tr(language, CFG.donationIntro, CFG.donationIntroZh)}</p>
+            <div className={`teams ${density}`}>
+              {donationTeams.map(card)}
+            </div>
+          </div>
         }
       </div>
     </section>);

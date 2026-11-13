@@ -111,18 +111,30 @@ const TEAMS = [
     presenter:"Tzu-Yao Lin", title:"CEO", email:"lint@wdmis.com.tw", website:"https://waydosoft.com.tw", speakerOrder:3,
     pitch:"Decision intelligence for delivery promises in high-mix precision manufacturing." },
   { id:"sonice",    name:"Sonice",    sub:"Wistron Accelerator #11", tags:[], batch:"WA#11", hq:"", language:"", presenter:"Presenter TBC", title:"", email:"", website:"", speakerOrder:4, pitch:"Details coming soon." },
+
+  // ─── Wistron Computing Power Donation ─ 2 recipients share results on stage (Wistron email, Nov 5) ───
+  // Copy from each team's own website until their material form comes in (forms.gle/posMyKoBXTaKZxqt5).
+  { id:"dentscape", portrait:"assets/portraits/dentscape.jpg",
+    name:"Dentscape", sub:"AI crown design for dental labs · AppWorks #24", tags:["Health Tech"], batch:"CPD", hq:"TW", language:"",
+    presenter:"Bill Chou", title:"CEO", email:"bill.chou@dentscape.ai", website:"https://dentscape.ai", speakerOrder:1,
+    pitch:"AI crown design software for dental labs: designs crowns, bridges and models in each lab's own style, reviewed in the tools the lab already uses." },
+  { id:"siliconmind", logo:"assets/logos/siliconmind.png",
+    name:"SiliconMind", sub:"Private, on-premise AI for chip design", tags:["Semiconductor"], batch:"CPD", hq:"TW", language:"",
+    presenter:"Mu-Chi Chen", title:"Co-founder & CEO", email:"muchi.chen@siliconmind.co", website:"https://siliconmind.co", speakerOrder:2,
+    pitch:"Private AI for IC design companies and IP providers: small models served on-premise that keep improving on the customer's own design data and workflows. Spun off from NTU and Academia Sinica." },
 ];
 
 const AW_COUNT = TEAMS.filter((t) => t.batch === 'AW#33').length;
 const WA_COUNT = TEAMS.filter((t) => t.batch === 'WA#11').length;
+const CPD_COUNT = TEAMS.filter((t) => t.batch === 'CPD').length;
 
-// Run of show per the TW Luma page (luma.com/DD33TWVIP).
+// Run of show per the TW Luma page (luma.com/DD33TWVIP), as of Nov 13.
 const AGENDA = [
   { t:"12:00–13:00", title:"Registration",                                    tag:"Lobby · 5F",  now:false },
-  { t:"13:00–13:20", title:"Opening",                                         tag:"Keynote",     now:false },
-  { t:"13:20–14:05", title:`AppWorks #33 Startups Demo · ${AW_COUNT} teams`,  tag:"Pitches",     now:true  },
-  { t:"14:05–14:30", title:`Wistron #11 Startups Demo · ${WA_COUNT} teams`,   tag:"Pitches",     now:false },
-  { t:"14:30–16:30", title:"Open Floor & Cocktail Networking",                tag:"Networking",  now:false, wide:true },
+  { t:"13:00–13:20", title:"Opening Keynote by Jamie Lin",                    tag:"Keynote",     now:false },
+  { t:"13:20–14:20", title:`AppWorks #33 Startups Demo · ${AW_COUNT} teams`,  tag:"Pitches",     now:true  },
+  { t:"14:20–14:50", title:`Wistron #11 Startups Demo · ${WA_COUNT} teams + Computing Power Donation results · ${CPD_COUNT} teams`, tag:"Pitches", now:false },
+  { t:"14:50–16:30", title:"Open Floor & Cocktail Networking",                tag:"Networking",  now:false, wide:true },
 ];
 
 const TABS = [
@@ -147,7 +159,7 @@ const ZH = {
   tabs: { teams: '團隊', agenda: '議程', about: '關於 AppWorks', partners: '緯創', 'booth-map': '攤位地圖' },
   teams: { heading: '登台團隊。', sub: '點選任一團隊即可收藏，或預約與創辦人交流。' },
   agenda: { heading: '議程。' },
-  agendaTitles: ['報到', '開場', `AppWorks #33 Demo · ${AW_COUNT} 組`, `Wistron #11 Demo · ${WA_COUNT} 組`, '自由交流與酒會'],
+  agendaTitles: ['報到', '開場：Jamie 林之晨主題演講', `AppWorks #33 Demo · ${AW_COUNT} 組`, `Wistron #11 Demo · ${WA_COUNT} 組 + 算力捐贈計畫成果分享 · ${CPD_COUNT} 組`, '自由交流與酒會'],
   album: { eyebrow: 'ACCUPAI 提供', heading: '活動即時相簿。', sub: '由 Accupai 即時拍攝活動現場——可即時觀看、下載與分享。' },
   partners: {
     cardTitle: 'Wistron Accelerator',
@@ -156,6 +168,7 @@ const ZH = {
   sponsors: { eyebrow: '感謝我們的贊助商與合作夥伴', heading: 'Demo Day 贊助夥伴。' },
   footer: { ctaTitle: 'AW#34 正在招募中！', ctaSub: '加入我們——或推薦一位創業者朋友。' },
   teamSub: {
+    dentscape: '為牙技所打造的 AI 牙冠設計', siliconmind: '在地端運作的晶片設計 AI',
     ailytics: '用既有攝影機做 AI 安全與產能監測', mimin: '文字與語音的客服 AI agent', alpenglow: '常時運作 AI 的記憶體內運算晶片',
     dataraai: '處理軟性元件組裝的機器人', ofek: '電子產線的 AI 品質管理', vernus: '以 AI 與量子模擬優化製藥製程',
     huemankind: '為 WhatsApp 銷售的中小企業打造的 AI 內容工作室', morphusai: 'AI agent 的記憶與身分層', federation: '處理貿易文件的 AI agent',
@@ -192,6 +205,8 @@ const ZH = {
     zig: '整合 AI 與數位孿生的一站式解決方案，加速企業轉型。',
     waydosoft: '為少量多樣的精密製造，提供交期承諾的決策智慧。',
     hanomi: '團隊資訊即將公布。', sonice: '團隊資訊即將公布。',
+    dentscape: '為牙技所打造的 AI 牙科 CAD：依照每間技工所自己的風格設計牙冠、牙橋與模型，並在原本熟悉的工具中檢閱。',
+    siliconmind: '為 IC 設計公司與 IP 供應商打造的私有 AI：在客戶機房運作的小型模型，持續以客戶自己的設計資料與流程學習。源自台大與中研院的研究計畫。',
   },
 };
 // Pick the right language; falls back to English if no zh string or not bilingual.
@@ -220,6 +235,10 @@ window.EVENT_CONFIG = {
   wistronLabel: 'Wistron #11',
   wistronLabelZh: '緯創 #11',
   wistronPrograms: 11,
+  donationBatch: 'CPD',      // Computing Power Donation recipients, shown under the Wistron block
+  donationLabel: 'Wistron Computing Power Donation', donationLabelZh: '緯創算力捐贈計畫',
+  donationIntro: "Wistron's Computing Power Donation program gives 1 million GPU hours a year to AI startups and research teams. Two recipients share their results on stage.",
+  donationIntroZh: '緯創算力捐贈計畫每年捐出 100 萬小時 GPU 算力，支持 AI 新創與研究團隊；本次有 2 組受贈團隊登台分享成果。',
   bilingual: true,   // EN + 中文
   wordly: true,      // AI live interpretation
   album: false,      // Accupai photo album — set albumUrl + true once the DD#33 album exists
@@ -232,11 +251,11 @@ window.EVENT_CONFIG = {
   heroTime: 'Thu · 12:00–16:30', heroTimeZh: '週四 · 12:00–16:30',
   heroVenueShort: 'Marriott', heroVenueShortZh: '台北萬豪酒店',
   heroVenueSub: '5F Grand Ballroom · Taipei', heroVenueSubZh: '5F 萬豪廳 · 台北',
-  heroTeamsNote: `${AW_COUNT} AppWorks · ${WA_COUNT} Wistron`,
+  heroTeamsNote: `${AW_COUNT} AppWorks · ${WA_COUNT} Wistron · ${CPD_COUNT} Compute Donation`,
   heroLede: {
-    en: `**${TEAMS.length} select startups, one room.** ${AW_COUNT} from **AppWorks Accelerator #33** + ${WA_COUNT} from **Wistron Accelerator #11** — founders from ${MARKET_NAMES}.\n` +
+    en: `**${TEAMS.length} select startups, one room.** ${AW_COUNT} from **AppWorks Accelerator #33**, ${WA_COUNT} from **Wistron Accelerator #11** and ${CPD_COUNT} from **Wistron's Computing Power Donation program** — founders from ${MARKET_NAMES}.\n` +
         `The AppWorks #33 theme is **Compiling the Uncompilable**: AI that captures the know-how experienced people carry and turns it into software any company can run.`,
-    zh: `${TEAMS.length} 組新創、一個下午：${AW_COUNT} 組來自 AppWorks Accelerator #33，${WA_COUNT} 組來自 Wistron Accelerator #11。\n` +
+    zh: `${TEAMS.length} 組新創、一個下午：${AW_COUNT} 組來自 AppWorks Accelerator #33，${WA_COUNT} 組來自 Wistron Accelerator #11，另有 ${CPD_COUNT} 組來自緯創算力捐贈計畫。\n` +
         `本屆主題「Compiling the Uncompilable」：用 AI 擷取資深工作者的經驗，轉成企業每天都能使用的軟體。`,
   },
   // Demo Day sponsors (logos from Ona's "(Newlogos)_DD#33TW" folder, 2026H2 versions).

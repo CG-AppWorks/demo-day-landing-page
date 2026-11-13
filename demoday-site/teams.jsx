@@ -188,8 +188,9 @@ function FilterBar({ filter, setFilter, teams, language }) {
 function TeamsSection({ favorites, onFav, onIntro, onOpenLive, density, accentIntensity, captionLanguage, onCaptionLanguageChange, sessionId, liveTeamId, language }) {
   const [filter, setFilter] = useState({ tag: 'All', batches: [], languages: [], markets: [], favoritesOnly: false });
 
-  // Wistron teams are shown under the Wistron block, not here.
-  const listed = TEAMS.filter(t => t.batch !== (window.EVENT_CONFIG || {}).wistronBatch);
+  // Wistron and Computing Power Donation teams are shown under the Wistron block, not here.
+  const CFG = window.EVENT_CONFIG || {};
+  const listed = TEAMS.filter(t => t.batch !== CFG.wistronBatch && t.batch !== CFG.donationBatch);
   const filtered = listed.filter(t => {
     if (filter.tag !== 'All' && !t.tags.includes(filter.tag)) return false;
     if (filter.batches.length && !filter.batches.includes(t.batch)) return false;
