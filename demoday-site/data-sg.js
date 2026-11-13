@@ -1,7 +1,8 @@
 // data-sg.js — Singapore edition team directory + supporting data.
 // DD#33 Singapore lineup (Tue 17 Nov 2026, Marina One West) — DRAFT.
 // Source: "DD#33 MC materials (Cg)" sheet, tab "DD founder info for MCs" (SG = 1),
-//   in its "Pitching order (SG)" order (Nov 10): 15 AppWorks Accelerator #33 teams.
+//   in its "Pitching order (SG)" order (Nov 10): 15 AppWorks Accelerator #33 teams;
+//   Screened dropped Nov 13 (Cg) -> 14 teams, later teams moved up one.
 // Card copy, logos and portraits mirror data.js; Coinpilot's presenter differs (Jonathan Mui).
 // English-only · no Wistron · no live captions · no album.
 const TEAMS = [
@@ -29,41 +30,37 @@ const TEAMS = [
     name:"PQStation", sub:"Post-quantum migration for enterprises", tags:["PQC"], batch:"AW#33", hq:"SG", language:"English",
     presenter:"Dr. Prasanna Ravi", title:"CEO", email:"prasanna@pqstation.com", website:"https://www.pqstation.com", speakerOrder:6,
     pitch:"Finds every place an enterprise still uses encryption that quantum computers will break, then helps fix it." },
-  { id:"screened", logo:"assets/logos/screened.png", linkedin:"https://www.linkedin.com/in/wen-chen/", portrait:"assets/portraits/screened.jpg",
-    name:"Screened", sub:"AI recruiter", tags:["Enterprise AI"], batch:"AW#33", hq:"SG", language:"English",
-    presenter:"Wen Chen", title:"Co-founder & CEO", email:"wen@screened.io", website:"https://screened.io/", speakerOrder:7,
-    pitch:"An AI recruiter that screens resumes, runs first-round interviews and handles candidate messages, with a structured interview framework built in." },
   { id:"federation", logo:"assets/logos/federation.png", linkedin:"https://www.linkedin.com/in/gaheeseo/", portrait:"assets/portraits/federation.jpg",
     name:"Federation", sub:"AI agents for trade paperwork", tags:["Enterprise AI"], batch:"AW#33", hq:"KR", language:"English",
-    presenter:"Gahee Seo", title:"CEO", email:"gahee@federationlabs.ai", website:"https://www.federationlabs.ai", speakerOrder:8,
+    presenter:"Gahee Seo", title:"CEO", email:"gahee@federationlabs.ai", website:"https://www.federationlabs.ai", speakerOrder:7,
     pitch:"AI agents that handle the trade paperwork manufacturers can't staff for — HS codes, tariffs, export rules — and use that knowledge to help them find and close deals." },
   { id:"vernus", logo:"assets/logos/vernus.png", linkedin:"https://www.linkedin.com/in/jimmy-yen-chu-lin-74785199/", portrait:"assets/portraits/vernus.jpg",
     name:"Vernus AI", sub:"AI & quantum simulation for drug manufacturing", tags:["Manufacturing AI"], batch:"AW#33", hq:"TW", language:"English",
-    presenter:"Jimmy Lin", title:"CEO", email:"jimmy.lin@vernus.ai", website:"https://vernus.ai/", speakerOrder:9,
+    presenter:"Jimmy Lin", title:"CEO", email:"jimmy.lin@vernus.ai", website:"https://vernus.ai/", speakerOrder:8,
     pitch:"ReAIX, an AI and quantum-simulation platform that optimizes how active pharmaceutical ingredients are manufactured, to bring production costs down." },
   { id:"netellus", logo:"assets/logos/netellus.png", linkedin:"https://www.linkedin.com/in/justinwu567/", portrait:"assets/portraits/netellus.jpg",
     name:"Netellus", sub:"Energy-saving upgrades for factories", tags:["Enterprise AI"], batch:"AW#33", hq:"TW", language:"English",
-    presenter:"Justin Wu", title:"CEO", email:"justin@netellus.com", website:"https://www.netellus.com/", speakerOrder:10,
+    presenter:"Justin Wu", title:"CEO", email:"justin@netellus.com", website:"https://www.netellus.com/", speakerOrder:9,
     pitch:"Matches manufacturers with vetted energy-saving vendors and finances the equipment upgrade, so a factory can replace major equipment with nothing upfront." },
   { id:"teamsync", logo:"assets/logos/teamsync.png", logoMark:true, linkedin:"https://www.linkedin.com/in/jason-kao-66481a15a/", portrait:"assets/portraits/teamsync.jpg",
     name:"TeamSync AI", sub:"Enterprise AI OS", tags:["Enterprise AI"], batch:"AW#33", hq:"TW", language:"English",
-    presenter:"Jason Kao", title:"Founder & CEO", email:"jasonvan701228@gmail.com", website:"https://shuchenai.com", speakerOrder:11,
+    presenter:"Jason Kao", title:"Founder & CEO", email:"jasonvan701228@gmail.com", website:"https://shuchenai.com", speakerOrder:10,
     pitch:"An enterprise AI OS that connects a company's scattered knowledge, AI agents and workflows — including the ERP — into one governed collaboration hub." },
   { id:"ofek", logo:"assets/logos/ofek.png", portrait:"assets/portraits/ofek.jpg",
     name:"Ofek", sub:"AI quality control for electronics lines", tags:["Manufacturing AI"], batch:"AW#33", hq:"TW", language:"English",
-    presenter:"Dario Weissmann", title:"CEO", email:"dariow@ofektaiwan.com", website:"https://www.ofektaiwan.com", speakerOrder:12,
+    presenter:"Dario Weissmann", title:"CEO", email:"dariow@ofektaiwan.com", website:"https://www.ofektaiwan.com", speakerOrder:11,
     pitch:"Reads the data from every station on an electronics production line — inspection, test, repair — and flags defects and process drift before the boards ship." },
   { id:"coinpilot", logo:"assets/logos/coinpilot.png", linkedin:"https://www.linkedin.com/in/muijonathan/", portrait:"assets/portraits/coinpilot-sg.jpg",
     name:"Coinpilot", sub:"AI copilot for crypto trading", tags:["On-Chain Banking"], batch:"AW#33", hq:"HK", language:"English",
-    presenter:"Jonathan Mui", title:"Co-founder & CEO", email:"jon@coinpilot.com", website:"https://coinpilot.com", speakerOrder:13,
+    presenter:"Jonathan Mui", title:"Co-founder & CEO", email:"jon@coinpilot.com", website:"https://coinpilot.com", speakerOrder:12,
     pitch:"Arlo, an AI copilot that researches, monitors and reviews crypto trades while the human keeps control of every decision." },
   { id:"fluidkey", logo:"assets/logos/fluidkey.png", linkedin:"https://www.linkedin.com/in/moritzboullenger/", portrait:"assets/portraits/fluidkey.jpg",
     name:"Fluidkey", sub:"Offshore brokerage on crypto rails", tags:["On-Chain Banking"], batch:"AW#33", hq:"CH", language:"English",
-    presenter:"Moritz Boullenger", title:"Co-founder & CEO", email:"moritz@fluidkey.com", website:"https://fluidkey.com", speakerOrder:14,
+    presenter:"Moritz Boullenger", title:"Co-founder & CEO", email:"moritz@fluidkey.com", website:"https://fluidkey.com", speakerOrder:13,
     pitch:"An offshore brokerage rebuilt on crypto rails, for investors in Asia." },
   { id:"stablecorp", logo:"assets/logos/stablecorp.png", logoMark:true, linkedin:"https://linkedin.com/in/sangharsh-bhustalimath", portrait:"assets/portraits/stablecorp.jpg",
     name:"Stablecorp", sub:"Back office for stablecoin earners", tags:["On-Chain Banking"], batch:"AW#33", hq:"MY", language:"English",
-    presenter:"Sangharsh Bhustalimath", title:"Co-founder & CEO", email:"10k@xelio.xyz", website:"https://mystablecorp.xyz", speakerOrder:15,
+    presenter:"Sangharsh Bhustalimath", title:"Co-founder & CEO", email:"10k@xelio.xyz", website:"https://mystablecorp.xyz", speakerOrder:14,
     pitch:"For founders and freelancers paid in stablecoins: a US company, business accounts, invoicing and tax filings in one place." },
 ];
 
