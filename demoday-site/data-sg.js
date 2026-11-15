@@ -141,6 +141,16 @@ window.EVENT_CONFIG = {
     { name: 'KKCOMPANY', src: 'assets/sponsor-dd33-kkcompany.png', h: 50 },
     { name: 'Stripe', src: 'assets/sponsor-dd33-stripe.png', h: 40 },   // SG only
   ],
+  // Footer CTA: SG guests are mostly investors, so the AW#34 button opens a ready-made
+  // referral note (copy / share / WhatsApp / email) instead of linking straight to the
+  // accelerator page. Remove `refer` to go back to the plain "Apply / Refer" link.
+  // `deadline` is added to the note until `deadlineUntil` (Taipei time), then dropped.
+  refer: {
+    url: 'https://appworks.tw/accelerator/',
+    deadline: 'The first round closes Nov 29.',
+    deadlineZh: '第一輪申請 11/29 截止。',
+    deadlineUntil: '2026-11-29',
+  },
   // Anonymous page-view / click counts (analytics.js) — read at <this URL>/stats.
   analytics: 'https://ddtw-captions.hsichun.workers.dev',
 };

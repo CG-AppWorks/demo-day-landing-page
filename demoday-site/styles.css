@@ -1589,6 +1589,7 @@ footer.foot {
   transition: background var(--dur-fast) var(--ease);
 }
 .foot-cta:hover { background: var(--accent-hover); }
+button.foot-cta { width: 100%; border: 0; font: inherit; color: #fff; text-align: left; cursor: pointer; }
 .foot-cta-text { display: flex; flex-direction: column; gap: 2px; }
 .foot-cta-text b { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; }
 .foot-cta-text span { font-size: 14px; color: rgba(255,255,255,0.9); }
@@ -1691,6 +1692,19 @@ footer.foot .nav-brand svg, footer.foot svg[aria-label="AppWorks"] { color: #fff
 .modal .foot .hint {
   margin-right: auto; font-size: 12px; color: var(--fg2);
 }
+
+/* Refer-a-founder modal */
+.refer-modal .refer-lede { margin: 0; font-size: 14px; line-height: 1.55; color: var(--fg2); }
+.refer-modal input.refer-name {
+  width: 100%; box-sizing: border-box;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 10px 12px; font: inherit; font-size: 16px; color: var(--fg1); background: #fff;
+}
+.refer-modal input.refer-name:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+.refer-modal .field.msg { font-family: inherit; font-size: 14.5px; line-height: 1.6; }
+.refer-modal .refer-apply { font-size: 13px; color: var(--fg2); }
+.refer-modal .refer-apply a { color: var(--accent); font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+.refer-modal .refer-apply .icon { width: 14px; height: 14px; }
 
 /* ───────── Banner ───────── */
 .banner {

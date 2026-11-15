@@ -400,18 +400,115 @@ function NowOnStage({ team, phase, captionLanguage, onCaptionLanguageChange, ses
 }
 window.NowOnStage = NowOnStage;
 
+/* ─── Refer-a-founder modal (EVENT_CONFIG.refer) ─── */
+function ReferModal({ language, onClose }) {
+  const cfg = window.EVENT_CONFIG || {};
+  const r = cfg.refer || {};
+  const url = r.url || 'https://appworks.tw/accelerator/';
+  const num = String(cfg.nextBatch || '').replace(/\D/g, '');
+  const [name, setName] = useState('');
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  const live = !r.deadlineUntil || Date.now() <= new Date(r.deadlineUntil + 'T23:59:59+08:00').getTime();
+  const who = name.trim();
+  const en = `Hi ${who || 'there'}, AppWorks is now taking applications for Accelerator Batch #${num}. ` +
+    `They don't take any equity and have a massive founder network across Asia. ` +
+    `${live && r.deadline ? r.deadline + ' ' : ''}Worth a look: ${url}`;
+  const zh = `嗨${who ? ' ' + who : ''}，AppWorks 之初加速器第 ${num} 屆現正開放申請。` +
+    `加速器不拿任何股權，還有遍布亞洲的龐大創業者網絡。` +
+    `${live && r.deadlineZh ? r.deadlineZh : ''}值得一看：${url}`;
+  const msg = tr(language, en, zh);
+  const subject = tr(language, `AppWorks Accelerator ${cfg.nextBatch} is open`, `AppWorks 之初加速器 ${cfg.nextBatch} 開放申請`);
+
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(msg); }
+    catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = msg; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch (e2) { /* ignore */ }
+      ta.remove();
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  };
+  // Phones get the system share sheet (covers WhatsApp, Telegram, LINE, Messages…);
+  // desktops get direct WhatsApp and email links.
+  const nativeShare = typeof navigator !== 'undefined' && !!navigator.share &&
+    !!window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  const share = () => { navigator.share({ text: msg }).catch(() => {}); };
+  const wa = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  const mail = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(msg)}`;
+
+  return ReactDOM.createPortal(
+    <div className="modal-back" onClick={onClose} role="dialog" aria-modal="true" aria-label={tr(language, 'Refer a founder', '推薦創業者')}>
+      <div className="modal refer-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="head">
+          <h3>{tr(language, 'Refer a founder to ', '推薦創業者加入 ')}<span className="accent">{cfg.nextBatch}</span></h3>
+          <button className="close" onClick={onClose} aria-label="Close">×</button>
+        </div>
+        <div className="body">
+          <p className="refer-lede">{tr(language,
+            'Know a founder who should be in the next AppWorks batch? Add their name, then copy or send this note.',
+            '身邊有適合下一屆 AppWorks 的創業者嗎？填上名字，複製或直接傳送這段訊息。')}</p>
+          <div>
+            <label htmlFor="refer-name">{tr(language, "Founder's first name (optional)", '對方名字（選填）')}</label>
+            <input id="refer-name" className="refer-name" type="text" autoComplete="off" maxLength={40}
+              value={name} onChange={(e) => setName(e.target.value)} placeholder={tr(language, 'e.g. Alex', '例：小明')} />
+          </div>
+          <div>
+            <label>{tr(language, 'Message', '訊息')}</label>
+            <div className="field msg">{msg}</div>
+          </div>
+          <div className="refer-apply">
+            {tr(language, 'Applying yourself? ', '想自己申請？')}
+            <a href={url} target="_blank" rel="noopener" data-track="apply">{tr(language, `See the ${cfg.nextBatch} page`, `看 ${cfg.nextBatch} 招募頁`)} <I.arrow/></a>
+          </div>
+        </div>
+        <div className="foot">
+          {nativeShare ?
+          <button className="btn outline sm" onClick={share} data-track="refer_share" data-x="native">{tr(language, 'Share…', '分享…')}</button> :
+          <React.Fragment>
+            <a className="btn outline sm" href={wa} target="_blank" rel="noopener" data-track="refer_share" data-x="whatsapp">WhatsApp</a>
+            <a className="btn outline sm" href={mail} data-track="refer_share" data-x="email">Email</a>
+          </React.Fragment>}
+          <button className="btn primary sm" onClick={copy} data-track="refer_copy">{copied ? tr(language, 'Copied ✓', '已複製 ✓') : tr(language, 'Copy message', '複製訊息')}</button>
+        </div>
+      </div>
+    </div>,
+    document.body);
+}
+window.ReferModal = ReferModal;
+
 /* ─── Footer ─── */
 function Footer({ language }) {
+  const cfg = window.EVENT_CONFIG || {};
+  const refer = !!cfg.refer;
+  const [referOpen, setReferOpen] = useState(false);
   return (
     <footer className="foot">
       <div className="container">
+        {refer ?
+        <button type="button" className="foot-cta" onClick={() => setReferOpen(true)} data-track="refer_open">
+          <div className="foot-cta-text">
+            <b>{tr(language, `Know a founder who should join ${cfg.nextBatch}?`, `認識適合 ${cfg.nextBatch} 的創業者嗎？`)}</b>
+            <span>{tr(language, 'Applications are now open. Send them a ready-made note in one tap.', '現正開放申請，一鍵把介紹訊息傳給他。')}</span>
+          </div>
+          <span className="foot-cta-btn">{tr(language, 'Refer a founder', '推薦創業者')} <I.arrow/></span>
+        </button> :
         <a className="foot-cta" href="https://appworks.tw/accelerator/" data-track="apply" target="_blank" rel="noopener">
           <div className="foot-cta-text">
-            <b>{tr(language, `${(window.EVENT_CONFIG || {}).nextBatch} is now taking applications!`, ZH.footer.ctaTitle)}</b>
+            <b>{tr(language, `${cfg.nextBatch} is now taking applications!`, ZH.footer.ctaTitle)}</b>
             <span>{tr(language, 'Join us — or refer a founder friend.', ZH.footer.ctaSub)}</span>
           </div>
           <span className="foot-cta-btn">{tr(language, 'Apply / Refer', '申請 / 推薦')} <I.arrow/></span>
-        </a>
+        </a>}
+        {referOpen && <ReferModal language={language} onClose={() => setReferOpen(false)} />}
         <div className="foot-simple">
           <Logo height={26} />
           <div className="tag">By Founders, For Founders.</div>
