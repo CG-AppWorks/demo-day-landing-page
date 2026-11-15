@@ -134,7 +134,7 @@ function TopNav({ activeTab, onNav, onLanguageChange, language, sessionId }) {
             </a>
             }
             {CFG.bilingual !== false &&
-            <button className="btn ghost" onClick={() => {onLanguageChange(language === 'zh' ? 'en' : 'zh');}} data-track="lang" data-x={language === 'zh' ? 'en' : 'zh'}>
+            <button className="btn ghost" onClick={() => {onLanguageChange(language === 'zh' ? 'en' : 'zh');setMenuOpen(false);}} data-track="lang" data-x={language === 'zh' ? 'en' : 'zh'}>
               <I.globe /> {language === 'zh' ? 'Switch to English' : '切換為中文'}
             </button>
             }

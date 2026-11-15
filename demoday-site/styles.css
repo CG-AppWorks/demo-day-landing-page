@@ -854,7 +854,7 @@ body {
   background: #fff; border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 18px; display: flex; flex-direction: column; gap: 12px;
-  position: relative; cursor: pointer;
+  position: relative; cursor: default;   /* only the buttons inside are clickable */
   transition: border-color var(--dur-fast) var(--ease),
               box-shadow var(--dur-fast) var(--ease),
               transform var(--dur-fast) var(--ease);

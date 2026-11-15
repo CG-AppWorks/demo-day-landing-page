@@ -45,7 +45,7 @@ const TEAMS = [
     pitch:"A memory and identity layer so AI agents remember who they are, what they know and what they're allowed to do." },
   { id:"federation", logo:"assets/logos/federation.png", linkedin:"https://www.linkedin.com/in/gaheeseo/", portrait:"assets/portraits/federation.jpg",
     name:"Federation", sub:"AI agents for trade paperwork", tags:["Enterprise AI"], batch:"AW#33", hq:"KR", language:"English",
-    presenter:"Gahee Seo", title:"CEO", email:"gahee@federationlabs.ai", website:"https://www.federationlabs.ai", speakerOrder:9,
+    presenter:"Gahee Seo", title:"CEO", email:"gahee@federationlabs.ai", website:"https://federationlabs.ai/en", speakerOrder:9,
     pitch:"AI agents that handle the trade paperwork manufacturers can't staff for — HS codes, tariffs, export rules — and use that knowledge to help them find and close deals." },
   { id:"alphaswift", logo:"assets/logos/alphaswift.png", logoMark:true, linkedin:"https://www.linkedin.com/in/shianlee/", portrait:"assets/portraits/alphaswift.jpg",
     name:"Alphaswift Industries", sub:"Autonomous cargo drones, built in Malaysia", tags:["Defense Tech"], batch:"AW#33", hq:"MY", language:"Mandarin",

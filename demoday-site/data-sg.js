@@ -32,7 +32,7 @@ const TEAMS = [
     pitch:"Finds every place an enterprise still uses encryption that quantum computers will break, then helps fix it." },
   { id:"federation", logo:"assets/logos/federation.png", linkedin:"https://www.linkedin.com/in/gaheeseo/", portrait:"assets/portraits/federation.jpg",
     name:"Federation", sub:"AI agents for trade paperwork", tags:["Enterprise AI"], batch:"AW#33", hq:"KR", language:"English",
-    presenter:"Gahee Seo", title:"CEO", email:"gahee@federationlabs.ai", website:"https://www.federationlabs.ai", speakerOrder:7,
+    presenter:"Gahee Seo", title:"CEO", email:"gahee@federationlabs.ai", website:"https://federationlabs.ai/en", speakerOrder:7,
     pitch:"AI agents that handle the trade paperwork manufacturers can't staff for — HS codes, tariffs, export rules — and use that knowledge to help them find and close deals." },
   { id:"vernus", logo:"assets/logos/vernus.png", linkedin:"https://www.linkedin.com/in/jimmy-yen-chu-lin-74785199/", portrait:"assets/portraits/vernus.jpg",
     name:"Vernus AI", sub:"AI & quantum simulation for drug manufacturing", tags:["Manufacturing AI"], batch:"AW#33", hq:"TW", language:"English",
