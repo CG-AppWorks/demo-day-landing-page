@@ -154,7 +154,7 @@ function TeamCard({ team, density, favorited, onFav, onIntro, onOpenLive, accent
 // Category chips: the four RFS first (#1 Manufacturing AI, #2 Defense Tech,
 // #3 On-Chain Banking, #4 PQC), then the other groups. Only categories present
 // in the list are shown, each with its team count.
-const CATEGORY_ORDER = ['Manufacturing AI', 'Defense Tech', 'On-Chain Banking', 'PQC', 'Enterprise AI', 'Semiconductor', 'Health Tech', 'Media'];
+const CATEGORY_ORDER = ['Manufacturing AI', 'Defense Tech', 'On-Chain Banking', 'PQC', 'Enterprise AI', 'Consumer AI', 'Semiconductor', 'Health Tech', 'Media'];
 const tagSlug = (t) => t.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
 function FilterBar({ filter, setFilter, teams, language }) {

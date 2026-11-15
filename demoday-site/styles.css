@@ -819,6 +819,9 @@ body {
 .chip.tag-enterprise-ai .dot { background: #1d4ed8; }
 .chip.on.tag-enterprise-ai { background: #1d4ed8; border-color: #1d4ed8; }
 .chip.on.tag-enterprise-ai .dot { background: #fff; }
+.chip.tag-consumer-ai .dot { background: #047857; }
+.chip.on.tag-consumer-ai { background: #047857; border-color: #047857; }
+.chip.on.tag-consumer-ai .dot { background: #fff; }
 .chip.tag-semiconductor .dot { background: #475569; }
 .chip.on.tag-semiconductor { background: #475569; border-color: #475569; }
 .chip.on.tag-semiconductor .dot { background: #fff; }
@@ -1034,6 +1037,7 @@ body {
 .badge.on-chain-banking { background: #6d28d9; color: #fff; }
 .badge.pqc { background: #0e7490; color: #fff; }
 .badge.enterprise-ai { background: #1d4ed8; color: #fff; }
+.badge.consumer-ai { background: #047857; color: #fff; }
 .badge.semiconductor { background: #475569; color: #fff; }
 .badge.health-tech { background: #be123c; color: #fff; }
 .badge.media { background: #a21caf; color: #fff; }
@@ -1085,6 +1089,7 @@ body {
 .teams.editorial .team-card.tag-on-chain-banking .cover { background: linear-gradient(135deg, #6d28d9, #424F57); }
 .teams.editorial .team-card.tag-pqc .cover { background: linear-gradient(135deg, #0e7490, #424F57); }
 .teams.editorial .team-card.tag-enterprise-ai .cover { background: linear-gradient(135deg, #1d4ed8, #424F57); }
+.teams.editorial .team-card.tag-consumer-ai .cover { background: linear-gradient(135deg, #047857, #424F57); }
 .teams.editorial .team-card.tag-semiconductor .cover { background: linear-gradient(135deg, #475569, #424F57); }
 .teams.editorial .team-card.tag-health-tech .cover { background: linear-gradient(135deg, #be123c, #424F57); }
 .teams.editorial .team-card.tag-media .cover { background: linear-gradient(135deg, #a21caf, #424F57); }
