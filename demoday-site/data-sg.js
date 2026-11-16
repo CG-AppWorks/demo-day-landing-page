@@ -3,7 +3,8 @@
 // Source: "DD#33 MC materials (Cg)" sheet, tab "DD founder info for MCs" (SG = 1),
 //   in its "Pitching order (SG)" order (Nov 10): 15 AppWorks Accelerator #33 teams;
 //   Screened dropped Nov 13 (Cg) -> 14 teams, later teams moved up one.
-// Logos and portraits mirror data.js; Coinpilot's presenter differs (Jonathan Mui).
+// Logos and portraits mirror data.js; Midas's presenter differs (Jonathan Mui).
+// Midas = formerly Coinpilot (renamed Nov 16 at the founder's request; id stays "coinpilot" so stats and favourites carry over).
 // One-liners: "AW#33 One-liner (Cg)" doc, accepted text as of Nov 15 (pending suggestions not applied).
 // English-only · no Wistron · no live captions · no album.
 const TEAMS = [
@@ -51,8 +52,8 @@ const TEAMS = [
     name:"Ofek", sub:"AI quality control for electronics lines", tags:["Manufacturing AI"], batch:"AW#33", hq:"TW", language:"English",
     presenter:"Dario Weissmann", title:"Founder & CEO", email:"dariow@ofektaiwan.com", website:"https://www.ofektaiwan.com", speakerOrder:11,
     pitch:"HeatVision reads every station on an electronics line in real time, catching defects and process drift before they leave the factory." },
-  { id:"coinpilot", logo:"assets/logos/coinpilot.png", linkedin:"https://www.linkedin.com/in/muijonathan/", portrait:"assets/portraits/coinpilot-sg.jpg",
-    name:"Coinpilot", sub:"AI copilot for crypto trading", tags:["On-Chain Banking"], batch:"AW#33", hq:"HK", language:"English",
+  { id:"coinpilot", logo:"assets/logos/midas.png", linkedin:"https://www.linkedin.com/in/muijonathan/", portrait:"assets/portraits/coinpilot-sg.jpg",
+    name:"Midas", sub:"AI copilot for crypto trading", tags:["Consumer AI"], batch:"AW#33", hq:"HK", language:"English",
     presenter:"Jonathan Mui", title:"Co-founder & CEO", email:"jon@coinpilot.com", website:"https://coinpilot.com", speakerOrder:12,
     pitch:"An AI copilot that walks retail traders through research, live monitoring, and post-trade review, replacing gut feel with discipline." },
   { id:"fluidkey", logo:"assets/logos/fluidkey.png", linkedin:"https://www.linkedin.com/in/moritzboullenger/", portrait:"assets/portraits/fluidkey.jpg",
