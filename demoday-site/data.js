@@ -1,8 +1,8 @@
 // data.js — Demo Day team directory + supporting data
 // DD#33 Taiwan lineup (Thu 3 Dec 2026, Taipei Marriott) — DRAFT.
 // Source: "DD#33 MC materials (Cg)" sheet, tab "DD founder info for MCs" (TW = 1),
-//   in its "Pitching order (TW)" order: 22 AppWorks Accelerator #33 teams (FlexHaul not pitching, Nov 13;
-//   Ennovation has no TW order yet, so it sits last) + 4 Wistron Accelerator #11 teams (Hanomi + Sonice details TBC).
+//   in its "Pitching order (TW)" order: 21 AppWorks Accelerator #33 teams (FlexHaul not pitching, Nov 13;
+//   Screened not pitching, Nov 22; Ennovation is slot 21) + 4 Wistron Accelerator #11 teams (Hanomi + Sonice details TBC).
 // Copy is product-level only: no revenue, customer names or regulatory claims
 //   (see the sheet's "⚠ Check before saying on stage" column).
 // Contacts: presenter email from the RSVP / intro-deck data; websites + LinkedIn
@@ -10,7 +10,7 @@
 //   (WA#11: the DD#33 material form). logoMark = icon-only logo, shown with the name.
 // Languages: Mandarin pitches are flagged; '' = not confirmed (no badge).
 const TEAMS = [
-  // ─── AppWorks Accelerator #33 ─ 22 teams (TW order per MC sheet, Nov 10; FlexHaul not pitching, Nov 13) ───
+  // ─── AppWorks Accelerator #33 ─ 21 teams (TW order per MC sheet; FlexHaul out Nov 13, Screened out Nov 22) ───
   { id:"ailytics", logo:"assets/logos/ailytics.png", linkedin:"https://www.linkedin.com/in/wei-zhuang-tan/", portrait:"assets/portraits/ailytics.jpg",
     name:"Ailytics", sub:"AI safety & productivity from existing cameras", tags:["Manufacturing AI","Enterprise AI"], batch:"AW#33", hq:"SG", language:"English",
     presenter:"Lenard Tan", title:"Founder & CEO", email:"weizhuang.tan@ailytics.ai", website:"https://ailytics.ai/", speakerOrder:1,
@@ -67,37 +67,33 @@ const TEAMS = [
     name:"Team REmited", sub:"Receipt rewards that become purchase data", tags:["Enterprise AI"], batch:"AW#33", hq:"KR", language:"English",
     presenter:"Brian Bae", title:"Co-founder & CEO", email:"sh.bae@teamremited.com", website:"https://www.teamremited.com", speakerOrder:14,
     pitch:"Carty rewards shoppers for uploading receipts, turning them into item-level purchase data that powers commerce AI for brands." },
-  { id:"screened", logo:"assets/logos/screened.png", linkedin:"https://www.linkedin.com/in/wen-chen/", portrait:"assets/portraits/screened.jpg",
-    name:"Screened", sub:"AI recruiter", tags:["Enterprise AI"], batch:"AW#33", hq:"SG", language:"Mandarin",
-    presenter:"Wen Chen", title:"Co-founder & CEO", email:"wen@screened.io", website:"https://screened.io/", speakerOrder:15,
-    pitch:"An AI recruiter that screens resumes, runs first-round interviews and handles candidate messages, with a structured interview framework built in." },
   { id:"qinvicta", logo:"assets/logos/qinvicta.png", portrait:"assets/portraits/qinvicta.jpg",
     name:"Qinvicta", sub:"Post-quantum cryptography in silicon", tags:["PQC"], batch:"AW#33", hq:"US", language:"Mandarin",
-    presenter:"Jimmy Chen", title:"Co-founder & Chairman", email:"jmchen@qinvicta.com", website:"https://qinvicta.com", speakerOrder:16,
+    presenter:"Jimmy Chen", title:"Co-founder & Chairman", email:"jmchen@qinvicta.com", website:"https://qinvicta.com", speakerOrder:15,
     pitch:"A hardware engine that builds post-quantum cryptography into silicon, so chipmakers and security vendors can make their products quantum-safe." },
   { id:"pqstation", logo:"assets/logos/pqstation.png", linkedin:"https://www.linkedin.com/in/prasanna-ravi-071a8679/", portrait:"assets/portraits/pqstation.jpg",
     name:"PQStation", sub:"Post-quantum migration for enterprises", tags:["PQC"], batch:"AW#33", hq:"SG", language:"English",
-    presenter:"Dr. Prasanna Ravi", title:"Co-founder & CEO", email:"prasanna@pqstation.com", website:"https://www.pqstation.com", speakerOrder:17,
+    presenter:"Dr. Prasanna Ravi", title:"Co-founder & CEO", email:"prasanna@pqstation.com", website:"https://www.pqstation.com", speakerOrder:16,
     pitch:"Finds every place an enterprise still uses encryption that quantum computers will break, then helps fix it." },
   { id:"blocktrend", logo:"assets/logos/blocktrend.png", linkedin:"https://www.linkedin.com/in/astrohsu/", portrait:"assets/portraits/blocktrend.jpg",
     name:"Blocktrend 區塊勢", sub:"Crypto analysis for Taiwan & Hong Kong readers", tags:["Media"], batch:"AW#33", hq:"TW", language:"Mandarin",
-    presenter:"Ming-En Hsu", title:"Founder", email:"mn@blocktrend.today", website:"https://www.blocktrend.today", speakerOrder:18,
+    presenter:"Ming-En Hsu", title:"Founder", email:"mn@blocktrend.today", website:"https://www.blocktrend.today", speakerOrder:17,
     pitch:"A subscription publication that explains global crypto through Taiwan and Hong Kong's own context, built on nine years of first-hand reporting and analysis." },
   { id:"coinpilot", logo:"assets/logos/midas.png?v=2", linkedin:"https://linkedin.com/in/huichunhim", portrait:"assets/portraits/coinpilot.jpg",
     name:"Midas", sub:"Personal investing agents", tags:["Consumer AI"], batch:"AW#33", hq:"HK", language:"English",
-    presenter:"Peter Hui", title:"Co-founder", email:"peter@coinpilot.com", website:"https://coinpilot.com", speakerOrder:19,
+    presenter:"Peter Hui", title:"Co-founder", email:"peter@coinpilot.com", website:"https://coinpilot.com", speakerOrder:18,
     pitch:"Your personal investing agents that help you find trade ideas, monitor your theses, and review closed trades so you become a better investor." },
   { id:"stablecorp", logo:"assets/logos/stablecorp.png", logoMark:true, linkedin:"https://linkedin.com/in/sangharsh-bhustalimath", portrait:"assets/portraits/stablecorp.jpg",
     name:"Stablecorp", sub:"Back office for stablecoin earners", tags:["On-Chain Banking"], batch:"AW#33", hq:"MY", language:"English",
-    presenter:"Sangharsh Bhustalimath", title:"Co-founder & CEO", email:"10k@xelio.xyz", website:"https://mystablecorp.xyz", speakerOrder:20,
+    presenter:"Sangharsh Bhustalimath", title:"Co-founder & CEO", email:"10k@xelio.xyz", website:"https://mystablecorp.xyz", speakerOrder:19,
     pitch:"For founders and freelancers paid in stablecoins: a US company, business accounts, invoicing and tax filings in one place." },
   { id:"fluidkey", logo:"assets/logos/fluidkey.png", linkedin:"https://www.linkedin.com/in/moritzboullenger/", portrait:"assets/portraits/fluidkey.jpg",
     name:"Fluidkey", sub:"Offshore brokerage on crypto rails", tags:["On-Chain Banking"], batch:"AW#33", hq:"CH", language:"English",
-    presenter:"Moritz Boullenger", title:"Co-founder & CEO", email:"moritz@fluidkey.com", website:"https://fluidkey.com", speakerOrder:21,
+    presenter:"Moritz Boullenger", title:"Co-founder & CEO", email:"moritz@fluidkey.com", website:"https://fluidkey.com", speakerOrder:20,
     pitch:"An offshore brokerage rebuilt on crypto rails, for investors in Asia." },
   { id:"ennovation", logo:"assets/logos/ennovation.png", linkedin:"https://www.linkedin.com/in/adeline-yang-h", portrait:"assets/portraits/ennovation.jpg",
     name:"Ennovation", sub:"One-size myopia control for children", tags:["Health Tech"], batch:"AW#33", hq:"SG", language:"",
-    presenter:"Adeline Yang", title:"Founder", email:"contact@ennovation.io", website:"https://www.myopreva.com", speakerOrder:22,
+    presenter:"Adeline Yang", title:"Founder", email:"contact@ennovation.io", website:"https://www.myopreva.com", speakerOrder:21,
     pitch:"MyoPREVA, a one-size myopia-control product for children that is easy to apply and non-invasive." },
 
   // ─── Wistron Accelerator #11 ─ no pitching order yet; Hanomi + Sonice details TBC ───
@@ -174,7 +170,7 @@ const ZH = {
     huemankind: '為 WhatsApp 銷售的中小企業打造的 AI 內容工作室', morphusai: 'AI agent 的記憶與身分層', federation: '處理貿易文件的 AI agent',
     alphaswift: '馬來西亞自製的自主貨運無人機', teamsync: '企業 AI 作業系統',
     netellus: '工廠節能升級的媒合與融資', tynapse: '企業 AI 的信任層', remited: '把收據回饋變成消費數據',
-    screened: 'AI 招募專員', qinvicta: '做進晶片的後量子密碼', pqstation: '企業的後量子密碼遷移',
+    qinvicta: '做進晶片的後量子密碼', pqstation: '企業的後量子密碼遷移',
     blocktrend: '以台港脈絡解讀加密產業的訂閱媒體', coinpilot: '個人投資代理人', stablecorp: '穩定幣收款者的後台營運',
     fluidkey: '以加密基礎設施重建的海外券商', ennovation: '兒童近視控制的單一規格產品',
     zig: 'AI 與數位孿生的企業轉型方案', waydosoft: '精密製造的交期決策',
@@ -194,7 +190,6 @@ const ZH = {
     netellus: '為製造業媒合經審核的節能廠商，並提供設備升級資金，讓工廠不需預付即可汰換主要設備。',
     tynapse: '在企業使用 AI 的當下進行檢查、治理與稽核，讓銀行等受監管企業能安心導入 AI。',
     remited: 'Carty 讓消費者上傳收據換取回饋，並把收據轉成品項層級的消費數據，提供品牌發展商務 AI。',
-    screened: 'AI 招募專員，負責篩選履歷、進行第一輪面試與回覆求職者訊息，並內建結構化面試框架。',
     qinvicta: '把後量子密碼（PQC）做進晶片的硬體引擎，協助晶片商與資安廠商讓產品具備抗量子能力。',
     pqstation: '找出企業內所有會被量子電腦破解的加密使用點，並協助完成修補。',
     blocktrend: '訂閱制媒體，以台灣與香港的在地脈絡解讀全球加密產業，累積九年的第一手報導與分析。',
