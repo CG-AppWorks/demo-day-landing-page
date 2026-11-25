@@ -1,8 +1,8 @@
 // data.js — Demo Day team directory + supporting data
 // DD#33 Taiwan lineup (Thu 3 Dec 2026, Taipei Marriott) — DRAFT.
 // Source: "DD#33 MC materials (Cg)" sheet, tab "DD founder info for MCs" (TW = 1),
-//   in its "Pitching order (TW)" order: 21 AppWorks Accelerator #33 teams (FlexHaul not pitching, Nov 13;
-//   Screened not pitching, Nov 22; Ennovation is slot 21) + 4 Wistron Accelerator #11 teams (Hanomi + Sonice details TBC).
+//   in its "Pitching order (TW)" order: 20 AppWorks Accelerator #33 teams (FlexHaul not pitching, Nov 13;
+//   Screened Nov 22, Stablecorp Nov 25; Ennovation is slot 20) + 4 Wistron Accelerator #11 teams (Hanomi + Sonice details TBC).
 // Copy is product-level only: no revenue, customer names or regulatory claims
 //   (see the sheet's "⚠ Check before saying on stage" column).
 // Contacts: presenter email from the RSVP / intro-deck data; websites + LinkedIn
@@ -10,7 +10,7 @@
 //   (WA#11: the DD#33 material form). logoMark = icon-only logo, shown with the name.
 // Languages: Mandarin pitches are flagged; '' = not confirmed (no badge).
 const TEAMS = [
-  // ─── AppWorks Accelerator #33 ─ 21 teams (TW order per MC sheet; FlexHaul out Nov 13, Screened out Nov 22) ───
+  // ─── AppWorks Accelerator #33 ─ 20 teams (TW order per MC sheet; FlexHaul out Nov 13, Screened Nov 22, Stablecorp Nov 25) ───
   { id:"ailytics", logo:"assets/logos/ailytics.png", linkedin:"https://www.linkedin.com/in/wei-zhuang-tan/", portrait:"assets/portraits/ailytics.jpg",
     name:"Ailytics", sub:"AI safety & productivity from existing cameras", tags:["Manufacturing AI","Enterprise AI"], batch:"AW#33", hq:"SG", language:"English",
     presenter:"Lenard Tan", title:"Founder & CEO", email:"weizhuang.tan@ailytics.ai", website:"https://ailytics.ai/", speakerOrder:1,
@@ -83,30 +83,26 @@ const TEAMS = [
     name:"Midas", sub:"Personal investing agents", tags:["Consumer AI"], batch:"AW#33", hq:"HK", language:"English",
     presenter:"Peter Hui", title:"Co-founder", email:"peter@coinpilot.com", website:"https://coinpilot.com", speakerOrder:18,
     pitch:"Your personal investing agents that help you find trade ideas, monitor your theses, and review closed trades so you become a better investor." },
-  { id:"stablecorp", logo:"assets/logos/stablecorp.png", logoMark:true, linkedin:"https://linkedin.com/in/sangharsh-bhustalimath", portrait:"assets/portraits/stablecorp.jpg",
-    name:"Stablecorp", sub:"Back office for stablecoin earners", tags:["On-Chain Banking"], batch:"AW#33", hq:"MY", language:"English",
-    presenter:"Sangharsh Bhustalimath", title:"Co-founder & CEO", email:"10k@xelio.xyz", website:"https://mystablecorp.xyz", speakerOrder:19,
-    pitch:"For founders and freelancers paid in stablecoins: a US company, business accounts, invoicing and tax filings in one place." },
   { id:"fluidkey", logo:"assets/logos/fluidkey.png", linkedin:"https://www.linkedin.com/in/moritzboullenger/", portrait:"assets/portraits/fluidkey.jpg",
     name:"Fluidkey", sub:"Offshore brokerage on crypto rails", tags:["On-Chain Banking"], batch:"AW#33", hq:"CH", language:"English",
-    presenter:"Moritz Boullenger", title:"Co-founder & CEO", email:"moritz@fluidkey.com", website:"https://fluidkey.com", speakerOrder:20,
+    presenter:"Moritz Boullenger", title:"Co-founder & CEO", email:"moritz@fluidkey.com", website:"https://fluidkey.com", speakerOrder:19,
     pitch:"An offshore brokerage rebuilt on crypto rails, for investors in Asia." },
   { id:"ennovation", logo:"assets/logos/ennovation.png", linkedin:"https://www.linkedin.com/in/adeline-yang-h", portrait:"assets/portraits/ennovation.jpg",
     name:"Ennovation", sub:"One-size myopia control for children", tags:["Health Tech"], batch:"AW#33", hq:"SG", language:"",
-    presenter:"Adeline Yang", title:"Founder", email:"contact@ennovation.io", website:"https://www.myopreva.com", speakerOrder:21,
+    presenter:"Adeline Yang", title:"Founder", email:"contact@ennovation.io", website:"https://www.myopreva.com", speakerOrder:20,
     pitch:"MyoPREVA, a one-size myopia-control product for children that is easy to apply and non-invasive." },
 
-  // ─── Wistron Accelerator #11 ─ no pitching order yet; Hanomi + Sonice details TBC ───
+  // ─── Wistron Accelerator #11 ─ order per MC sheet (Nov 25); Hanomi + Sonice details TBC ───
   { id:"hanomi",    name:"Hanomi",    sub:"Wistron Accelerator #11", tags:[], batch:"WA#11", hq:"", language:"", presenter:"Presenter TBC", title:"", email:"", website:"", speakerOrder:1, pitch:"Details coming soon." },
-  { id:"zig", logo:"assets/logos/zig.png", portrait:"assets/portraits/zig.jpg",
-    name:"ZiG", sub:"AI + digital twins for enterprise transformation", tags:["Manufacturing AI","Enterprise AI"], batch:"WA#11", hq:"TW", language:"",
-    presenter:"Frank Chang", title:"CMO", email:"frank.chang@zignet.co", website:"https://zignet.co/", speakerOrder:2,
-    pitch:"A turnkey solution that integrates AI and digital twins to accelerate enterprise transformation." },
+  { id:"sonice",    name:"Sonice",    sub:"Wistron Accelerator #11", tags:[], batch:"WA#11", hq:"", language:"", presenter:"Presenter TBC", title:"", email:"", website:"", speakerOrder:2, pitch:"Details coming soon." },
   { id:"waydosoft", logo:"assets/logos/waydosoft.png", logoMark:true, portrait:"assets/portraits/waydosoft.jpg",
     name:"WayDoSoft", sub:"Delivery-date decisions for precision manufacturing", tags:["Manufacturing AI"], batch:"WA#11", hq:"TW", language:"",
     presenter:"Tzu-Yao Lin", title:"CEO", email:"lint@wdmis.com.tw", website:"https://waydosoft.com.tw", speakerOrder:3,
     pitch:"Decision intelligence for delivery promises in high-mix precision manufacturing." },
-  { id:"sonice",    name:"Sonice",    sub:"Wistron Accelerator #11", tags:[], batch:"WA#11", hq:"", language:"", presenter:"Presenter TBC", title:"", email:"", website:"", speakerOrder:4, pitch:"Details coming soon." },
+  { id:"zig", logo:"assets/logos/zig.png", portrait:"assets/portraits/zig.jpg",
+    name:"ZiG", sub:"AI + digital twins for enterprise transformation", tags:["Manufacturing AI","Enterprise AI"], batch:"WA#11", hq:"TW", language:"",
+    presenter:"Frank Chang", title:"CMO", email:"frank.chang@zignet.co", website:"https://zignet.co/", speakerOrder:4,
+    pitch:"A turnkey solution that integrates AI and digital twins to accelerate enterprise transformation." },
 
   // ─── Wistron Computing Power Donation ─ 2 recipients share results on stage (Wistron email, Nov 5) ───
   // Copy from each team's own website until their material form comes in (forms.gle/posMyKoBXTaKZxqt5).
@@ -171,7 +167,7 @@ const ZH = {
     alphaswift: '馬來西亞自製的自主貨運無人機', teamsync: '企業 AI 作業系統',
     netellus: '工廠節能升級的媒合與融資', tynapse: '企業 AI 的信任層', remited: '把收據回饋變成消費數據',
     qinvicta: '做進晶片的後量子密碼', pqstation: '企業的後量子密碼遷移',
-    blocktrend: '以台港脈絡解讀加密產業的訂閱媒體', coinpilot: '個人投資代理人', stablecorp: '穩定幣收款者的後台營運',
+    blocktrend: '以台港脈絡解讀加密產業的訂閱媒體', coinpilot: '個人投資代理人',
     fluidkey: '以加密基礎設施重建的海外券商', ennovation: '兒童近視控制的單一規格產品',
     zig: 'AI 與數位孿生的企業轉型方案', waydosoft: '精密製造的交期決策',
   },
@@ -194,7 +190,6 @@ const ZH = {
     pqstation: '找出企業內所有會被量子電腦破解的加密使用點，並協助完成修補。',
     blocktrend: '訂閱制媒體，以台灣與香港的在地脈絡解讀全球加密產業，累積九年的第一手報導與分析。',
     coinpilot: '你的個人投資代理人：幫你找交易點子、追蹤投資論點、檢討已平倉的交易，讓你成為更好的投資人。',
-    stablecorp: '為以穩定幣收款的創業者與自由工作者，一站整合美國公司設立、商務帳戶、發票與報稅。',
     fluidkey: '以加密貨幣基礎設施重新打造的海外券商，服務亞洲投資人。',
     ennovation: 'MyoPREVA 是單一規格的兒童近視控制產品，使用簡單、非侵入式。',
     zig: '整合 AI 與數位孿生的一站式解決方案，加速企業轉型。',
