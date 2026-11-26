@@ -88,7 +88,7 @@ visitor id in localStorage, plus the link's `utm_source` / referrer and Cloudfla
 ## Placeholders to replace (DD#33)
 
 - **Key visual** — drop the artwork in `assets/` and set `keyVisual` to its path (both data files).
-- **Wistron #11** teams in `data.js` are name-only (Hanomi, ZiG, Waydosoft, Sonice).
+- **Wistron #11** teams in `data.js` have full cards (Hanomi, ROVEN by Sonice, WayDoSoft, ZiG).
 - **Team logos** — none yet (cards fall back to the pitching-order box).
 - **Booth map, event-partner perks, photo album** — off until confirmed.
 - **Live-caption glossary** (`../ddtw-live-translate/worker/src/glossary.js`) still holds DD#32 +

@@ -2,7 +2,7 @@
 // DD#33 Taiwan lineup (Thu 3 Dec 2026, Taipei Marriott) — DRAFT.
 // Source: "DD#33 MC materials (Cg)" sheet, tab "DD founder info for MCs" (TW = 1),
 //   in its "Pitching order (TW)" order: 19 AppWorks Accelerator #33 teams (FlexHaul not pitching, Nov 13;
-//   Screened Nov 22, Stablecorp Nov 25, Fluidkey Nov 26; Ennovation is slot 19) + 4 Wistron Accelerator #11 teams (Hanomi + Sonice details TBC).
+//   Screened Nov 22, Stablecorp Nov 25, Fluidkey Nov 26; Ennovation is slot 19) + 4 Wistron Accelerator #11 teams (Hanomi + ROVEN from their WA#11 applications, websites and ROVEN's poster, Nov 26).
 // Copy is product-level only: no revenue, customer names or regulatory claims
 //   (see the sheet's "⚠ Check before saying on stage" column).
 // Contacts: presenter email from the RSVP / intro-deck data; websites + LinkedIn
@@ -88,9 +88,16 @@ const TEAMS = [
     presenter:"Adeline Yang", title:"Founder", email:"contact@ennovation.io", website:"https://www.myopreva.com", speakerOrder:19,
     pitch:"MyoPREVA, a one-size myopia-control product for children that is easy to apply and non-invasive." },
 
-  // ─── Wistron Accelerator #11 ─ order per MC sheet (Nov 25); Hanomi + Sonice details TBC ───
-  { id:"hanomi",    name:"Hanomi",    sub:"Wistron Accelerator #11", tags:[], batch:"WA#11", hq:"", language:"", presenter:"Presenter TBC", title:"", email:"", website:"", speakerOrder:1, pitch:"Details coming soon." },
-  { id:"sonice",    name:"Sonice",    sub:"Wistron Accelerator #11", tags:[], batch:"WA#11", hq:"", language:"", presenter:"Presenter TBC", title:"", email:"", website:"", speakerOrder:2, pitch:"Details coming soon." },
+  // ─── Wistron Accelerator #11 ─ order per MC sheet (Nov 26). Hanomi + ROVEN sent no material form: copy from their
+  //     WA#11 applications + own websites; ROVEN = Sonice (好友電)'s product brand, per its DD poster ───
+  { id:"hanomi", logo:"assets/logos/hanomi.png",
+    name:"Hanomi", sub:"3D CAD to 2D production drawings in minutes", tags:["Manufacturing AI"], batch:"WA#11", hq:"US", language:"",
+    presenter:"Marco Mascolo", title:"Co-founder & CEO", email:"marco@hanomi.ai", website:"https://www.hanomi.ai", speakerOrder:1,
+    pitch:"Turns 3D CAD models into production-ready 2D technical drawings with full GD&T in minutes, following each company's own drafting standards. Built by mechanical engineers from NASA, Formula 1 and Apple." },
+  { id:"roven", logo:"assets/logos/roven.png",
+    name:"ROVEN", sub:"Spatial memory for the physical world · by Sonice", tags:["Enterprise AI"], batch:"WA#11", hq:"TW", language:"",
+    presenter:"Sunny Chen", title:"General Manager", email:"sunny.chen@sonice-aioe.com", website:"https://sonice-aioe.com", speakerOrder:2,
+    pitch:"Connects a site's existing cameras, sensors and equipment into one physical-AI layer that spots hazards and incidents in real time and acts on them, from alerting staff to adjusting equipment. Built for factories, hotels, logistics hubs and EV charging sites." },
   { id:"waydosoft", logo:"assets/logos/waydosoft.png", logoMark:true, portrait:"assets/portraits/waydosoft.jpg",
     name:"WayDoSoft", sub:"Delivery-date decisions for precision manufacturing", tags:["Manufacturing AI"], batch:"WA#11", hq:"TW", language:"",
     presenter:"Tzu-Yao Lin", title:"CEO", email:"lint@wdmis.com.tw", website:"https://waydosoft.com.tw", speakerOrder:3,
@@ -165,6 +172,7 @@ const ZH = {
     qinvicta: '做進晶片的後量子密碼', pqstation: '企業的後量子密碼遷移',
     blocktrend: '以台港脈絡解讀加密產業的訂閱媒體', coinpilot: '個人投資代理人',
     ennovation: '兒童近視控制的單一規格產品',
+    hanomi: '幾分鐘內把 3D CAD 轉成 2D 生產圖面', roven: '實體世界的空間記憶 · 好友電',
     zig: 'AI 與數位孿生的企業轉型方案', waydosoft: '精密製造的交期決策',
   },
   teamPitch: {
@@ -189,7 +197,8 @@ const ZH = {
     ennovation: 'MyoPREVA 是單一規格的兒童近視控制產品，使用簡單、非侵入式。',
     zig: '整合 AI 與數位孿生的一站式解決方案，加速企業轉型。',
     waydosoft: '為少量多樣的精密製造，提供交期承諾的決策智慧。',
-    hanomi: '團隊資訊即將公布。', sonice: '團隊資訊即將公布。',
+    hanomi: '學習企業自己的製圖規範，把 3D CAD 模型在幾分鐘內轉成含完整幾何公差標註（GD&T）的 2D 生產圖面。創辦團隊是來自 NASA、F1 車隊與 Apple 的機械工程師。',
+    roven: '把場域既有的攝影機、感測器與設備串成一套實體 AI，即時發現危險與異常並採取行動，從通知人員到調整設備。適用於工廠、飯店、物流中心與電動車充電站。',
     dentscape: '為牙技所打造的 AI 牙科 CAD：依照每間技工所自己的風格設計牙冠、牙橋與模型，並在原本熟悉的工具中檢閱。',
     siliconmind: '為 IC 設計公司與 IP 供應商打造的私有 AI：在客戶機房運作的小型模型，持續以客戶自己的設計資料與流程學習。源自台大與中研院的研究計畫。',
   },
