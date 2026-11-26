@@ -1,8 +1,8 @@
 // data.js — Demo Day team directory + supporting data
 // DD#33 Taiwan lineup (Thu 3 Dec 2026, Taipei Marriott) — DRAFT.
 // Source: "DD#33 MC materials (Cg)" sheet, tab "DD founder info for MCs" (TW = 1),
-//   in its "Pitching order (TW)" order: 20 AppWorks Accelerator #33 teams (FlexHaul not pitching, Nov 13;
-//   Screened Nov 22, Stablecorp Nov 25; Ennovation is slot 20) + 4 Wistron Accelerator #11 teams (Hanomi + Sonice details TBC).
+//   in its "Pitching order (TW)" order: 19 AppWorks Accelerator #33 teams (FlexHaul not pitching, Nov 13;
+//   Screened Nov 22, Stablecorp Nov 25, Fluidkey Nov 26; Ennovation is slot 19) + 4 Wistron Accelerator #11 teams (Hanomi + Sonice details TBC).
 // Copy is product-level only: no revenue, customer names or regulatory claims
 //   (see the sheet's "⚠ Check before saying on stage" column).
 // Contacts: presenter email from the RSVP / intro-deck data; websites + LinkedIn
@@ -10,7 +10,7 @@
 //   (WA#11: the DD#33 material form). logoMark = icon-only logo, shown with the name.
 // Languages: Mandarin pitches are flagged; '' = not confirmed (no badge).
 const TEAMS = [
-  // ─── AppWorks Accelerator #33 ─ 20 teams (TW order per MC sheet; FlexHaul out Nov 13, Screened Nov 22, Stablecorp Nov 25) ───
+  // ─── AppWorks Accelerator #33 ─ 19 teams (TW order per MC sheet; FlexHaul out Nov 13, Screened Nov 22, Stablecorp Nov 25, Fluidkey Nov 26) ───
   { id:"ailytics", logo:"assets/logos/ailytics.png", linkedin:"https://www.linkedin.com/in/wei-zhuang-tan/", portrait:"assets/portraits/ailytics.jpg",
     name:"Ailytics", sub:"AI safety & productivity from existing cameras", tags:["Manufacturing AI","Enterprise AI"], batch:"AW#33", hq:"SG", language:"English",
     presenter:"Lenard Tan", title:"Founder & CEO", email:"weizhuang.tan@ailytics.ai", website:"https://ailytics.ai/", speakerOrder:1,
@@ -83,13 +83,9 @@ const TEAMS = [
     name:"Midas", sub:"Personal investing agents", tags:["Consumer AI"], batch:"AW#33", hq:"HK", language:"English",
     presenter:"Peter Hui", title:"Co-founder", email:"peter@coinpilot.com", website:"https://coinpilot.com", speakerOrder:18,
     pitch:"Your personal investing agents that help you find trade ideas, monitor your theses, and review closed trades so you become a better investor." },
-  { id:"fluidkey", logo:"assets/logos/fluidkey.png", linkedin:"https://www.linkedin.com/in/moritzboullenger/", portrait:"assets/portraits/fluidkey.jpg",
-    name:"Fluidkey", sub:"Offshore brokerage on crypto rails", tags:["On-Chain Banking"], batch:"AW#33", hq:"CH", language:"English",
-    presenter:"Moritz Boullenger", title:"Co-founder & CEO", email:"moritz@fluidkey.com", website:"https://fluidkey.com", speakerOrder:19,
-    pitch:"An offshore brokerage rebuilt on crypto rails, for investors in Asia." },
   { id:"ennovation", logo:"assets/logos/ennovation.png", linkedin:"https://www.linkedin.com/in/adeline-yang-h", portrait:"assets/portraits/ennovation.jpg",
     name:"Ennovation", sub:"One-size myopia control for children", tags:["Health Tech"], batch:"AW#33", hq:"SG", language:"",
-    presenter:"Adeline Yang", title:"Founder", email:"contact@ennovation.io", website:"https://www.myopreva.com", speakerOrder:20,
+    presenter:"Adeline Yang", title:"Founder", email:"contact@ennovation.io", website:"https://www.myopreva.com", speakerOrder:19,
     pitch:"MyoPREVA, a one-size myopia-control product for children that is easy to apply and non-invasive." },
 
   // ─── Wistron Accelerator #11 ─ order per MC sheet (Nov 25); Hanomi + Sonice details TBC ───
@@ -106,14 +102,14 @@ const TEAMS = [
 
   // ─── Wistron Computing Power Donation ─ 2 recipients share results on stage (Wistron email, Nov 5) ───
   // Copy from each team's own website until their material form comes in (forms.gle/posMyKoBXTaKZxqt5).
-  { id:"dentscape", portrait:"assets/portraits/dentscape.jpg",
-    name:"Dentscape", sub:"AI crown design for dental labs · AppWorks #24", tags:["Health Tech"], batch:"CPD", hq:"TW", language:"",
-    presenter:"Bill Chou", title:"CEO", email:"bill.chou@dentscape.ai", website:"https://dentscape.ai", speakerOrder:1,
-    pitch:"AI crown design software for dental labs: designs crowns, bridges and models in each lab's own style, reviewed in the tools the lab already uses." },
   { id:"siliconmind", logo:"assets/logos/siliconmind.png",
     name:"SiliconMind", sub:"Private, on-premise AI for chip design", tags:["Semiconductor"], batch:"CPD", hq:"TW", language:"",
-    presenter:"Mu-Chi Chen", title:"Co-founder & CEO", email:"muchi.chen@siliconmind.co", website:"https://siliconmind.co", speakerOrder:2,
+    presenter:"Mu-Chi Chen", title:"Co-founder & CEO", email:"muchi.chen@siliconmind.co", website:"https://siliconmind.co", speakerOrder:1,
     pitch:"Private AI for IC design companies and IP providers: small models served on-premise that keep improving on the customer's own design data and workflows. Spun off from NTU and Academia Sinica." },
+  { id:"dentscape", portrait:"assets/portraits/dentscape.jpg",
+    name:"Dentscape", sub:"AI crown design for dental labs · AppWorks #24", tags:["Health Tech"], batch:"CPD", hq:"TW", language:"",
+    presenter:"Bill Chou", title:"CEO", email:"bill.chou@dentscape.ai", website:"https://dentscape.ai", speakerOrder:2,
+    pitch:"AI crown design software for dental labs: designs crowns, bridges and models in each lab's own style, reviewed in the tools the lab already uses." },
 ];
 
 const AW_COUNT = TEAMS.filter((t) => t.batch === 'AW#33').length;
@@ -168,7 +164,7 @@ const ZH = {
     netellus: '工廠節能升級的媒合與融資', tynapse: '企業 AI 的信任層', remited: '把收據回饋變成消費數據',
     qinvicta: '做進晶片的後量子密碼', pqstation: '企業的後量子密碼遷移',
     blocktrend: '以台港脈絡解讀加密產業的訂閱媒體', coinpilot: '個人投資代理人',
-    fluidkey: '以加密基礎設施重建的海外券商', ennovation: '兒童近視控制的單一規格產品',
+    ennovation: '兒童近視控制的單一規格產品',
     zig: 'AI 與數位孿生的企業轉型方案', waydosoft: '精密製造的交期決策',
   },
   teamPitch: {
@@ -190,7 +186,6 @@ const ZH = {
     pqstation: '找出企業內所有會被量子電腦破解的加密使用點，並協助完成修補。',
     blocktrend: '訂閱制媒體，以台灣與香港的在地脈絡解讀全球加密產業，累積九年的第一手報導與分析。',
     coinpilot: '你的個人投資代理人：幫你找交易點子、追蹤投資論點、檢討已平倉的交易，讓你成為更好的投資人。',
-    fluidkey: '以加密貨幣基礎設施重新打造的海外券商，服務亞洲投資人。',
     ennovation: 'MyoPREVA 是單一規格的兒童近視控制產品，使用簡單、非侵入式。',
     zig: '整合 AI 與數位孿生的一站式解決方案，加速企業轉型。',
     waydosoft: '為少量多樣的精密製造，提供交期承諾的決策智慧。',
