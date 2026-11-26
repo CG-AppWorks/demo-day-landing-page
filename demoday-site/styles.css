@@ -1491,6 +1491,8 @@ body {
   letter-spacing: -0.015em; color: var(--aw-slate);
 }
 .about-card .stats-inline .stat .v .num { color: var(--accent); font-family: var(--font-mono); }
+/* zh money units (億美元) sit beside the mono number in the display font, smaller */
+.about-card .stats-inline .stat .v .unit { color: var(--accent); font-size: 0.62em; font-weight: 700; margin-left: 3px; letter-spacing: 0; }
 .about-card .stats-inline .stat .l {
   font-size: 11px; font-weight: 600;
   color: var(--fg2); text-transform: uppercase; letter-spacing: 0.08em;

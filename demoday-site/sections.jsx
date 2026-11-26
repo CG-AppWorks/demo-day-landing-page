@@ -50,23 +50,23 @@ function About({ language }) {
   {
     title: "AppWorks",
     en: "Founded in 2009, AppWorks is an accelerator built by founders, for founders — which has since expanded into a broader startup community and venture capital platform. Just as the Mobile Internet reshaped entire industries, we believe AI and blockchain are driving the next major paradigm shift. Founders lead the work of building great companies; our role is to support them from the seed stage onward with long-term guidance, capital, and a strong regional network.",
-    zh: "2009 年成立，由「創業者」為「創業者」設立的加速器，以及基於加速器發展的新創社群與創投機構，致力協助下世代的創業者抓住數位革命的成長機會。正如 Mobile Internet 曾引發巨大的產業變革，我們相信 AI 與區塊鏈正推動新一波關鍵的典範轉移。創業者是主角，投資人是配角；我們從種子時期開始支持團隊，陪著他們打造區域級、世界級的偉大企業。",
+    zh: "2009 年成立，由「創業者」為「創業者」設立的加速器，以及基於加速器發展的新創社群與創投機構，致力協助下世代的創業者抓住數位革命的成長機會。正如行動網路曾引發巨大的產業變革，我們相信 AI 與區塊鏈正推動新一波關鍵的典範轉移。創業者是主角，投資人是配角；我們從種子時期開始支持團隊，陪著他們打造區域級、世界級的偉大企業。",
     link: "https://appworks.tw/",
     stats: [
-    { v: "680", l: "Startups", num: true },
-    { v: "2,168", l: "Founders", num: true },
-    { v: <span style={{ color: '#ff6b0f' }}>{zh ? "亞洲跨境" : "Pan-Asia"}</span>, l: "Region" }]
+    { v: "680", l: "Startups", lz: "新創", num: true },
+    { v: "2,168", l: "Founders", lz: "創業者", num: true },
+    { v: <span style={{ color: '#ff6b0f' }}>{zh ? "亞洲跨境" : "Pan-Asia"}</span>, l: "Region", lz: "布局" }]
 
   },
   {
     title: "AppWorks Accelerator",
     en: "Founded in 2010, AppWorks Accelerator selects the most promising teams every six months, helping founders go from 0 to 1 to product–market fit and scale. As of Q3 2026, the ecosystem spans 680 active startups and 2,168 founders — including 135 AI startups and 144 Web3 startups. Collectively they have raised US$ 8.2B, reached US$ 43.4B in valuation, generate US$ 19.7B in annual revenue, and created 28,592 jobs across 9 markets.",
-    zh: "2010 年成立，每半年遴選最具潛力的團隊，協助創業者從 0 到 1 找到 Product-Market Fit、並在成長階段建立可持續且可擴張的商業模式。截至 2026 年第三季，生態系共有 680 家活躍新創、2,168 位創業者，包含 135 家 AI 新創與 144 家 Web3 新創；合計募得 82 億美元，總市值 434 億美元，年營收 197 億美元，提供 28,592 個工作機會，橫跨台灣、印尼、新加坡、馬來西亞、越南、菲律賓、韓國、日本與香港等九大市場。",
+    zh: "2010 年成立，每半年遴選最具潛力的團隊，協助創業者從 0 到 1 找到產品與市場的契合點，並在成長階段建立可持續且可擴張的商業模式。截至 2026 年第三季，生態系共有 680 家活躍新創、2,168 位創業者，包含 135 家 AI 新創與 144 家 Web3 新創；合計募得 82 億美元，總市值 434 億美元，年營收 197 億美元，提供 28,592 個工作機會，橫跨台灣、印尼、新加坡、馬來西亞、越南、菲律賓、韓國、日本與香港等九大市場。",
     link: "https://appworks.tw/accelerator/",
     stats: [
-    { v: "US$ 8.2B", l: "Total Raised", num: true },
-    { v: "US$ 43.4B", l: "Total Valuation", num: true },
-    { v: "28,592", l: "Jobs Created", num: true }]
+    { v: "US$ 8.2B", vz: ["82", "億美元"], l: "Total Raised", lz: "總募資", num: true },
+    { v: "US$ 43.4B", vz: ["434", "億美元"], l: "Total Valuation", lz: "總市值", num: true },
+    { v: "28,592", l: "Jobs Created", lz: "工作機會", num: true }]
 
   },
   {
@@ -75,9 +75,9 @@ function About({ language }) {
     zh: "管理四支創投基金，總募集金額 3.86 億美元。通常投資種子輪至 C 輪，每年進行 20–30 個投資案，至今已投資超過 130 家新創，如 Lalamove、Dapper Labs / Flow、Animoca Brands、91APP、Figment、Carousell、ShopBack、17LIVE、KKday；並已有 6 個 IPO、9 個 IEO，以及 1 隻百角獸、2 隻十角獸、5 隻獨角獸與 4 隻 Centaur。",
     link: "https://appworks.tw/investments/",
     stats: [
-    { v: "US$ 386M", l: "AUM", num: true },
-    { v: <span style={{ color: '#ff6b0f' }}>6 / 5</span>, l: "IPOs · Unicorns" },
-    { v: "130+", l: "Portfolio", num: true }]
+    { v: "US$ 386M", vz: ["3.86", "億美元"], l: "AUM", lz: "管理資產", num: true },
+    { v: <span style={{ color: '#ff6b0f' }}>6 / 5</span>, l: "IPOs · Unicorns", lz: "IPO · 獨角獸" },
+    { v: "130+", l: "Portfolio", lz: "投資新創", num: true }]
 
   },
   {
@@ -86,9 +86,9 @@ function About({ language }) {
     zh: "專注協助企業推動 AI 與自動化升級，以顧問服務與人才培訓為核心，從素養啟蒙到應用落地。曾協助台灣大哥大、永豐金控、南山人壽、和泰產險、翰林出版等企業建立 AI 與自動化能力；現為 OpenAI 台灣官方合作服務夥伴，截至目前已與超過 200 家企業合作，累計培訓逾 20,000 位學員，服務橫跨電信、金融、零售、出版與科技產業。",
     link: "https://aiworks.tw/",
     stats: [
-    { v: "200+", l: "Enterprises", num: true },
-    { v: "20,000+", l: "Trained", num: true },
-    { v: <span style={{ color: '#ff6b0f' }}>OpenAI</span>, l: "Partner" }]
+    { v: "200+", l: "Enterprises", lz: "合作企業", num: true },
+    { v: "20,000+", l: "Trained", lz: "培訓學員", num: true },
+    { v: <span style={{ color: '#ff6b0f' }}>OpenAI</span>, l: "Partner", lz: "合作夥伴" }]
 
   }];
 
@@ -98,7 +98,7 @@ function About({ language }) {
       <div className="container">
         <div className="section-head">
           <div>
-            <div className="eyebrow">SINCE 2009 </div>
+            <div className="eyebrow">{zh ? '創立於 2009 年' : 'SINCE 2009'}</div>
             <h2>{zh ? '關於 AppWorks。' : 'About AppWorks.'}</h2>
             <p className="sub">{zh ? '加速器、社群與創投，由創業者，為創業者打造。' : 'An accelerator, a community, and venture capital — built by founders, for founders.'}</p>
           </div>
@@ -111,13 +111,13 @@ function About({ language }) {
               <div className="stats-inline">
                 {c.stats.map((s, j) =>
               <div key={j} className="stat">
-                    <div className="v">{s.num ? <span className="num">{s.v}</span> : s.v}</div>
-                    <div className="l">{s.l}</div>
+                    <div className="v">{zh && s.vz ? <><span className="num">{s.vz[0]}</span><span className="unit">{s.vz[1]}</span></> : s.num ? <span className="num">{s.v}</span> : s.v}</div>
+                    <div className="l">{zh && s.lz ? s.lz : s.l}</div>
                   </div>
               )}
               </div>
               <a className="btn outline sm arrow" href={c.link} target="_blank" rel="noopener" data-track="about_link" data-x={c.title}>
-                More information <I.arrow />
+                {zh ? '更多資訊' : 'More information'} <I.arrow />
               </a>
             </div>
           )}
