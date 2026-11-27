@@ -81,7 +81,7 @@ const TEAMS = [
     pitch:"A subscription publication that explains global crypto through Taiwan and Hong Kong's own context, built on nine years of first-hand reporting and analysis." },
   { id:"coinpilot", logo:"assets/logos/midas.png?v=2", linkedin:"https://linkedin.com/in/huichunhim", portrait:"assets/portraits/coinpilot.jpg",
     name:"Midas", sub:"Personal investing agents", tags:["Consumer AI"], batch:"AW#33", hq:"HK", language:"English",
-    presenter:"Peter Hui", title:"Co-founder", email:"peter@coinpilot.com", website:"https://coinpilot.com", speakerOrder:18,
+    presenter:"Peter Hui", title:"Co-founder", email:"peter@coinpilot.com", website:"https://heymidas.ai", speakerOrder:18,
     pitch:"Your personal investing agents that help you find trade ideas, monitor your theses, and review closed trades so you become a better investor." },
   { id:"ennovation", logo:"assets/logos/ennovation.png", linkedin:"https://www.linkedin.com/in/adeline-yang-h", portrait:"assets/portraits/ennovation.jpg",
     name:"Ennovation", sub:"One-size myopia control for children", tags:["Health Tech"], batch:"AW#33", hq:"SG", language:"",
@@ -113,9 +113,9 @@ const TEAMS = [
     name:"SiliconMind", sub:"Private, on-premise AI for chip design", tags:["Semiconductor"], batch:"CPD", hq:"TW", language:"",
     presenter:"Mu-Chi Chen", title:"Co-founder & CEO", email:"muchi.chen@siliconmind.co", website:"https://siliconmind.co", speakerOrder:1,
     pitch:"Private AI for IC design companies and IP providers: small models served on-premise that keep improving on the customer's own design data and workflows. Spun off from NTU and Academia Sinica." },
-  { id:"dentscape", portrait:"assets/portraits/dentscape.jpg",
+  { id:"dentscape", logo:"assets/logos/dentscape.png", portrait:"assets/portraits/dentscape.jpg",
     name:"Dentscape", sub:"AI crown design for dental labs · AppWorks #24", tags:["Health Tech"], batch:"CPD", hq:"TW", language:"",
-    presenter:"Bill Chou", title:"CEO", email:"bill.chou@dentscape.ai", website:"https://dentscape.ai", speakerOrder:2,
+    presenter:"Bill Chou", title:"Co-founder & CEO", email:"bill.chou@dentscape.ai", website:"https://dentscape.ai", speakerOrder:2,
     pitch:"AI crown design software for dental labs: designs crowns, bridges and models in each lab's own style, reviewed in the tools the lab already uses." },
 ];
 

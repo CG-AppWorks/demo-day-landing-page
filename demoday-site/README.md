@@ -40,7 +40,7 @@ embedded Wordly / QR / Accupai resources.
 
 | File | Purpose |
 |------|---------|
-| `index.html` | Shell — loads styles, React/Babel, and the component scripts in order |
+| `index.html` | Shell — loads styles, React (production build) and the precompiled component scripts in `dist/` in order |
 | `tokens.css` | AppWorks design tokens (color, type, spacing, radius) |
 | `styles.css` | All component styles |
 | `data.js` | **Taiwan** team directory, agenda, nav tabs + `EVENT_CONFIG` (TW) |
@@ -53,6 +53,11 @@ embedded Wordly / QR / Accupai resources.
 | `app.jsx` | Top-level app, Tweaks panel, state wiring |
 | `tweaks-panel.jsx` | Tweaks UI shell + form controls |
 | `assets/` | Key visual, hero background, AppWorks mark (favicon) |
+| `dist/` | **Generated** — the `.jsx` files precompiled by `../tools/build-jsx.mjs`. Never edit by hand |
+
+**After editing any `.jsx` file, rebuild before committing:** `node tools/build-jsx.mjs` from the repo root
+(`--check` exits 1 if `dist/` is stale). It uses the same Babel build and options the browser used before,
+so output is identical; it just runs once instead of on every phone. `singapore.html` still uses in-browser Babel.
 
 ## Event-day setup
 
