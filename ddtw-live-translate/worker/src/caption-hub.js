@@ -6,9 +6,10 @@
 // switch currently points at, and get a `switch` event when it flips.
 
 import { CORS_HEADERS, json } from "./http.js";
+import { cleanGeneral, cleanTeam, cleanId, LIMITS } from "./context.js";
 
 const CHANNELS = ["openai", "gemini"];               // caption-producing engine channels
-const SWITCH_TARGETS = ["openai", "gemini", "wordly"]; // valid POST /api/switch values
+const SWITCH_TARGETS = ["openai", "gemini"];        // valid POST /api/switch values (Wordly removed Nov 27 2026)
 const STREAM_CHANNELS = ["openai", "gemini", "active"];
 const MAX_SEGMENTS = 500;       // per-channel in-memory cap (spec §2.1)
 const BACKLOG_ON_CONNECT = 30;  // recent segments replayed to a new subscriber
@@ -25,19 +26,31 @@ export class CaptionHub {
 
     // Live state (in-memory, rebuilt from storage on cold start).
     this.segments = { openai: [], gemini: [] }; // each sorted ascending by seq
-    this.active = "openai";
+    this.active = "gemini"; // default engine (GCP Gemini)
     this.subs = { openai: new Set(), gemini: new Set(), active: new Set() };
 
     this.heartbeat = null;
     this.lastFlush = 0;
     this.dirty = { openai: false, gemini: false };
 
+    // Operator-managed caption context (see context.js): general notes +
+    // glossary, per-team scripts, and who is on stage. Kept in memory, persisted
+    // under ctx:* keys.
+    this.ctx = { general: { instructions: "", glossary: "", updatedAt: 0 }, teams: {}, onStage: "", onStageLabel: "" };
+
     this.state.blockConcurrencyWhile(async () => {
       const storedActive = await this.state.storage.get("active");
-      if (SWITCH_TARGETS.includes(storedActive)) this.active = storedActive;
+      if (SWITCH_TARGETS.includes(storedActive)) this.active = storedActive; // a stored "wordly" falls back to gemini
       for (const ch of CHANNELS) {
         const arr = await this.state.storage.get(`segments:${ch}`);
         if (Array.isArray(arr)) this.segments[ch] = arr;
+      }
+      const saved = await this.state.storage.list({ prefix: "ctx:" });
+      for (const [k, v] of saved) {
+        if (k === "ctx:general" && v) this.ctx.general = v;
+        else if (k === "ctx:onstage") this.ctx.onStage = v || "";
+        else if (k === "ctx:onstagelabel") this.ctx.onStageLabel = v || "";
+        else if (k.startsWith("ctx:team:") && v) this.ctx.teams[k.slice(9)] = v;
       }
     });
   }
@@ -51,6 +64,8 @@ export class CaptionHub {
         case "/api/reset":   return await this.handleReset();
         case "/api/latest":  return this.handleLatest(url);
         case "/api/stream":  return this.handleStream(url);
+        case "/api/context": return request.method === "POST" ? await this.handleContextSave(request) : this.handleContextGet();
+        case "/api/context/prompt": return this.handleContextPrompt(url);
         default:             return json({ error: "not_found" }, { status: 404 });
       }
     } catch (err) {
@@ -117,10 +132,8 @@ export class CaptionHub {
     try { await this.env.CAPTIONS_KV.put("active", active); } catch { /* KV is best-effort */ }
 
     // Tell "active" subscribers to reset, then replay the new source's backlog.
-    // "wordly" is a non-caption source (the viewer shows the Wordly embed), so
-    // it has no segments to replay.
     this.sendRaw("active", this.frame("switch", { active, ts: Date.now() }));
-    const segs = CHANNELS.includes(active) ? this.segments[active].slice(-BACKLOG_ON_CONNECT) : [];
+    const segs = this.segments[active].slice(-BACKLOG_ON_CONNECT);
     this.sendRaw("active", this.frame("backlog", { channel: active, segments: segs }));
 
     return json({ ok: true, active });
@@ -130,7 +143,6 @@ export class CaptionHub {
   handleLatest(url) {
     const requested = url.searchParams.get("channel") || "active";
     const resolved = requested === "active" ? this.active : requested;
-    if (resolved === "wordly") return json({ channel: "wordly", active: this.active, segments: [] });
     if (!CHANNELS.includes(resolved)) return json({ error: "bad_channel" }, { status: 400 });
 
     const sinceRaw = url.searchParams.get("since");
@@ -139,6 +151,55 @@ export class CaptionHub {
     if (Number.isFinite(since)) segs = segs.filter((s) => s.seq > since);
 
     return json({ channel: resolved, active: this.active, segments: segs });
+  }
+
+  // -- caption context (admin; gated in index.js) ---------------------------
+  // GET /api/context → everything, for the Backstage editor.
+  handleContextGet() {
+    return json({ ok: true, general: this.ctx.general, teams: this.ctx.teams, onStage: this.ctx.onStage });
+  }
+
+  // POST /api/context  { general?: {instructions, glossary}, team?: {id, label, script}, onStage?: id|"" }
+  // Partial update; an empty script deletes that team's entry.
+  async handleContextSave(request) {
+    let b;
+    try { b = await request.json(); } catch { return json({ error: "bad_json" }, { status: 400 }); }
+    const now = Date.now();
+    if (b && b.general) {
+      this.ctx.general = { ...cleanGeneral(b.general), updatedAt: now };
+      await this.state.storage.put("ctx:general", this.ctx.general);
+    }
+    if (b && b.team) {
+      const id = cleanId(b.team.id);
+      if (!id) return json({ error: "bad_team" }, { status: 400 });
+      const t = cleanTeam(b.team);
+      if (t.script) {
+        this.ctx.teams[id] = { ...t, updatedAt: now };
+        await this.state.storage.put(`ctx:team:${id}`, this.ctx.teams[id]);
+      } else {
+        delete this.ctx.teams[id];
+        await this.state.storage.delete(`ctx:team:${id}`);
+      }
+    }
+    if (b && "onStage" in b) {
+      this.ctx.onStage = cleanId(b.onStage);
+      this.ctx.onStageLabel = this.ctx.onStage ? String(b.onStageLabel || "").slice(0, LIMITS.label).trim() : "";
+      await this.state.storage.put("ctx:onstage", this.ctx.onStage);
+      await this.state.storage.put("ctx:onstagelabel", this.ctx.onStageLabel);
+    }
+    return this.handleContextGet();
+  }
+
+  // GET /api/context/prompt[?team=id] → what one caption call needs: the general
+  // notes + glossary and the on-stage (or requested) team's script.
+  handleContextPrompt(url) {
+    const id = cleanId(url.searchParams.get("team")) || this.ctx.onStage;
+    const t = id ? this.ctx.teams[id] : null;
+    return json({
+      instructions: this.ctx.general.instructions || "",
+      glossary: this.ctx.general.glossary || "",
+      team: id ? { id, label: (t && t.label) || (id === this.ctx.onStage && this.ctx.onStageLabel) || id, script: (t && t.script) || "" } : null,
+    });
   }
 
   // -- GET /api/stream?channel=openai|gemini|active (SSE) -------------------

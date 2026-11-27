@@ -25,6 +25,8 @@ const ADMIN_ROUTES = new Set([
   "/api/ephemeral/gemini",
   "/api/stats",
   "/api/stats/reset",
+  "/api/context",
+  "/api/context/prompt",
 ]);
 
 // Stateful routes handled by the Durable Object.
@@ -34,6 +36,8 @@ const DO_ROUTES = new Set([
   "/api/latest",
   "/api/switch",
   "/api/reset",
+  "/api/context",
+  "/api/context/prompt",
 ]);
 
 // Direct browser→provider streaming (not needed by the chunked /api/caption path).
@@ -64,6 +68,18 @@ function trackRow(body, request) {
     src: clean(b.src, 60) || "direct",
     cc: String((request.cf && request.cf.country) || "").slice(0, 2),
   };
+}
+
+// Operator-managed caption context (Backstage) for one caption call: general
+// notes + glossary and the on-stage team's script (or `team` when given).
+// Never blocks captioning: on any failure, caption without it.
+async function promptContext(env, team) {
+  try {
+    const stub = env.CAPTION_HUB.get(env.CAPTION_HUB.idFromName("event"));
+    const q = team ? "?team=" + encodeURIComponent(team) : "";
+    const r = await stub.fetch(new Request("https://do/api/context/prompt" + q));
+    return r.ok ? await r.json() : null;
+  } catch { return null; }
 }
 
 // Post a finished segment to the single DO instance (store + SSE fan-out).
@@ -116,7 +132,7 @@ export default {
       try {
         const form = await request.formData();
         const file = form.get("audio");
-        const engine = String(form.get("engine") || "openai");
+        const engine = String(form.get("engine") || "gemini");
         const seq = Number(form.get("seq"));
         const ctx = String(form.get("context") || "");
         const terms = String(form.get("terms") || "");
@@ -126,7 +142,8 @@ export default {
         if (!Number.isFinite(seq)) return json({ error: "bad_seq" }, { status: 400 });
 
         const bytes = new Uint8Array(await file.arrayBuffer());
-        const res = await captionChunk(env, engine, file, bytes, file.type || "audio/wav", ctx, terms, lang);
+        const pctx = await promptContext(env, "");
+        const res = await captionChunk(env, engine, file, bytes, file.type || "audio/wav", ctx, terms, lang, pctx);
         if (res.transcript) {
           await postSegment(env, { channel: engine, seq, en: res.en, zh: res.zh, final: true });
         }
@@ -141,9 +158,11 @@ export default {
       try {
         const b = await request.json();
         if (!b || !b.text) return json({ error: "no_text" }, { status: 400 });
-        const engine = ENGINES.has(b.engine) ? b.engine : "openai";
-        const pair = await translateText(env, engine, String(b.text), String(b.context || ""), String(b.terms || ""), String(b.lang || "zh-TW"));
-        return json({ ok: true, ...pair });
+        const engine = ENGINES.has(b.engine) ? b.engine : "gemini";
+        // Backstage's "Try a line" passes team to test that team's script before it is on stage.
+        const pctx = b.useContext === false ? null : await promptContext(env, String(b.team || ""));
+        const pair = await translateText(env, engine, String(b.text), String(b.context || ""), String(b.terms || ""), String(b.lang || "zh-TW"), pctx);
+        return json({ ok: true, ...pair, team: pctx && pctx.team ? pctx.team.id : "" });
       } catch (e) {
         return json({ error: "translate_failed", message: String(e.message || e).slice(0, 300) }, { status: 502 });
       }

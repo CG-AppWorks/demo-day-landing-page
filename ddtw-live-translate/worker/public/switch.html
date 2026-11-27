@@ -6,7 +6,7 @@
 <title>Demo Day · Caption Switch (operator)</title>
 <style>
   :root{ --bg:#0b0d10; --panel:#14181d; --line:#222a31; --ink:#f4f7fa; --dim:#8c98a4;
-         --openai:#10a37f; --gemini:#4c8dff; --wordly:#b06bff; --good:#37d39b; --bad:#ff6b6b; }
+         --openai:#10a37f; --gemini:#4c8dff; --good:#37d39b; --bad:#ff6b6b; }
   *{box-sizing:border-box}
   body{margin:0;min-height:100dvh;background:var(--bg);color:var(--ink);
     font:500 16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -20,14 +20,13 @@
   .lamp{width:11px;height:11px;border-radius:50%;background:var(--dim)}
   .lamp.ok{background:var(--good)} .lamp.err{background:var(--bad)}
   .now b{font-weight:700}
-  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
   .opt{appearance:none;cursor:pointer;border:2px solid var(--line);background:#0b0d10;color:var(--ink);
     border-radius:12px;padding:16px 8px;font:inherit;font-weight:700;display:flex;flex-direction:column;
     align-items:center;gap:6px;transition:.15s}
   .opt small{font-weight:500;color:var(--dim);font-size:11px}
   .opt[data-k=openai].active{border-color:var(--openai);color:var(--openai)}
   .opt[data-k=gemini].active{border-color:var(--gemini);color:var(--gemini)}
-  .opt[data-k=wordly].active{border-color:var(--wordly);color:var(--wordly)}
   .opt:disabled{opacity:.5;cursor:wait}
   .msg{font-size:13px;color:var(--dim);min-height:18px;margin-top:10px}
   .msg.err{color:var(--bad)} .msg.ok{color:var(--good)}
@@ -47,7 +46,6 @@
     <div class="grid">
       <button class="opt" data-k="openai">OpenAI<small>engine</small></button>
       <button class="opt" data-k="gemini">Gemini<small>engine</small></button>
-      <button class="opt" data-k="wordly">Wordly<small>backup</small></button>
     </div>
     <div class="msg" id="msg"></div>
   </div>

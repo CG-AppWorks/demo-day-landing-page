@@ -5,7 +5,7 @@ Current edition: **DD#33** (SG Tue 17 Nov 2026 · TW Thu 3 Dec 2026). DD#32 live
 Two single-page event sites that share the same components:
 
 - **`index.html`** — **Taiwan** edition. AppWorks #33 + Wistron #11, bilingual (EN/中文),
-  with live AI interpretation (captions Worker, Wordly as backup).
+  with live AI captions (our captions Worker on Gemini, OpenAI as backup; Wordly removed Nov 27).
 - **`singapore.html`** — **Singapore** edition. AppWorks #33 only, English-only, no
   Wistron / captions / album. (Served at ddsg.appworks.tw from the `demo-day-singapore` repo.) Edition differences are driven by `EVENT_CONFIG` in the data file.
 
@@ -22,9 +22,9 @@ python3 -m http.server 8000
 # then visit http://localhost:8000
 ```
 
-React + Babel are loaded from a CDN and JSX is transpiled in the browser, so the files
-run as-is. An internet connection is required on first load for the CDN scripts and the
-embedded Wordly / QR / Accupai resources.
+The TW page loads React from a CDN and the precompiled `dist/` scripts (see below);
+`singapore.html` still transpiles its JSX in the browser. An internet connection is
+required for the CDN scripts, the captions Worker and the Accupai album.
 
 ## Deploy to GitHub Pages
 
@@ -47,7 +47,7 @@ embedded Wordly / QR / Accupai resources.
 | `data-sg.js` | **Singapore** team directory, agenda, nav tabs + `EVENT_CONFIG` (SG) |
 | `chrome.jsx` | Top nav, hero, "Now on stage" card, footer, icons, AppWorks logo |
 | `teams.jsx` | Team directory: search + cards (compact / cards / editorial) |
-| `live.jsx` | Live panel + Wordly captions feed |
+| `live.jsx` | Live panel + floating 即時翻譯 captions widget (streams from the captions Worker) |
 | `sections.jsx` | Agenda, photo album, About, partners, sponsors, intro modal |
 | `backstage.jsx` | Operator backstage controls (session ID, on-stage team) |
 | `app.jsx` | Top-level app, Tweaks panel, state wiring |
@@ -61,8 +61,13 @@ so output is identical; it just runs once instead of on every phone. `singapore.
 
 ## Event-day setup
 
-- **Wordly session ID** — set in the Tweaks panel (default `DXRS-1194`). Drives the
-  caption iframe, QR codes, and attendee links.
+- **Live captions** — Backstage (footer link or ⌘/Ctrl+Shift+B, then the admin token):
+  - *Live captions engine*: Gemini (main) / OpenAI (backup) for all guests.
+  - *Caption context*: style notes, a glossary (`English = 中文`, `Name = keep`, `# note`)
+    and each team's pitch script, saved on the captions Worker. The Worker sends the notes,
+    the glossary and the on-stage team's script with every line it translates.
+  - *Currently pitching* (in On Air) also sets which team's script the captions use.
+  - The broadcaster laptop runs `<captions Worker>/broadcast` and shows the current context.
 - **On-stage team / phase** — operator-controlled via the backstage panel / Tweaks, so
   the page never drifts out of sync with the real schedule.
 - **Photo album** — the Accupai link in `sections.jsx` (`Album`) opens the live album.

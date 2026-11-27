@@ -342,11 +342,17 @@ export const GLOSSARY = [
   { en: "WeMo Scooter", zh: "KEEP", note: "WeMo scooter-sharing, Taiwan (client)" },
 ];
 
+// Event-independent part: org names + Taiwan-usage terminology (the first two
+// blocks above). When the operator has saved an event glossary in Backstage,
+// only this core is sent with it — the rest are past events' lineups.
+export const CORE_GLOSSARY = GLOSSARY.slice(0, GLOSSARY.findIndex((g) => g.en === "NOTAG KOREA"));
+
 // Render the glossary block for the translation system prompt.
 // For non-Chinese targets (e.g. lang='ja'), only the KEEP entries apply —
 // the zh-TW renderings would otherwise push Chinese into the caption.
-export function glossaryForPrompt(lang) {
-  const entries = lang === "ja" ? GLOSSARY.filter((g) => g.zh === "KEEP") : GLOSSARY;
+export function glossaryForPrompt(lang, { coreOnly = false } = {}) {
+  const base = coreOnly ? CORE_GLOSSARY : GLOSSARY;
+  const entries = lang === "ja" ? base.filter((g) => g.zh === "KEEP") : base;
   return entries.map((g) =>
     g.zh === "KEEP"
       ? `- "${g.en}" -> keep as "${g.en}"${g.note ? ` (${g.note})` : ""}`

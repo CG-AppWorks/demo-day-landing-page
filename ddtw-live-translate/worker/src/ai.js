@@ -8,8 +8,12 @@ const GEMINI_MT_MODEL = "gemini-3.5-flash"; // 3.5 gives the better glossary rec
 const OPENAI_STT_MODEL = "gpt-4o-transcribe";
 const OPENAI_MT_MODEL = "gpt-4o-mini";
 
-function bilingualSystemPrompt(extraTerms, lang) {
+// pctx = operator-managed context from Backstage ({instructions, glossary, team:{label, script}}),
+// or null. With an event glossary saved, only the core static glossary is added to it.
+function bilingualSystemPrompt(extraTerms, lang, pctx) {
   const ja = lang === "ja"; // secondary language: Japanese (Tokyo) vs the default zh-TW
+  const eventGlossary = pctx && pctx.glossary ? pctx.glossary : "";
+  const team = pctx && pctx.team && pctx.team.script ? pctx.team : null;
   return [
     `You caption a bilingual startup pitch event for a MIXED audience (${ja ? "Japanese + English" : "Mandarin + English"}).`,
     "For the given caption line, output BOTH:",
@@ -22,7 +26,14 @@ function bilingualSystemPrompt(extraTerms, lang) {
       ? "Use natural spoken Japanese (敬体/丁寧). Keep brand/product names and acronyms in their original form."
       : "Taiwan vocabulary ONLY in zh: 軟體 not 软件, 網路 not 网络, 影片 not 视频, 新創 not 初创, 人工智慧/AI not 人工智能.",
     "Proper nouns must be rendered exactly; 'keep as' means leave in English (in BOTH en and zh):",
-    glossaryForPrompt(lang),
+    glossaryForPrompt(lang, { coreOnly: Boolean(eventGlossary) }),
+    eventGlossary
+      ? "Event glossary from the organiser, one per line. 'A = B' means render A as B; 'A = keep' or a bare term means leave it in English in BOTH fields; text after # is a note:\n" + eventGlossary
+      : "",
+    pctx && pctx.instructions ? "Organiser's style notes (follow them):\n" + pctx.instructions : "",
+    team
+      ? "Now on stage: " + team.label + ". Their prepared pitch script is below. Use it ONLY to recognise names, product terms and numbers and to keep wording consistent with it. Speakers skip, reorder and ad-lib: caption exactly what was said in the line, never add or complete sentences from the script.\n<<<SCRIPT\n" + team.script + "\nSCRIPT>>>"
+      : "",
     extraTerms ? "Speaker-specific terms for this segment:\n" + extraTerms : "",
     "Keep numbers, currencies, units exact. Output ONLY the caption.",
   ].filter(Boolean).join("\n");
@@ -73,12 +84,21 @@ function looksLikeHallucination(text) {
 }
 
 // Gemini flash models throw transient 429/503 under load — retry with backoff.
-async function geminiFetch(url, init, tries = 4) {
+// Each attempt is capped at 8s: a stuck call (seen Nov 27: 132s on one request)
+// would otherwise deliver its caption minutes late. 3 attempts ≈ 25s worst case.
+async function geminiFetch(url, init, tries = 3, timeoutMs = 8000) {
+  let lastErr;
   for (let a = 0; a < tries; a++) {
-    const r = await fetch(url, init);
-    if (r.ok || ![429, 500, 503].includes(r.status) || a === tries - 1) return r;
-    await sleep(700 * (a + 1));
+    try {
+      const r = await fetch(url, { ...init, signal: AbortSignal.timeout(timeoutMs) });
+      if (r.ok || ![429, 500, 503].includes(r.status) || a === tries - 1) return r;
+    } catch (e) {
+      lastErr = e; // timeout / network: retry
+      if (a === tries - 1) throw new Error("Gemini timeout/network: " + String((e && e.message) || e).slice(0, 120));
+    }
+    await sleep(500 * (a + 1));
   }
+  throw lastErr || new Error("Gemini: no response");
 }
 
 function bytesToBase64(bytes) {
@@ -103,6 +123,9 @@ async function sttOpenAI(env, blob) {
   return ((await r.json()).text || "").trim();
 }
 
+// No name hints here on purpose: tested Nov 27, a hint list made Gemini hear
+// "we already" as "Ailytics". Names are fixed in the translation step instead,
+// which sees the glossary + the on-stage team's script.
 async function sttGemini(env, bytes, mime) {
   const body = {
     contents: [{ parts: [
@@ -120,7 +143,7 @@ async function sttGemini(env, bytes, mime) {
 }
 
 // ---- bilingual translation of a single caption line ----
-async function translateOpenAI(env, text, ctx, extraTerms, lang) {
+async function translateOpenAI(env, text, ctx, extraTerms, lang, pctx) {
   const r = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: { Authorization: `Bearer ${env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
@@ -135,7 +158,7 @@ async function translateOpenAI(env, text, ctx, extraTerms, lang) {
         },
       },
       messages: [
-        { role: "system", content: bilingualSystemPrompt(extraTerms, lang) },
+        { role: "system", content: bilingualSystemPrompt(extraTerms, lang, pctx) },
         { role: "user", content: (ctx ? `Recent context:\n${ctx}\n\n` : "") + `Caption this line:\n${text}` },
       ],
     }),
@@ -144,11 +167,11 @@ async function translateOpenAI(env, text, ctx, extraTerms, lang) {
   return JSON.parse((await r.json()).choices[0].message.content);
 }
 
-async function translateGemini(env, text, ctx, extraTerms, lang) {
+async function translateGemini(env, text, ctx, extraTerms, lang, pctx) {
   const r = await geminiFetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MT_MODEL}:generateContent?key=${env.GEMINI_API_KEY}`, {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      systemInstruction: { parts: [{ text: bilingualSystemPrompt(extraTerms, lang) }] },
+      systemInstruction: { parts: [{ text: bilingualSystemPrompt(extraTerms, lang, pctx) }] },
       contents: [{ parts: [{ text: (ctx ? `Recent context:\n${ctx}\n\n` : "") + `Caption this line:\n${text}` }] }],
       generationConfig: {
         temperature: 0.2, responseMimeType: "application/json",
@@ -164,21 +187,21 @@ async function translateGemini(env, text, ctx, extraTerms, lang) {
 }
 
 // One audio chunk -> {transcript, en, zh} for the given engine.
-export async function captionChunk(env, engine, blob, bytes, mime, ctx, extraTerms, lang) {
+export async function captionChunk(env, engine, blob, bytes, mime, ctx, extraTerms, lang, pctx) {
   const transcript = engine === "gemini" ? await sttGemini(env, bytes, mime) : await sttOpenAI(env, blob);
   // Drop phantom transcripts before spending a translation call on them.
   if (!transcript || looksLikeHallucination(transcript)) return { transcript: "", en: "", zh: "" };
   const pair = engine === "gemini"
-    ? await translateGemini(env, transcript, ctx, extraTerms, lang)
-    : await translateOpenAI(env, transcript, ctx, extraTerms, lang);
+    ? await translateGemini(env, transcript, ctx, extraTerms, lang, pctx)
+    : await translateOpenAI(env, transcript, ctx, extraTerms, lang, pctx);
   // Belt-and-braces: also drop if the rendered caption is a known phantom.
   if (looksLikeHallucination(pair.en) || looksLikeHallucination(pair.zh)) return { transcript: "", en: "", zh: "" };
   return { transcript, en: pair.en || "", zh: pair.zh || "" };
 }
 
 // Text-only bilingual translate (for /api/translate testing + reuse).
-export async function translateText(env, engine, text, ctx, extraTerms, lang) {
+export async function translateText(env, engine, text, ctx, extraTerms, lang, pctx) {
   return engine === "gemini"
-    ? translateGemini(env, text, ctx, extraTerms, lang)
-    : translateOpenAI(env, text, ctx, extraTerms, lang);
+    ? translateGemini(env, text, ctx, extraTerms, lang, pctx)
+    : translateOpenAI(env, text, ctx, extraTerms, lang, pctx);
 }

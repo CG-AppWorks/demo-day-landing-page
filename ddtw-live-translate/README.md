@@ -20,6 +20,7 @@ guest phones over SSE (with a polling fallback).
 | 5 | Gemini pipeline + `/compare` + 3-way switch (incl. Wordly) | ✅ deployed |
 | — | Dynamic glossary generator (`compare/build-glossary.mjs`) | ✅ tooling ready |
 | 6 | Rehearsal with recorded + live audio; load test | ⬜ |
+| 7 | DD#33 (Nov 27 2026): Wordly removed, Gemini default; operator caption context (notes, glossary, per-team scripts, on-stage team) via `/api/context`, edited in the landing page Backstage | ✅ |
 
 ## Layout
 
@@ -45,7 +46,10 @@ ddtw-live-translate/
 | `POST /api/segment` | bearer `ADMIN_TOKEN` | `{channel, seq, en, zh, ts?, final?}` — store + broadcast. Re-posting the same `seq` replaces the segment (interim → final). |
 | `GET /api/stream?channel=openai\|gemini\|active` | none | SSE. Events: `hello`, `backlog`, `segment`, `switch`, plus `: ping` heartbeats every 20s. `active` follows the switch. |
 | `GET /api/latest?channel=...&since=seq` | none | Polling fallback. Returns `{channel, active, segments}`. |
-| `POST /api/switch` | bearer `ADMIN_TOKEN` | `{active:"openai"\|"gemini"}` — flips what `active` subscribers see; emits a `switch` event. |
+| `POST /api/switch` | bearer `ADMIN_TOKEN` | `{active:"gemini"\|"openai"}` — flips what `active` subscribers see; emits a `switch` event. (Default gemini; "wordly" no longer accepted.) |
+| `GET /api/context` | bearer | Caption context for the Backstage editor: `{general:{instructions,glossary}, teams:{id:{label,script}}, onStage}` |
+| `POST /api/context` | bearer | Partial update: `{general?}`, `{team:{id,label,script}}` (empty script deletes), `{onStage, onStageLabel}` |
+| `GET /api/context/prompt[?team=id]` | bearer | What one caption call uses: notes, glossary, on-stage (or given) team's script |
 | `POST /api/translate`, `POST /api/ephemeral/*` | bearer | `501` until later steps. |
 
 `channel` is `openai` or `gemini`. `active` is a virtual stream channel that
@@ -124,7 +128,8 @@ BASE=https://ddtw-captions.hsichun.workers.dev ADMIN_TOKEN=<token> ./test/post-f
   feed from the FOH mixer** into a USB audio interface — not a room mic.
 - Pre-event: load final glossary, start both engines 15 min early, verify on
   `/compare`, confirm the active channel.
-- During: watch the level meter + reconnect lights; flip engines if quality
-  degrades. **Wordly stays running in parallel** as the final fallback (its
-  plugin remains one click away on the landing page).
+- During: watch the level meter + reconnect lights; flip to OpenAI if Gemini
+  degrades. Keep **Currently pitching** in the landing-page Backstage in step with
+  the stage: it switches which team's script the captions use (the broadcaster
+  page shows the current one). Wordly was removed for DD#33.
 - Cost: ~STT $2–4 + translation $1–3 per engine over 2h; budget < US$20 total.

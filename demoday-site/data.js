@@ -234,7 +234,7 @@ window.EVENT_CONFIG = {
   donationIntro: "Wistron's Computing Power Donation program gives 1 million GPU hours a year to AI startups and research teams. Two recipients share their results on stage.",
   donationIntroZh: '緯創算力捐贈計畫每年捐出 100 萬小時 GPU 算力，支持 AI 新創與研究團隊；本次有 2 組受贈團隊登台分享成果。',
   bilingual: true,   // EN + 中文
-  wordly: true,      // AI live interpretation
+  wordly: false,     // Wordly removed Nov 27: captions run on Gemini via captionsWorker
   album: false,      // Accupai photo album — set albumUrl + true once the DD#33 album exists
   albumUrl: '',
   wistron: true,     // WA cohort + partners section
@@ -258,9 +258,8 @@ window.EVENT_CONFIG = {
     { name: 'AWS', src: 'assets/sponsor-dd33-aws.png', h: 56 },
     { name: 'KKCOMPANY', src: 'assets/sponsor-dd33-kkcompany.png', h: 50 },
   ],
-  // Live caption engine switch (OpenAI/Gemini/Wordly). When set, the Captions
-  // tab follows the server switch; defaults to Wordly so guests see no change
-  // until an operator flips it from Backstage.
+  // Live captions server: the 即時翻譯 widget streams from it and follows its
+  // engine switch (Gemini main, OpenAI backup); Backstage edits its caption context.
   captionsWorker: 'https://ddtw-captions.hsichun.workers.dev',
   // Anonymous page-view / click counts (analytics.js) — read at <this URL>/stats.
   analytics: 'https://ddtw-captions.hsichun.workers.dev',

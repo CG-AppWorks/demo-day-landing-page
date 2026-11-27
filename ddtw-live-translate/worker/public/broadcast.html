@@ -59,8 +59,8 @@
 
     <label>Engine</label>
     <div class="seg-eng" id="engine">
-      <button data-e="openai" class="on">OpenAI</button>
-      <button data-e="gemini">Gemini</button>
+      <button data-e="gemini" class="on">Gemini</button>
+      <button data-e="openai">OpenAI</button>
     </div>
 
     <label>Input level <span class="hint">— green while speaking, amber line = silence threshold</span></label>
@@ -75,6 +75,7 @@
       <button id="pushLive">Make engine live to guests</button>
     </div>
     <div class="stat"><span class="dot idle" id="recDot"></span><span id="recState">idle</span><span id="counter"></span></div>
+    <div class="stat">Caption context: <b id="onStage" style="color:var(--ink)">—</b> <span class="hint">(set in the landing page Backstage → Caption context)</span></div>
     <div class="msg" id="msg"></div>
 
     <label>Captions sent</label>
@@ -88,7 +89,7 @@
   // Secondary caption language: ?lang=ja (Tokyo) — defaults to zh-TW on the server.
   var LANG = (new URLSearchParams(location.search).get("lang") || "").trim();
   var $ = function(id){ return document.getElementById(id); };
-  var token = "", engine = "openai", seq = (Date.now() % 1e7);
+  var token = "", engine = "gemini", seq = (Date.now() % 1e7);
   var ctx, source, proc, stream;
   var buf = [], bufLen = 0, inRate = 48000;
   var speaking = false, silenceRun = 0, voiceRun = 0, lastCtx = [];
@@ -103,7 +104,17 @@
     localStorage.setItem("ddtw.token", token);
     $("gate").classList.add("hidden"); $("app").classList.remove("hidden");
     listDevices();
+    pollOnStage(); setInterval(pollOnStage, 5000);
   };
+  // Which team's script the server is using as caption context right now.
+  async function pollOnStage(){
+    try{
+      var r = await fetch(BASE + "/api/context/prompt", { headers:{ Authorization:"Bearer "+token }, cache:"no-store" });
+      var j = await r.json();
+      $("onStage").textContent = !r.ok ? "(unavailable)" : !j.team ? "no team on stage (glossary + notes only)"
+        : j.team.label + (j.team.script ? "" : " — no script saved");
+    }catch(e){ $("onStage").textContent = "(offline)"; }
+  }
 
   // ---- engine select ----
   // Switching model resets the session: clears stored captions + wipes every

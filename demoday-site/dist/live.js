@@ -19,12 +19,11 @@ function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" !=
 function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 // live.jsx — Live audience panel (chat / Q&A / polls / people)
 
-// Which caption source guests currently see, per the server switch. Polls the
-// captions Worker every 3s. Returns 'openai' | 'gemini' | 'wordly' | null.
+// Which caption engine guests currently see, per the server switch. Polls the
+// captions Worker every 3s. Returns 'gemini' | 'openai' | null. (Wordly removed Nov 27.)
 var CAPTION_SOURCE_LABEL = {
   openai: 'OpenAI',
-  gemini: 'Gemini',
-  wordly: 'Wordly'
+  gemini: 'Gemini'
 };
 function useActiveCaptionSource(worker) {
   var _useState = useState(null),
@@ -369,63 +368,16 @@ function LivePanel(_ref) {
 }
 window.LivePanel = LivePanel;
 
-/* ─── Captions live feed (used inside the live panel) ───
-   Embeds the Wordly attendee iframe for the current session, with a QR
-   code + session ID card pinned below for audience members who want to
-   open captions on their own phone. */
-function CaptionsLive(_ref4) {
-  var language = _ref4.language,
-    sessionId = _ref4.sessionId;
-  var joinUrl = wordlyJoinUrl(sessionId);
-  var frameUrl = wordlyFrameUrl(sessionId, language, {
-    bgcolor: 'FFFFFF',
-    fgcolor: '424F57',
-    fgsize: '1em'
-  });
-  return /*#__PURE__*/React.createElement("div", {
-    className: "caption-live-stack"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "caption-live-frame"
-  }, /*#__PURE__*/React.createElement("iframe", {
-    key: "".concat(sessionId, "-").concat(language),
-    src: frameUrl,
-    title: "Wordly live captions",
-    allow: "autoplay",
-    loading: "lazy"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "caption-live-footer"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "qr-thumb"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: wordlyQrUrl(sessionId, 140),
-    alt: "QR",
-    width: "60",
-    height: "60"
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "qr-text"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "k"
-  }, "Listen on your phone"), /*#__PURE__*/React.createElement("div", {
-    className: "v"
-  }, "attend.wordly.ai \xB7 ", /*#__PURE__*/React.createElement("b", null, sessionId))), /*#__PURE__*/React.createElement("a", {
-    className: "btn outline sm",
-    href: joinUrl,
-    target: "_blank",
-    rel: "noopener"
-  }, "Open ", /*#__PURE__*/React.createElement(I.arrow, null))));
-}
-window.CaptionsLive = CaptionsLive;
-
 /* ─── Floating live-captions widget ───
    A bottom-corner launcher that opens a slide-up caption panel on demand, so
-   guests who don't need captions are unaffected. Follows the server switch:
-   OpenAI/Gemini stream via the embedded viewer; Wordly via the existing embed.
+   guests who don't need captions are unaffected. Captions stream through the
+   embedded viewer, which follows the server's engine switch (Gemini / OpenAI).
    Renders nothing unless EVENT_CONFIG.captionsWorker is set. */
-function LiveCaptionsWidget(_ref5) {
-  var _ref5$sessionId = _ref5.sessionId,
-    sessionId = _ref5$sessionId === void 0 ? 'DXRS-1194' : _ref5$sessionId,
-    _ref5$captionLanguage = _ref5.captionLanguage,
-    captionLanguage = _ref5$captionLanguage === void 0 ? 'zh-TW' : _ref5$captionLanguage;
+function LiveCaptionsWidget(_ref4) {
+  var _ref4$sessionId = _ref4.sessionId,
+    sessionId = _ref4$sessionId === void 0 ? 'DXRS-1194' : _ref4$sessionId,
+    _ref4$captionLanguage = _ref4.captionLanguage,
+    captionLanguage = _ref4$captionLanguage === void 0 ? 'zh-TW' : _ref4$captionLanguage;
   var worker = window.EVENT_CONFIG && window.EVENT_CONFIG.captionsWorker || '';
   var _useState1 = useState(false),
     _useState10 = _slicedToArray(_useState1, 2),
@@ -437,7 +389,7 @@ function LiveCaptionsWidget(_ref5) {
     _useState12 = _slicedToArray(_useState11, 2),
     compact = _useState12[0],
     setCompact = _useState12[1];
-  var source = useActiveCaptionSource(open ? worker : '') || 'wordly';
+  var source = useActiveCaptionSource(open ? worker : '') || 'gemini';
   // Let the nav caption buttons open this widget.
   useEffect(function () {
     window.ddOpenCaptions = function () {
@@ -450,7 +402,6 @@ function LiveCaptionsWidget(_ref5) {
     };
   }, []);
   if (!worker) return null;
-  var isWordly = source === 'wordly';
   return /*#__PURE__*/React.createElement("div", {
     className: "ddcap ".concat(compact ? 'compact' : '')
   }, open && /*#__PURE__*/React.createElement("div", {
@@ -463,7 +414,7 @@ function LiveCaptionsWidget(_ref5) {
     className: "ddcap-badge"
   }, /*#__PURE__*/React.createElement("span", {
     className: "ddcap-dot"
-  }), CAPTION_SOURCE_LABEL[source] || 'Wordly'), /*#__PURE__*/React.createElement("span", {
+  }), CAPTION_SOURCE_LABEL[source] || 'Gemini'), /*#__PURE__*/React.createElement("span", {
     className: "ddcap-title"
   }, "\u5373\u6642\u7FFB\u8B6F \xB7 Live captions"), /*#__PURE__*/React.createElement("button", {
     className: "ddcap-min",
@@ -482,10 +433,7 @@ function LiveCaptionsWidget(_ref5) {
     "aria-label": "Close captions"
   }, "\xD7")), /*#__PURE__*/React.createElement("div", {
     className: "ddcap-body"
-  }, isWordly ? /*#__PURE__*/React.createElement(CaptionsLive, {
-    language: captionLanguage,
-    sessionId: sessionId
-  }) : /*#__PURE__*/React.createElement("iframe", {
+  }, /*#__PURE__*/React.createElement("iframe", {
     key: source,
     className: "ddcap-frame",
     src: worker + '/viewer?base=' + encodeURIComponent(worker),
@@ -510,9 +458,9 @@ window.LiveCaptionsWidget = LiveCaptionsWidget;
 
 /* In-page caption launcher (placed just above Sponsors). Opens the same
    slide-up panel as the floating button. Renders only when configured. */
-function CaptionsLauncher(_ref6) {
-  var _ref6$language = _ref6.language,
-    language = _ref6$language === void 0 ? 'en' : _ref6$language;
+function CaptionsLauncher(_ref5) {
+  var _ref5$language = _ref5.language,
+    language = _ref5$language === void 0 ? 'en' : _ref5$language;
   var worker = window.EVENT_CONFIG && window.EVENT_CONFIG.captionsWorker || '';
   if (!worker) return null;
   return /*#__PURE__*/React.createElement("div", {

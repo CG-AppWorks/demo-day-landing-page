@@ -1,8 +1,8 @@
 // live.jsx — Live audience panel (chat / Q&A / polls / people)
 
-// Which caption source guests currently see, per the server switch. Polls the
-// captions Worker every 3s. Returns 'openai' | 'gemini' | 'wordly' | null.
-const CAPTION_SOURCE_LABEL = { openai: 'OpenAI', gemini: 'Gemini', wordly: 'Wordly' };
+// Which caption engine guests currently see, per the server switch. Polls the
+// captions Worker every 3s. Returns 'gemini' | 'openai' | null. (Wordly removed Nov 27.)
+const CAPTION_SOURCE_LABEL = { openai: 'OpenAI', gemini: 'Gemini' };
 function useActiveCaptionSource(worker) {
   const [active, setActive] = useState(null);
   useEffect(() => {
@@ -172,44 +172,11 @@ function LivePanel({ captionLanguage = 'en', onCaptionLanguageChange = () => {},
 }
 window.LivePanel = LivePanel;
 
-/* ─── Captions live feed (used inside the live panel) ───
-   Embeds the Wordly attendee iframe for the current session, with a QR
-   code + session ID card pinned below for audience members who want to
-   open captions on their own phone. */
-function CaptionsLive({ language, sessionId }) {
-  const joinUrl = wordlyJoinUrl(sessionId);
-  const frameUrl = wordlyFrameUrl(sessionId, language, { bgcolor: 'FFFFFF', fgcolor: '424F57', fgsize: '1em' });
-  return (
-    <div className="caption-live-stack">
-      <div className="caption-live-frame">
-        <iframe
-          key={`${sessionId}-${language}`}
-          src={frameUrl}
-          title="Wordly live captions"
-          allow="autoplay"
-          loading="lazy" />
-      </div>
-      <div className="caption-live-footer">
-        <div className="qr-thumb">
-          <img src={wordlyQrUrl(sessionId, 140)} alt="QR" width="60" height="60" />
-        </div>
-        <div className="qr-text">
-          <div className="k">Listen on your phone</div>
-          <div className="v">attend.wordly.ai · <b>{sessionId}</b></div>
-        </div>
-        <a className="btn outline sm" href={joinUrl} target="_blank" rel="noopener">
-          Open <I.arrow />
-        </a>
-      </div>
-    </div>);
-
-}
-window.CaptionsLive = CaptionsLive;
 
 /* ─── Floating live-captions widget ───
    A bottom-corner launcher that opens a slide-up caption panel on demand, so
-   guests who don't need captions are unaffected. Follows the server switch:
-   OpenAI/Gemini stream via the embedded viewer; Wordly via the existing embed.
+   guests who don't need captions are unaffected. Captions stream through the
+   embedded viewer, which follows the server's engine switch (Gemini / OpenAI).
    Renders nothing unless EVENT_CONFIG.captionsWorker is set. */
 function LiveCaptionsWidget({ sessionId = 'DXRS-1194', captionLanguage = 'zh-TW' }) {
   const worker = (window.EVENT_CONFIG && window.EVENT_CONFIG.captionsWorker) || '';
@@ -217,20 +184,19 @@ function LiveCaptionsWidget({ sessionId = 'DXRS-1194', captionLanguage = 'zh-TW'
   // Compact ("docked") mode: a slim bottom bar showing the latest line, so the
   // page stays browsable behind it. Tap ▴ to expand back to the full panel.
   const [compact, setCompact] = useState(false);
-  const source = useActiveCaptionSource(open ? worker : '') || 'wordly';
+  const source = useActiveCaptionSource(open ? worker : '') || 'gemini';
   // Let the nav caption buttons open this widget.
   useEffect(() => {
     window.ddOpenCaptions = () => setOpen(true);
     return () => { try { delete window.ddOpenCaptions; } catch (e) {} };
   }, []);
   if (!worker) return null;
-  const isWordly = source === 'wordly';
   return (
     <div className={`ddcap ${compact ? 'compact' : ''}`}>
       {open &&
       <div className={`ddcap-panel ${compact ? 'compact' : ''}`} role="dialog" aria-label="Live captions">
         <div className="ddcap-head">
-          <span className="ddcap-badge"><span className="ddcap-dot" />{CAPTION_SOURCE_LABEL[source] || 'Wordly'}</span>
+          <span className="ddcap-badge"><span className="ddcap-dot" />{CAPTION_SOURCE_LABEL[source] || 'Gemini'}</span>
           <span className="ddcap-title">即時翻譯 · Live captions</span>
           <button className="ddcap-min" onClick={() => setCompact((c) => !c)}
             aria-label={compact ? 'Expand captions' : 'Shrink to a bar'}
@@ -238,11 +204,9 @@ function LiveCaptionsWidget({ sessionId = 'DXRS-1194', captionLanguage = 'zh-TW'
           <button className="ddcap-x" onClick={() => setOpen(false)} aria-label="Close captions">×</button>
         </div>
         <div className="ddcap-body">
-          {isWordly ?
-          <CaptionsLive language={captionLanguage} sessionId={sessionId} /> :
           <iframe key={source} className="ddcap-frame"
             src={worker + '/viewer?base=' + encodeURIComponent(worker)}
-            title="Live captions" allow="autoplay" loading="lazy" />}
+            title="Live captions" allow="autoplay" loading="lazy" />
         </div>
       </div>}
       <button className={`ddcap-fab ${open ? 'on' : ''}`} onClick={() => setOpen((o) => !o)} aria-expanded={open} data-track="captions" data-x={open ? 'close' : 'open'}>

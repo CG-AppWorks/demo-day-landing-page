@@ -80,6 +80,184 @@ function useBackstageToggle() {
 }
 window.useBackstageToggle = useBackstageToggle;
 
+// ── Stage order: batches in the order they appear in TEAMS (AW → WA → CPD),
+// then speakerOrder within each batch. ──
+function stageOrder() {
+  const teams = window.TEAMS || [];
+  const rank = {};
+  teams.forEach((t) => { if (!(t.batch in rank)) rank[t.batch] = Object.keys(rank).length; });
+  return [...teams].sort((a, b) => (rank[a.batch] - rank[b.batch]) || (a.speakerOrder - b.speakerOrder));
+}
+window.stageOrder = stageOrder;
+
+const teamLabel = (t) => t ? `${t.name} — ${t.presenter || ''}${t.title ? ', ' + t.title : ''} · ${t.sub || ''}` : '';
+
+// Starting glossary for a fresh event: event terms + every team and presenter
+// name, kept in English. Cg reviews and saves it; nothing is sent until then.
+const CAPTION_EVENT_TERMS = [
+  'AppWorks = keep', 'AppWorks Accelerator = keep', 'Demo Day = keep',
+  'Compiling the Uncompilable = keep  # AW#33 theme',
+  'Jamie Lin = 林之晨  # AppWorks chairman, keynote',
+  'Wistron = 緯創', 'Wistron Accelerator = keep',
+  'Computing Power Donation = 算力捐贈計畫  # Wistron program',
+  'Garage+ = keep', 'Google Cloud = keep', 'AWS = keep', 'KKCOMPANY = keep',
+];
+function lineupGlossaryLines() {
+  const lines = [...CAPTION_EVENT_TERMS];
+  stageOrder().forEach((t) => {
+    lines.push(`${t.name} = keep  # ${t.batch} team`);
+    if (t.presenter && !/TBC/i.test(t.presenter)) lines.push(`${t.presenter} = keep  # ${t.name}`);
+  });
+  return lines;
+}
+// Append lines whose term (left of "=") isn't in the glossary yet.
+function mergeGlossary(text, lines) {
+  const key = (l) => l.replace(/#.*$/, '').split('=')[0].trim().toLowerCase();
+  const have = new Set((text || '').split('\n').map(key).filter(Boolean));
+  const add = lines.filter((l) => !have.has(key(l)));
+  return [(text || '').trim(), ...add].filter(Boolean).join('\n');
+}
+
+// ── Caption context editor: what the AI reads before it captions ──
+// Saved on the captions server, so it applies to the broadcaster laptop and
+// every guest, whatever device you edit it from.
+function CaptionContext({ worker, token, onStage, onLoaded }) {
+  const teams = stageOrder();
+  const [loaded, setLoaded] = useBkState(false);
+  const [general, setGeneral] = useBkState({ instructions: '', glossary: '' });
+  const [saved, setSaved] = useBkState({ instructions: '', glossary: '' });
+  const [scripts, setScripts] = useBkState({});
+  const [sel, setSel] = useBkState(teams[0] ? teams[0].id : '');
+  const [draft, setDraft] = useBkState('');
+  const [msg, setMsg] = useBkState('');
+  const [busy, setBusy] = useBkState(false);
+  const [tryText, setTryText] = useBkState('');
+  const [tryOut, setTryOut] = useBkState(null);
+
+  const api = (path, body) => fetch(worker + path, {
+    method: body ? 'POST' : 'GET',
+    headers: { ...(body ? { 'Content-Type': 'application/json' } : {}), Authorization: 'Bearer ' + token },
+    body: body ? JSON.stringify(body) : undefined,
+    cache: 'no-store',
+  }).then((r) => r.json().then((j) => { if (!r.ok || j.error) throw new Error(j.error || ('HTTP ' + r.status)); return j; }));
+
+  const apply = (j) => {
+    const g = { instructions: (j.general && j.general.instructions) || '', glossary: (j.general && j.general.glossary) || '' };
+    setSaved(g); setScripts(j.teams || {}); onLoaded && onLoaded(j.onStage || '');
+    return g;
+  };
+  const fail = (what) => (e) => { setBusy(false); setMsg(what + ' failed: ' + e.message + (/unauthorized/.test(e.message) ? ' — check the admin token' : '')); };
+
+  const load = () => {
+    if (!token) { setMsg('Enter the admin token above to load the caption context.'); return; }
+    setBusy(true); setMsg('Loading…');
+    api('/api/context').then((j) => {
+      const g = apply(j);
+      const fresh = !g.glossary && !g.instructions;
+      setGeneral(fresh ? { instructions: '', glossary: mergeGlossary('', lineupGlossaryLines()) } : g);
+      setLoaded(true); setBusy(false);
+      setMsg(fresh ? 'Nothing saved yet. The glossary below is pre-filled from the lineup: review it, then Save.' : 'Loaded from the captions server.');
+    }).catch(fail('Load'));
+  };
+  useBkEffect(() => { if (token && !loaded) load(); }, [token]);
+  useBkEffect(() => { setDraft((scripts[sel] && scripts[sel].script) || ''); setTryOut(null); }, [sel, scripts]);
+
+  const generalDirty = general.instructions !== saved.instructions || general.glossary !== saved.glossary;
+  const savedScript = (scripts[sel] && scripts[sel].script) || '';
+  const scriptDirty = draft.trim() !== savedScript;
+  const selTeam = teams.find((t) => t.id === sel);
+  const onStageTeam = teams.find((t) => t.id === onStage);
+  const nScripts = teams.filter((t) => scripts[t.id]).length;
+
+  const saveGeneral = () => {
+    setBusy(true);
+    api('/api/context', { general }).then((j) => { apply(j); setBusy(false); setMsg('Style notes + glossary saved. Captions use them from the next line.'); }).catch(fail('Save'));
+  };
+  const saveScript = () => {
+    setBusy(true);
+    api('/api/context', { team: { id: sel, label: teamLabel(selTeam), script: draft } }).then((j) => {
+      apply(j); setBusy(false);
+      setMsg(draft.trim() ? `Script saved for ${selTeam.name}.` : `Script removed for ${selTeam.name}.`);
+    }).catch(fail('Save'));
+  };
+  const useNow = (id) => {
+    setBusy(true);
+    const t = teams.find((x) => x.id === id);
+    api('/api/context', { onStage: id, onStageLabel: teamLabel(t) }).then((j) => {
+      apply(j); setBusy(false);
+      setMsg(t ? `Captions now use ${t.name}'s script.` : 'No team on stage: captions use the style notes + glossary only.');
+    }).catch(fail('Update'));
+  };
+  const tryLine = () => {
+    if (!tryText.trim()) return;
+    setTryOut({ pending: true });
+    api('/api/translate', { engine: 'gemini', text: tryText.trim(), team: sel })
+      .then((j) => setTryOut(j)).catch((e) => setTryOut({ error: e.message }));
+  };
+
+  if (!token) {
+    return <div className="bk-hint">Enter the admin token above to edit the caption context.</div>;
+  }
+  return (
+    <div className="bk-ctx">
+      <div className="bk-sublabel">Style notes <span className="bk-count">{general.instructions.length} / 4,000</span></div>
+      <textarea className="bk-input bk-text" rows={3} value={general.instructions} disabled={!loaded}
+        placeholder={'e.g. Keep 中文 short and spoken. 新創 not 初創. Money as 萬/億 美元. Keep company + product names in English.'}
+        onChange={(e) => setGeneral({ ...general, instructions: e.target.value })}/>
+      <div className="bk-sublabel">Glossary <span className="bk-muted">one per line · <code>English = 中文</code> · <code>Name = keep</code> · # note</span>
+        <span className="bk-count">{general.glossary.split('\n').filter((l) => l.trim()).length} lines</span></div>
+      <textarea className="bk-input bk-text mono-ish" rows={8} value={general.glossary} disabled={!loaded} spellCheck={false}
+        onChange={(e) => setGeneral({ ...general, glossary: e.target.value })}/>
+      <div className="bk-row">
+        <button className="bk-btn primary" disabled={!loaded || busy || !generalDirty} onClick={saveGeneral}>{generalDirty ? 'Save notes + glossary' : 'Saved ✓'}</button>
+        <button className="bk-btn" disabled={!loaded || busy} onClick={() => setGeneral({ ...general, glossary: mergeGlossary(general.glossary, lineupGlossaryLines()) })}>Add lineup names</button>
+        {generalDirty && <button className="bk-btn ghost" onClick={() => setGeneral(saved)}>Undo</button>}
+      </div>
+
+      <div className="bk-sublabel" style={{ marginTop: 18 }}>Pitch scripts <span className="bk-count">{nScripts} / {teams.length} saved</span></div>
+      <select className="bk-input" value={sel} onChange={(e) => setSel(e.target.value)} disabled={!loaded}>
+        {teams.map((t) => (
+          <option key={t.id} value={t.id}>
+            {scripts[t.id] ? '✓ ' : '· '}{t.batch} {String(t.speakerOrder).padStart(2, '0')} · {t.name}{t.id === onStage ? '  (on stage)' : ''}
+          </option>
+        ))}
+      </select>
+      <textarea className="bk-input bk-text" rows={8} value={draft} disabled={!loaded} style={{ marginTop: 8 }}
+        placeholder={selTeam ? `Paste ${selTeam.name}'s pitch script (English, 中文 or both). The AI uses it to get names, terms and numbers right while this team is on stage.` : ''}
+        onChange={(e) => setDraft(e.target.value)}/>
+      <div className="bk-row">
+        <button className="bk-btn primary" disabled={!loaded || busy || !scriptDirty} onClick={saveScript}>{scriptDirty ? (draft.trim() ? 'Save script' : 'Remove script') : 'Saved ✓'}</button>
+        <button className="bk-btn" disabled={!loaded || busy || sel === onStage} onClick={() => useNow(sel)}>{sel === onStage ? 'On stage now ✓' : 'Use for captions now'}</button>
+        <span className="bk-count">{draft.length.toLocaleString()} / 15,000</span>
+      </div>
+
+      <div className="bk-live">
+        <span className="k">Captions use:</span>
+        <code>{onStageTeam ? onStageTeam.name : 'notes + glossary only'}</code>
+        {onStageTeam && !scripts[onStage] && <span className="warn">no script saved</span>}
+        {onStage && <button className="bk-btn ghost" style={{ marginLeft: 'auto', padding: '4px 8px' }} disabled={busy} onClick={() => useNow('')}>Clear</button>}
+      </div>
+      <div className="bk-hint">Follows <b>Currently pitching</b> below (in On Air), or set it here. Saved on the captions server, so it reaches the broadcaster laptop.</div>
+
+      <div className="bk-sublabel" style={{ marginTop: 18 }}>Try a line <span className="bk-muted">Gemini, with the saved notes, glossary and {selTeam ? selTeam.name + "'s saved script" : 'script'}</span></div>
+      <div className="bk-id-row">
+        <input className="bk-input" value={tryText} placeholder="Type what a speaker might say…" disabled={!loaded}
+          onChange={(e) => setTryText(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') tryLine(); }}/>
+        <button className="bk-btn" disabled={!loaded || !tryText.trim()} onClick={tryLine}>Translate</button>
+      </div>
+      {tryOut && (
+        <div className="bk-try">
+          {tryOut.pending ? 'Translating…' : tryOut.error ? <span className="warn">Failed: {tryOut.error}</span> : <>
+            <div>{tryOut.en}</div><div className="zh">{tryOut.zh}</div>
+          </>}
+        </div>
+      )}
+      {msg && <div className="bk-hint"><span className={/failed|check/i.test(msg) ? 'warn' : ''}>{msg}</span></div>}
+    </div>
+  );
+}
+window.CaptionContext = CaptionContext;
+
 function Backstage({ open, onClose, stage, setStage, reset }) {
   const [draftId, setDraftId] = useBkState(stage.sessionId);
   useBkEffect(() => { setDraftId(stage.sessionId); }, [stage.sessionId]);
@@ -136,6 +314,26 @@ function Backstage({ open, onClose, stage, setStage, reset }) {
         else { setSwitchMsg('Failed: ' + (j.error || 'error') + (j.error === 'unauthorized' ? ' (check token)' : '')); }
       }).catch((e) => setSwitchMsg('Network error: ' + e.message));
   };
+
+  // ── Caption context: which team's script the captions server uses ──
+  const [ctxOnStage, setCtxOnStage] = useBkState('');
+  const [stageSyncMsg, setStageSyncMsg] = useBkState('');
+  const syncOnStage = (id) => {
+    const tok = adminToken.trim();
+    if (!captionsWorker) return;
+    if (!tok) { setStageSyncMsg('Not sent to captions: enter the admin token above.'); return; }
+    fetch(captionsWorker + '/api/context', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok },
+      body: JSON.stringify({ onStage: id, onStageLabel: teamLabel(stageOrder().find((t) => t.id === id)) }),
+    }).then((r) => r.json().then((j) => ({ ok: r.ok, j })))
+      .then(({ ok, j }) => {
+        if (ok && !j.error) { setCtxOnStage(j.onStage || ''); setStageSyncMsg(''); }
+        else setStageSyncMsg('Captions context not updated: ' + (j.error || 'error'));
+      }).catch((e) => setStageSyncMsg('Captions context not updated: ' + e.message));
+  };
+  // Changing the pitching team also points the captions at that team's script.
+  const setLive = (id) => { setStage({ liveTeamId: id }); syncOnStage(id === 'OFF_AIR' ? '' : id); };
 
   if (!open) return null;
 
@@ -229,19 +427,27 @@ function Backstage({ open, onClose, stage, setStage, reset }) {
               autoComplete="off"
               onChange={(e) => setAdminToken(e.target.value)}/>
             <div className="bk-seg" style={{ marginTop: 8 }}>
-              {['openai', 'gemini', 'wordly'].map((e) => (
+              {['gemini', 'openai'].map((e) => (
                 <button key={e} className={liveSource === e ? 'on' : ''} onClick={() => flipEngine(e)}>
-                  {e === 'openai' ? 'OpenAI' : e === 'gemini' ? 'Gemini' : 'Wordly'}
+                  {e === 'gemini' ? 'Gemini (GCP)' : 'OpenAI · backup'}
                 </button>
               ))}
             </div>
             <div className="bk-hint">
               {switchMsg
                 ? <span className={/fail|error|token/i.test(switchMsg) ? 'warn' : ''}>{switchMsg}</span>
-                : <span>Flips the Captions tab for <b>all guests</b>, instantly. <b>Wordly</b> = backup.</span>}
+                : <span>Flips the Captions tab for <b>all guests</b>, instantly. <b>Gemini</b> is the main engine; OpenAI is the backup.</span>}
             </div>
             <div className="bk-live"><span className="k">Now live:</span> <code>{(liveSource || '—').toUpperCase()}</code></div>
             <button className="bk-btn ghost" style={{ marginTop: 8 }} onClick={clearCaptions}>Clear caption history</button>
+          </section>
+          )}
+
+          {/* Caption context: style notes, glossary, pitch scripts */}
+          {captionsWorker && (
+          <section className="bk-section">
+            <label className="bk-label">Caption context <span className="bk-muted">what the AI reads before it captions</span></label>
+            <CaptionContext worker={captionsWorker} token={adminToken.trim()} onStage={ctxOnStage} onLoaded={setCtxOnStage}/>
           </section>
           )}
 
@@ -265,19 +471,25 @@ function Backstage({ open, onClose, stage, setStage, reset }) {
               className="bk-input"
               value={stage.liveTeamId}
               disabled={stage.phase !== 'live'}
-              onChange={(e) => setStage({ liveTeamId: e.target.value })}>
+              onChange={(e) => setLive(e.target.value)}>
               <option value="OFF_AIR">— Off air / break —</option>
-              {TEAMS.map(t => (
+              {stageOrder().map(t => (
                 <option key={t.id} value={t.id}>
                   {String(t.speakerOrder).padStart(2,'0')} · {t.name} ({t.batch})
                 </option>
               ))}
             </select>
             <div className="bk-stepper">
-              <button className="bk-btn" disabled={stage.phase !== 'live'} onClick={() => stepLive(-1, stage, setStage)}>← Prev</button>
-              <button className="bk-btn" disabled={stage.phase !== 'live'} onClick={() => stepLive(1, stage, setStage)}>Next →</button>
-              <button className="bk-btn" disabled={stage.phase !== 'live'} onClick={() => setStage({ liveTeamId: 'OFF_AIR' })}>Off air</button>
+              <button className="bk-btn" disabled={stage.phase !== 'live'} onClick={() => stepLive(-1, stage, setLive)}>← Prev</button>
+              <button className="bk-btn" disabled={stage.phase !== 'live'} onClick={() => stepLive(1, stage, setLive)}>Next →</button>
+              <button className="bk-btn" disabled={stage.phase !== 'live'} onClick={() => setLive('OFF_AIR')}>Off air</button>
             </div>
+            {captionsWorker && (
+              <div className="bk-hint">
+                {stageSyncMsg ? <span className="warn">{stageSyncMsg}</span>
+                  : <span>Also sets the caption context to that team's script (now: <b>{(stageOrder().find((t) => t.id === ctxOnStage) || {}).name || 'none'}</b>).</span>}
+              </div>
+            )}
           </section>
         </div>
 
@@ -291,17 +503,18 @@ function Backstage({ open, onClose, stage, setStage, reset }) {
 }
 window.Backstage = Backstage;
 
-// Advance / rewind the live team by pitch order.
-function stepLive(dir, stage, setStage) {
-  const ordered = [...TEAMS].sort((a,b) => a.speakerOrder - b.speakerOrder);
+// Advance / rewind the live team in stage order (AW → WA → CPD, then pitch
+// order). setLive(id) updates the page state and the caption context.
+function stepLive(dir, stage, setLive) {
+  const ordered = stageOrder();
   const idx = ordered.findIndex(t => t.id === stage.liveTeamId);
   let next;
   if (idx === -1) {
     next = dir > 0 ? ordered[0] : ordered[ordered.length - 1];
   } else {
     const ni = idx + dir;
-    if (ni < 0 || ni >= ordered.length) { setStage({ liveTeamId: 'OFF_AIR' }); return; }
+    if (ni < 0 || ni >= ordered.length) { setLive('OFF_AIR'); return; }
     next = ordered[ni];
   }
-  setStage({ liveTeamId: next.id });
+  setLive(next.id);
 }
